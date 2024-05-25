@@ -1,4 +1,5 @@
 import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/views/escaneoQR.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -9,9 +10,11 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Escanear(),
+    );
   }
 }
