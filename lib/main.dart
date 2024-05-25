@@ -1,4 +1,5 @@
 import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/views/detallePedido.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -12,6 +13,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: detallePedido() ,
+    );
   }
 }
