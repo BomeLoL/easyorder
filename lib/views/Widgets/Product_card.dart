@@ -82,13 +82,13 @@ class ProductCard extends StatelessWidget {
                 height: 35,
                 child: IconButton(
                   onPressed: () {},
-                  icon: Icon(Icons.add),
+                  icon: Icon(Icons.remove),
                   style: IconButton.styleFrom(
-                    backgroundColor: Color.fromRGBO(255, 95, 4, 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(7),
+                      backgroundColor: Color.fromRGBO(255, 95, 4, 0.1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
                       )),
-                  color: Colors.white,
+                  color: Color.fromRGBO(255, 95, 4, 1),
                   iconSize: 20,
                 ),
               ),
@@ -103,13 +103,13 @@ class ProductCard extends StatelessWidget {
                 height: 35,
                 child: IconButton(
                   onPressed: () {},
-                  icon: Icon(Icons.remove),
+                  icon: Icon(Icons.add),
                   style: IconButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(255, 95, 4, 0.1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7),
+                    backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7),
                       )),
-                  color: Color.fromRGBO(255, 95, 4, 1),
+                  color: Colors.white,
                   iconSize: 20,
                 ),
               ),

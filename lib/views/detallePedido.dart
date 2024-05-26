@@ -15,28 +15,34 @@ class _detallePedidoState extends State<detallePedido> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
+          backgroundColor: Color.fromARGB(0, 255, 255, 255),
+          scrolledUnderElevation: 0,
         ),
-        body: Stack(
-          children: [
-            Positioned(
-              top: -100,
-              right: 0,
-              child: Transform.rotate(
-                angle: -0.7,
+        body: Stack(children: [
+          Positioned(
+            top: -80,
+            right: -60,
+            child: Transform.rotate(
+              angle: 0.3,
+              child: Opacity(
+                opacity: 0.3,
                 child: Image.asset(
-                  'images/background.png',
-                  width: 200,
-                  height: 200,
+                  'images/fruits.png',
+                  width: 480,
+                  height: 245,
                   fit: BoxFit.cover,
-                  ),
                 ),
+              ),
             ),
-            Padding(
+          ),
+          Padding(
             padding: EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: kToolbarHeight + 40),
                 Text(
                   'Detalles del pedido',
                   style: GoogleFonts.poppins(
@@ -44,26 +50,11 @@ class _detallePedidoState extends State<detallePedido> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Gap(25),
-                Container(
-                  width: double.infinity,
+                Gap(20),
+                Expanded(
                   child: ListView(
-                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
                     children: [
-                      ProductCard(
-                        productName: 'Hamburguesa',
-                        productPrice: 19.8,
-                        productImage:
-                            'https://recetasdeusa.com/wp-content/uploads/2022/05/Hamburguesa-americana-1-scaled.jpg',
-                      ),
-                      Gap(20),
-                      ProductCard(
-                        productName: 'Hamburguesa',
-                        productPrice: 19.8,
-                        productImage:
-                            'https://recetasdeusa.com/wp-content/uploads/2022/05/Hamburguesa-americana-1-scaled.jpg',
-                      ),
-                      Gap(20),
                       ProductCard(
                         productName: 'Hamburguesa',
                         productPrice: 19.8,
@@ -72,11 +63,111 @@ class _detallePedidoState extends State<detallePedido> {
                       ),
                     ],
                   ),
+                ),
+                Gap(40),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color.fromRGBO(255, 95, 4, 1),
+                          Colors.red,
+                        ],
+                      )),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Sub-Total:',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            '1111',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Descuento:',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            '0',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
+                      ),
+                      Gap(10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Total:',
+                            style: GoogleFonts.roboto(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            '1111',
+                            style: GoogleFonts.roboto(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
+                      ),
+                      Gap(10),
+                      Container(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                          ),
+                          child: Text(
+                            'Ordenar',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromRGBO(255, 95, 4, 1),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 )
               ],
             ),
           ),
-          ]
-        ));
+        ]));
   }
 }
