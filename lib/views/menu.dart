@@ -1,3 +1,4 @@
+import 'package:easyorder/views/Widgets/Product_Card_Init.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -99,11 +100,57 @@ class _MenuState extends State<Menu> {
                     SizedBox(width: 10,),
                   ],
                 ),
-                        ]),
+              ]),
             ),
-
+            SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                width: double.infinity,
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    botonIndice==0?
+                      ProductCardInit(
+                      productName: "Parrilla con platano", 
+                      productPrice: 15.8, 
+                      productImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZs4XdR6VDF8inuMgk5_rLDBdQF7pVv4-b6Y63nyUF0g&s"
+                      )
+                    : botonIndice==1? 
+                      ProductCardInit(
+                      productName: "Parrilla sin platano", 
+                      productPrice: 14.0, 
+                      productImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI0vuP2m3JkbwjczFfZwIxqAy8Ub55p1lw7rtSiREp1A&s")
+                    : ProductCardInit(
+                      productName: "Quesillo", 
+                      productPrice: 6.0, 
+                      productImage: "https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg")
+                ],
+              ),
+              ),
+            ),
           ],
         ),
+      ),
+    bottomNavigationBar: BottomNavigationBar(
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.home,
+            size: 45.0,
+            color: Color(0xFFFF0000).withOpacity(0.5),
+            ),
+          label: "Home",
+          ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.qr_code,
+            size: 45.0,
+            color: Color(0xFFFF0000).withOpacity(0.5),
+            ),
+          label: "Scan",
+          )
+      ]
       ),
     );
   }
