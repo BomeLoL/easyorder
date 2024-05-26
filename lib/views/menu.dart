@@ -27,56 +27,62 @@ class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // extendBodyBehindAppBar: true,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
-        child: Stack(
-          children: [
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/fruits.png'), 
+      backgroundColor: Colors.white,
+      extendBodyBehindAppBar: true,
+      //appBar: PreferredSize(
+      //  preferredSize: Size.fromHeight(kToolbarHeight),
+      //  child: Stack(
+      //    children: [
+      //      Container(
+      //        width: double.infinity,
+      //        height: double.infinity,
+      //        decoration: BoxDecoration(
+      //          image: DecorationImage(
+      //            image: AssetImage('images/fruits.png'), 
+      //            fit: BoxFit.cover,
+      //            colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.4), BlendMode.dstATop),
+      //          ),
+      //        ),
+      //      ),
+      //      AppBar(
+      //      backgroundColor: Color.fromARGB(0, 255, 255, 255),
+      //      scrolledUnderElevation: 0,
+      //      centerTitle: true,
+      //      title: Text(infoQr, //tecnicamente infoQr tendra info que debera separarse, en esta parte iria el nombre del restaurante
+      //      style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+      //      ),
+      //    ),
+      //  ]
+      //  ),
+      //),
+      appBar: AppBar(
+          backgroundColor: Color.fromARGB(0, 255, 255, 255),
+          scrolledUnderElevation: 0,
+        ),
+      body: Stack(
+        children: [
+          Positioned(
+            top: -80,
+            right: -60,
+            child: Transform.rotate(
+              angle: 0.3,
+              child: Opacity(
+                opacity: 0.3,
+                child: Image.asset(
+                  'images/fruits.png',
+                  width: 480,
+                  height: 245,
                   fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.4), BlendMode.dstATop),
                 ),
               ),
             ),
-            AppBar(
-            backgroundColor: Color.fromARGB(0, 255, 255, 255),
-            scrolledUnderElevation: 0,
-            centerTitle: true,
-            title: Text(infoQr, //tecnicamente infoQr tendra info que debera separarse, en esta parte iria el nombre del restaurante
-            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-            ),
           ),
-        ]
-        ),
-      ),
-      body: Stack(
-        children: [
-          // Positioned(
-          //   top: -80,
-          //   right: -60,
-          //   child: Transform.rotate(
-          //     angle: 0.3,
-          //     child: Opacity(
-          //       opacity: 0.3,
-          //       child: Image.asset(
-          //         'images/fruits.png',
-          //         width: 480,
-          //         height: 245,
-          //         fit: BoxFit.cover,
-          //       ),
-          //     ),
-          //   ),
-          // ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: kToolbarHeight + 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Text("Menú del Restaurante", style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold,)),
@@ -87,6 +93,7 @@ class _MenuState extends State<Menu> {
                 height: 50,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
+
                   children: [
                     Row(
                     children: [
@@ -122,7 +129,7 @@ class _MenuState extends State<Menu> {
                         minimumSize: Size(45, 40),   
                       ),
                       child: Text("Parrilla Caraqueña")),
-                      SizedBox(width: 10,),
+                      SizedBox(width: 10),
                       OutlinedButton(onPressed: (){
                         setState(() {
                           botonIndice=2;
@@ -143,52 +150,55 @@ class _MenuState extends State<Menu> {
                 ]),
               ),
               SizedBox(height: 10,),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Container(
-                  width: double.infinity,
-                  child: ListView(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    children: [
-                      botonIndice==0?
-                        ProductCardInit(
-                        productName: "Parrilla con platano", 
-                        productPrice: 15.8, 
-                        productImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZs4XdR6VDF8inuMgk5_rLDBdQF7pVv4-b6Y63nyUF0g&s"
-                        )
-                      : botonIndice==1? 
-                        ProductCardInit(
-                        productName: "Parrilla sin platano", 
-                        productPrice: 14.0, 
-                        productImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI0vuP2m3JkbwjczFfZwIxqAy8Ub55p1lw7rtSiREp1A&s")
-                      : ProductCardInit(
-                        productName: "Quesillo", 
-                        productPrice: 6.0, 
-                        productImage: "https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg")
-                  ],
-                ),
-                ),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    botonIndice==0?
+                      ProductCardInit(
+                      productName: "Parrilla con platano", 
+                      productPrice: 15.8, 
+                      productImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZs4XdR6VDF8inuMgk5_rLDBdQF7pVv4-b6Y63nyUF0g&s"
+                      )
+                    : botonIndice==1? 
+                      ProductCardInit(
+                      productName: "Parrilla sin platano", 
+                      productPrice: 14.0, 
+                      productImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI0vuP2m3JkbwjczFfZwIxqAy8Ub55p1lw7rtSiREp1A&s")
+                    : ProductCardInit(
+                      productName: "Quesillo", 
+                      productPrice: 6.0, 
+                      productImage: "https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg")
+                ],
+              ),
               ),
             ],
             ),
           ),]
       ),
     bottomNavigationBar: BottomNavigationBar(
-      items: [
+      backgroundColor: Colors.white,
+      fixedColor: Color.fromRGBO(142, 142, 142, 1),
+      selectedLabelStyle: GoogleFonts.poppins(
+        fontWeight: FontWeight.bold,
+      ),
+      unselectedLabelStyle: GoogleFonts.poppins(
+        fontWeight: FontWeight.bold,
+      ),
+      items: const [
         BottomNavigationBarItem(
           icon: Icon(
             Icons.home,
             size: 45.0,
-            color: Color(0xFFFF0000).withOpacity(0.5),
+            color: Color.fromRGBO(255, 95, 4, 1),
             ),
-          label: "Home",
+          label: 'Home',
           ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.qr_code,
             size: 45.0,
-            color: Color(0xFFFF0000).withOpacity(0.5),
+            color: Color.fromRGBO(255, 95, 4, 1),
             ),
           label: "Scan",
           )
