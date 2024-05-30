@@ -1,15 +1,64 @@
-import 'dart:developer';
-
+import 'package:easyorder/models/clases/menu.dart';
+import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
-
 import 'package:mongo_dart/mongo_dart.dart';
 
 class MongoDatabase {
+
+  static var db, coleccion_restaurante,coleccion_menu;
+  
   static connect() async {
-    var db = await Db.create(MONGO_URL);
+    db = await Db.create(MONGO_URL);
     await db.open();
-    inspect(db);
-//    var status = db.serverStatus();
-//    var collection = db.collection(COLLECTION_NAME);
+    coleccion_restaurante = db.collection(CRestaurante);
+    coleccion_menu = db.collection(CMenu);
   }
+
+  static Future<List<Map<String,dynamic>>> getRestaurantes() async{
+    try{
+      final restaurantes = await coleccion_restaurante.find().toList();
+      return restaurantes;
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      // ignore: null_argument_to_non_null_type
+      return Future.value();
+    }
+  }
+
+  static insertarRestaurante(Restaurante restaurante) async {
+    await coleccion_restaurante.insertAll([restaurante.toMap()]);
+  }
+
+static actualizarRestaurante(Restaurante restaurante) async {
+  await coleccion_restaurante.updateMany(
+    where.eq('_id', restaurante.id),
+    modify
+      .set('nombre', restaurante.nombre)
+      .set('mesas', restaurante.mesas)
+      .set('comentarios', restaurante.comentarios),
+  );
+}
+
+  static eliminarRestaurante(Restaurante restaurante) async{
+    await coleccion_restaurante.deleteOne({"_id": restaurante.id});
+  }
+
+  static insertarMenu(Menu menu) async {
+    await coleccion_menu.insertAll([menu.toMap()]);
+  }
+
+static actualizarMenu(Menu menu) async {
+  await coleccion_menu.updateMany(
+    where.eq('idRestaurante', menu.idRestaurante),
+    modify
+      .set('itemsMenu', menu.itemsMenu)
+  );
+}
+
+  static eliminarMenu(Menu menu) async{
+    await coleccion_menu.deleteOne({"idRestaurante": menu.idRestaurante});
+  }
+
+
 }
