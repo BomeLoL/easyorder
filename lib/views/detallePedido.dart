@@ -49,12 +49,15 @@ class _detallePedidoState extends State<detallePedido> {
                       itemCount: cartController.pedido.productos.length,
                       itemBuilder: (context, index) {
                         final producto = cartController.pedido.productos.keys.elementAt(index);
-                        final cantidad = cartController.pedido.productos[producto]!;
-                        print(producto);
-                        return ProductCard(
-                          producto: producto,
-                          cantidad: cantidad,
-                          );
+                        return Column(
+                          children: [
+                            ProductCard(
+                              producto: producto,
+                              isPedido: 0,
+                              ),
+                            const Gap(20),
+                          ],
+                        );
                       },
                     ),
                   ),
