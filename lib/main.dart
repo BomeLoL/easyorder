@@ -1,5 +1,6 @@
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/escaneoQR.dart';
+import 'package:easyorder/views/menu.dart';
 import 'package:flutter/material.dart';
 
 
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      
+      debugShowCheckedModeBanner: false,
+      home: Escanear(),
     );
   }
 }
