@@ -1,6 +1,3 @@
-
-
-
 import 'package:easyorder/models/clases/item_menu.dart';
 
 class Pedido{
