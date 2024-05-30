@@ -20,10 +20,11 @@ class pantallaCarga extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SpinKitPouringHourGlass(
+                  SpinKitPouringHourGlassRefined(
                     size: 250,
                     color: Colors.white,
                   ),
+                  SizedBox(height: 45),
                   Text(
                     'Su pedido se esta realizando',
                     style: TextStyle(
