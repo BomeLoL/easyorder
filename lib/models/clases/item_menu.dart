@@ -11,4 +11,13 @@ class ItemMenu {
     required this.categoria,
     required this.imgUrl,
   });
+
+    Map<String, dynamic> toMap() {
+    return {
+      'nombreProducto': nombreProducto,
+      'precio': precio,
+      'categoria': categoria,
+      'imgUrl': imgUrl,
+    };
+  }
 }
