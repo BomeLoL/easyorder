@@ -60,7 +60,7 @@ class _MenuState extends State<Menu> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: kToolbarHeight + 40),
+                SizedBox(height: kToolbarHeight + MediaQuery.of(context).size.height * 0.03),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Text(
@@ -182,29 +182,35 @@ class _MenuState extends State<Menu> {
               left: 0,
               right: 0,
               child: Container(
-                color: Colors.white,
-                height: 90,
+                color: Colors.grey[50],
                 child: Padding(
                   padding: EdgeInsets.all(16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: Text(
-                          nroProductos.toString() + ' productos en el carrito',
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            color: Colors.grey,
+                      Expanded(
+                        flex: 7,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: Text(
+                            nroProductos.toString() + ' producto(s) en el carrito',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.47,
+                      Spacer(flex: 1,),
+                      Expanded(
+                        flex: 8,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                const Color.fromRGBO(255, 95, 4, 1),
+                              backgroundColor:const Color.fromRGBO(255, 95, 4, 1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                              )
                               ),
                           onPressed: () {
                             Navigator.push(

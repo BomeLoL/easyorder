@@ -7,8 +7,6 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-
-
 class detallePedido extends StatefulWidget {
   const detallePedido({super.key});
 
@@ -34,7 +32,9 @@ class _detallePedidoState extends State<detallePedido> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: kToolbarHeight + 40),
+                  SizedBox(
+                      height: kToolbarHeight +
+                          MediaQuery.of(context).size.height * 0.03),
                   Text(
                     'Detalles del pedido',
                     style: GoogleFonts.poppins(
@@ -42,27 +42,30 @@ class _detallePedidoState extends State<detallePedido> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Gap(20),
+                  Spacer(),
                   Expanded(
+                    flex: 25,
                     child: ListView.builder(
                       padding: EdgeInsets.zero,
                       itemCount: cartController.pedido.productos.length,
                       itemBuilder: (context, index) {
-                        final producto = cartController.pedido.productos.keys.elementAt(index);
+                        final producto = cartController.pedido.productos.keys
+                            .elementAt(index);
                         return Column(
                           children: [
                             ProductCard(
                               producto: producto,
                               isPedido: 0,
-                              ),
+                            ),
                             const Gap(20),
                           ],
                         );
                       },
                     ),
                   ),
-                  Gap(40),
+                  Spacer(),
                   Container(
+                    height: 180,
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(7),
@@ -74,87 +77,99 @@ class _detallePedidoState extends State<detallePedido> {
                         )),
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Sub-Total:',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Sub-Total:',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '1111',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
+                              Text(
+                                '1111',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Descuento:',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Descuento:',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '0',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
+                              Text(
+                                '0',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                        Gap(10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Total:',
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                        Spacer(),
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Total:',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '1111',
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
+                              Text(
+                                '1111',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                        Gap(10),
-                        Container(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(7),
+                        Spacer(),
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              'Ordenar',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromRGBO(255, 95, 4, 1),
+                              child: Text(
+                                'Ordenar',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromRGBO(255, 95, 4, 1),
+                                ),
                               ),
                             ),
                           ),

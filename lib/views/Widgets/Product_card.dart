@@ -18,7 +18,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.13,
+      height: 115,
       padding: EdgeInsets.all(13),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(7),
@@ -36,23 +36,29 @@ class ProductCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(7),
-            child: Image.network(
-              producto.imgUrl,
-              height: 80,
-              width: 80,
-              fit: BoxFit.cover,
+          Expanded(
+            flex: 5,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(7),
+              child: Image.network(
+                producto.imgUrl,
+                height: 80,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.3,
+          Spacer(flex: 1,),
+          Expanded(
+            flex: 8,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   producto.nombreProducto,
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.start,
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w500,
                     fontSize: 15,
@@ -84,74 +90,81 @@ class ProductCard extends StatelessWidget {
               ],
             ),
           ),
+          Spacer(flex: 1,),
           Consumer<CartController>(
             builder: (context, cartController, child){
               final cantidad = cartController.pedido.productos[producto];
             if (cantidad != null){
-              return Row(
-                  children: [
-                    Container(
-                      width: 35,
-                      height: 35,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.remove),
-                        style: IconButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(255, 95, 4, 0.1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
-                            )),
-                        color: Color.fromRGBO(255, 95, 4, 1),
-                        iconSize: 20,
-                      ),
-                    ),
-                    const Gap(10),
-                    SizedBox(
-                      width: 20,
-                      child: Text(
-                        cantidad.toString(),
-                        style: GoogleFonts.poppins(),
-                        textAlign: TextAlign.center,
+              return Expanded(
+                flex: 8,
+                child: Row(
+                    children: [
+                      Expanded(
+                        flex: 4,
+                        child: Container(
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.remove),
+                            style: IconButton.styleFrom(
+                                backgroundColor: Color.fromRGBO(255, 95, 4, 0.1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                )),
+                            color: Color.fromRGBO(255, 95, 4, 1),
+                            iconSize: 20,
+                          ),
                         ),
-                    ),
-                    const Gap(10),
-                    Container(
-                      width: 35,
-                      height: 35,
-                      child: IconButton(
-                        onPressed: () {
-                          cartController.addProduct(producto);
-                        },
-                        icon: Icon(Icons.add),
-                        style: IconButton.styleFrom(
-                          backgroundColor: Color.fromRGBO(255, 95, 4, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7),
-                            )),
-                        color: Colors.white,
-                        iconSize: 20,
                       ),
-                    ),
-                  ],
+                      Spacer(flex: 1,),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          cantidad.toString(),
+                          style: GoogleFonts.poppins(),
+                          textAlign: TextAlign.center,
+                          ),
+                      ),
+                      Spacer(flex: 1,),
+                      Expanded(
+                        flex: 4,
+                        child: Container(
+                          child: IconButton(
+                            onPressed: () {
+                              cartController.addProduct(producto);
+                            },
+                            icon: Icon(Icons.add),
+                            style: IconButton.styleFrom(
+                              backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                                )),
+                            color: Colors.white,
+                            iconSize: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                ),
               );
               }else {
-                return Container(
-                        width: 35,
-                        height: 35,
-                        child: IconButton(
-                          onPressed: () {
-                            cartController.addProduct(producto);
-                          },
-                          icon: Icon(Icons.add),
-                          style: IconButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(255, 95, 4, 1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
-                              )),
-                          color: Colors.white,
-                          iconSize: 20,
+                return Flexible(
+                  flex: 2,
+                  child: Container(
+                          child: IconButton(
+                            onPressed: () {
+                              cartController.addProduct(producto);
+                            },
+                            icon: Icon(Icons.add),
+                            style: IconButton.styleFrom(
+                              backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                                )),
+                            color: Colors.white,
+                            iconSize: 20,
+                          ),
                         ),
-                      );
+                );
               } 
             })
         ],
