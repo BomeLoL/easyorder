@@ -18,30 +18,48 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   String infoQr = "";
-  ItemMenu producto1 = ItemMenu(
+  List item_menu=[
+    ItemMenu(
       nombreProducto: 'Parrilla con platano',
       precio: 15.1,
+      categoria: "Parrilla Guanteña",
       imgUrl:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZs4XdR6VDF8inuMgk5_rLDBdQF7pVv4-b6Y63nyUF0g&s');
-  ItemMenu producto2 = ItemMenu(
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZs4XdR6VDF8inuMgk5_rLDBdQF7pVv4-b6Y63nyUF0g&s'),
+    ItemMenu(
       nombreProducto: 'Parrilla sin platano',
       precio: 14.0,
+      categoria: "Parrilla Caraqueña",
       imgUrl:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI0vuP2m3JkbwjczFfZwIxqAy8Ub55p1lw7rtSiREp1A&s');
-  ItemMenu producto3 = ItemMenu(
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI0vuP2m3JkbwjczFfZwIxqAy8Ub55p1lw7rtSiREp1A&s'),
+    ItemMenu(
       nombreProducto: 'Quesillo',
+      categoria: "Postre",
       precio: 6.0,
       imgUrl:
-          'https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg');
-
-  int botonIndice = 0;
-  List<int> botones = [0, 1, 2]; //se deberia tener un numero por cada categoria
+          'https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg'),
+    ItemMenu(
+      nombreProducto: 'Helado',
+      categoria: "Postre",
+      precio: 1.0,
+      imgUrl:
+          'https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg'),
+      
+  ];
+  Set <String> categorias= Set <String>();
+  int selectedIndex = -1;
+  String selectedCategoria = "";
+  // List<int> botones = [0, 1, 2]; //se deberia tener un numero por cada categoria
   Color colorBoton1 = Color(0xFFFF5F04);
   //Color colorBoton2=Colors.white;
+
   @override
   void initState() {
     super.initState();
     infoQr = widget.info;
+    item_menu.forEach((elemento) {
+    categorias.add(elemento.categoria); // Agregar la categoría al conjunto
+    });
+    selectedCategoria = item_menu[0].categoria;
   }
 
   @override
@@ -52,9 +70,14 @@ class _MenuState extends State<Menu> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(0, 255, 255, 255),
         scrolledUnderElevation: 0,
+        centerTitle: true,
+        title: Text(infoQr, //tecnicamente infoQr tendra info que debera separarse, en esta parte iria el nombre del restaurante
+           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+           ),
       ),
-      body: Stack(children: [
-        Background_image(
+      body: Stack(
+        children:[
+          Background_image(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -70,108 +93,71 @@ class _MenuState extends State<Menu> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                Gap(20),
-                Container(
+                  ),
+                  Gap(20),
+                  Container(
                   width: double.infinity,
                   height: 50,
                   child: ListView(scrollDirection: Axis.horizontal, children: [
                     Row(
-                      children: [
-                        SizedBox(
-                          width: 15,
-                        ),
+                      children: categorias.map(
+                        (elemento){
+                          Color color = elemento == selectedCategoria ? Color(0xFFFF5F04) : Colors.white;
+                          Color color1 = elemento == selectedCategoria ? Colors.white : Colors.black;
+                        return [
                         OutlinedButton(
-                          onPressed: () {
+                          onPressed: (){
                             setState(() {
-                              botonIndice = 0;
+                              selectedCategoria = elemento;
                             });
                           },
                           style: OutlinedButton.styleFrom(
-                            backgroundColor: botonIndice == 0
-                                ? Color(0xFFFF5F04)
-                                : Colors.white,
-                            foregroundColor:
-                                botonIndice == 0 ? Colors.white : Colors.black,
+                            backgroundColor: color,
+                            foregroundColor: color1,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
                             minimumSize: Size(45, 40),
+                          ), 
+                          child: Text(elemento)
                           ),
-                          child: Text("Parrilla Guanteña"),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        OutlinedButton(
-                            onPressed: () {
-                              setState(() {
-                                botonIndice = 1;
-                              });
-                            },
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: botonIndice == 1
-                                  ? Color(0xFFFF5F04)
-                                  : Colors.white,
-                              foregroundColor: botonIndice == 1
-                                  ? Colors.white
-                                  : Colors.black,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              minimumSize: Size(45, 40),
-                            ),
-                            child: Text("Parrilla Caraqueña")),
-                        SizedBox(width: 10),
-                        OutlinedButton(
-                            onPressed: () {
-                              setState(() {
-                                botonIndice = 2;
-                              });
-                            },
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: botonIndice == 2
-                                  ? Color(0xFFFF5F04)
-                                  : Colors.white,
-                              foregroundColor: botonIndice == 2
-                                  ? Colors.white
-                                  : Colors.black,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              minimumSize: Size(45, 40),
-                            ),
-                            child: Text("Postre")),
-                        SizedBox(
-                          width: 10,
-                        ),
-                      ],
+                          SizedBox( width: 10,),
+                          ];
+                        }
+                      ).expand((widgets)=> widgets).toList()  
                     ),
                   ]),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      botonIndice == 0
-                          ? ProductCard(producto: producto1, isPedido: 1)
-                          : botonIndice == 1
-                              ? ProductCard(producto: producto2, isPedido: 1)
-                              //productName: "Parrilla sin platano",
-                              //productPrice: 14.0,
-                              //productImage:
-                              //    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI0vuP2m3JkbwjczFfZwIxqAy8Ub55p1lw7rtSiREp1A&s")
-                              : ProductCard(producto: producto3, isPedido: 1)
-                      //productName: "Quesillo",
-                      //productPrice: 6.0,
-                      //productImage:
-                      //    "https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg")
-                    ],
                   ),
-                ),
-              ],
-            ),
-          ),
+                  SizedBox(
+                  height: 10,
+                  ),
+                  Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: item_menu.length,
+                    itemBuilder: (context, index) {
+                      String categoria = item_menu[index].categoria;
+                      if (categoria == selectedCategoria) {
+                        return Column(
+                          children: [
+                            ProductCard(producto: item_menu[index], isPedido: 1),
+                            // ProductCardInit(
+                            //   productName: item_menu[index]["Nombre"], 
+                            //   productPrice: item_menu[index]["Precio"], 
+                            //   productImage: "https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg"),
+                            SizedBox(height: 10,)
+                          ],
+                        );
+                      } else {
+                        return Container();
+                      }
+                    }
+                    )
+                  
+                  ),
+              
+        ]
+        ),
+        ),
         ),
         Consumer<CartController>(builder: (context, cartController, child) {
           if (cartController.pedido.productos.isNotEmpty) {
@@ -181,56 +167,53 @@ class _MenuState extends State<Menu> {
               bottom: 0,
               left: 0,
               right: 0,
-              child: Container(
-                color: Colors.grey[50],
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: 7,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          child: Text(
-                            nroProductos.toString() + ' producto(s) en el carrito',
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 7,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: Text(
+                          nroProductos.toString() + ' producto(s) en el carrito',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            color: Colors.grey,
                           ),
                         ),
                       ),
-                      Spacer(flex: 1,),
-                      Expanded(
-                        flex: 8,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor:const Color.fromRGBO(255, 95, 4, 1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(7),
-                              )
-                              ),
-                          onPressed: () {
-                            Navigator.push(
-                              context, 
-                              MaterialPageRoute(
-                                builder: (context) => detallePedido()
-                                ),
-                              );
-                          },
-                          child: Text(
-                            'Ver mi pedido',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold
+                    ),
+                    Spacer(flex: 1,),
+                    Expanded(
+                      flex: 8,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor:const Color.fromRGBO(255, 95, 4, 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            )
                             ),
+                        onPressed: () {
+                          Navigator.push(
+                            context, 
+                            MaterialPageRoute(
+                              builder: (context) => detallePedido()
+                              ),
+                            );
+                        },
+                        child: Text(
+                          'Ver mi pedido',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold
                           ),
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             );
@@ -240,8 +223,9 @@ class _MenuState extends State<Menu> {
               height: 0,
             );
           }
-        })
-      ]),
+        })  
+        ]
+      ),
       bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Colors.white,
           fixedColor: Color.fromRGBO(142, 142, 142, 1),

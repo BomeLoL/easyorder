@@ -7,8 +7,7 @@ import 'package:easyorder/views/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
-void main()  {
+void main() {
   runApp(const MyApp());
 }
 
@@ -18,14 +17,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context){
+        ChangeNotifierProvider(create: (context) {
           return CartController();
         }),
       ],
       child: const MaterialApp(
-        home: Menu(info: 'Rip'),
+        home: Escanear(),
         debugShowCheckedModeBanner: false,
       ),
-      );    
+    );
   }
 }
