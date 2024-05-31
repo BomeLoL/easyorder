@@ -155,6 +155,11 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_web_plugins:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   gap:
     dependency: "direct main"
     description:
@@ -267,6 +272,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.12.0"
+  mobile_scanner:
+    dependency: "direct main"
+    description:
+      name: mobile_scanner
+      sha256: b8c0e9afcfd52534f85ec666f3d52156f560b5e6c25b1e3d4fe2087763607926
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.1"
   mongo_dart:
     dependency: "direct main"
     description:

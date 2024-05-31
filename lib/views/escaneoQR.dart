@@ -30,9 +30,11 @@ class _EscanearState extends State<Escanear> {
           // width: double.infinity,
           child: ElevatedButton(
             onPressed: ()async{
-              String info=await scannerQr();
+              String info=await scannerQr(context);
+              // Navigator.push(context, MaterialPageRoute(builder: (context){return BarcodeScannerWithOverlay();}));
+              
               if (mounted && info!="-1") {
-                Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){return Menu(info: info);}));
+                Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){return Menu(info: "yei");}));
               }
               },
             style: ElevatedButton.styleFrom(

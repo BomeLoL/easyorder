@@ -4,6 +4,7 @@ import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/detallePedido.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
@@ -51,7 +52,6 @@ class _MenuState extends State<Menu> {
   // List<int> botones = [0, 1, 2]; //se deberia tener un numero por cada categoria
   Color colorBoton1 = Color(0xFFFF5F04);
   //Color colorBoton2=Colors.white;
-
   @override
   void initState() {
     super.initState();
@@ -68,6 +68,7 @@ class _MenuState extends State<Menu> {
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(0, 255, 255, 255),
         scrolledUnderElevation: 0,
         centerTitle: true,
