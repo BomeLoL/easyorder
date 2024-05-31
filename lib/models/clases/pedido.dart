@@ -14,4 +14,17 @@ class Pedido{
       productos[producto]=1;
     }
   }
+
+Map<String, dynamic> toMap() {
+  List<Map<String, dynamic>> productosMap = [];
+  productos.forEach((producto, cantidad) {
+    productosMap.add({
+      'producto': producto.toMap(),
+      'cantidad': cantidad,
+    });
+  });
+  return {
+    'productos': productosMap,
+  };
+}
 }

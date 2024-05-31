@@ -14,10 +14,14 @@ class MongoDatabase {
     coleccion_menu = db.collection(CMenu);
   }
 
-  static Future<List<Map<String,dynamic>>> getRestaurantes() async{
+  static Future<List<Map<String,dynamic>>?> getRestaurantes(String id) async{
     try{
-      final restaurantes = await coleccion_restaurante.find().toList();
-      return restaurantes;
+      final restaurante = await coleccion_restaurante.findOne({'_id':id});
+    if (restaurante != null) {
+      return restaurante.toMap();
+    } else{
+      return null;
+    }
     } catch (e) {
       // ignore: avoid_print
       print(e);
@@ -35,7 +39,7 @@ static actualizarRestaurante(Restaurante restaurante) async {
     where.eq('_id', restaurante.id),
     modify
       .set('nombre', restaurante.nombre)
-      .set('mesas', restaurante.mesas)
+      .set('mesas', restaurante.mesas.map((mesa) => mesa.toMap()).toList())
       .set('comentarios', restaurante.comentarios),
   );
 }
@@ -52,7 +56,7 @@ static actualizarMenu(Menu menu) async {
   await coleccion_menu.updateMany(
     where.eq('idRestaurante', menu.idRestaurante),
     modify
-      .set('itemsMenu', menu.itemsMenu)
+      .set('itemsMenu', menu.itemsMenu.map((item) => item.toMap()).toList()),
   );
 }
 
