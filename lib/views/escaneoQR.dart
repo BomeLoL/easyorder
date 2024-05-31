@@ -1,4 +1,4 @@
-import 'package:easyorder/controllers/main_controller.dart';
+import 'package:easyorder/controllers/qr_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/views/menu.dart';
@@ -30,12 +30,12 @@ class _EscanearState extends State<Escanear> {
           // width: double.infinity,
           child: ElevatedButton(
             onPressed: ()async{
-              String info=await scannerQr(context);
-              // Navigator.push(context, MaterialPageRoute(builder: (context){return BarcodeScannerWithOverlay();}));
+              // String info=await scannerQr(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context){return BarcodeScannerWithOverlay();}));
               
-              if (mounted && info!="-1") {
-                Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){return Menu(info: "yei");}));
-              }
+              // if (mounted && info!="-1") {
+              //   Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){return Menu(info: "yei");}));
+              // }
               },
             style: ElevatedButton.styleFrom(
             backgroundColor: Color(0xFFFF5F04),

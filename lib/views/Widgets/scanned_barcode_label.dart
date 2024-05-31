@@ -24,7 +24,7 @@ class ScannedBarcodeLabel extends StatelessWidget {
             width: 300.0,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(3.0),
+              borderRadius: BorderRadius.circular(4.0),
             ),
             child: Center(
               child: Text(
@@ -38,7 +38,7 @@ class ScannedBarcodeLabel extends StatelessWidget {
             ),
           );
         } else {
-          WidgetsBinding.instance?.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
           return Menu(info: scannedBarcodes.first.displayValue ?? '');
         }));
@@ -46,11 +46,6 @@ class ScannedBarcodeLabel extends StatelessWidget {
   }
 
         return Container();
-        // Text(
-        //   scannedBarcodes.first.displayValue ?? 'No display value.',
-        //   overflow: TextOverflow.fade,
-        //   style: const TextStyle(color: Colors.white),
-        // );
       },
     );
   }

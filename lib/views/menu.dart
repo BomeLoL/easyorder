@@ -154,8 +154,12 @@ class _MenuState extends State<Menu> {
                     }
                     )
                   
-                  ),
-                Consumer<CartController>(builder: (context, cartController, child) {
+                  ),      
+        ]
+        ),
+        ),
+        ),
+        Consumer<CartController>(builder: (context, cartController, child) {
           if (cartController.pedido.productos.isNotEmpty) {
             final nroProductos =
                 cartController.pedido.productos.values.reduce((a, b) => a + b);
@@ -216,11 +220,7 @@ class _MenuState extends State<Menu> {
               height: 0,
             );
           }
-        })        
-        ]
-        ),
-        ),
-        ),
+        })  
         ]
       ),
       bottomNavigationBar: BottomNavigationBar(

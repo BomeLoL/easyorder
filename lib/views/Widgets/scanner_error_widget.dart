@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:easyorder/views/escaneoQR.dart';
 
 class ScannerErrorWidget extends StatelessWidget {
   const ScannerErrorWidget({super.key, required this.error});
@@ -12,13 +14,13 @@ class ScannerErrorWidget extends StatelessWidget {
 
     switch (error.errorCode) {
       case MobileScannerErrorCode.controllerUninitialized:
-        errorMessage = 'Controller not ready.';
+        errorMessage = 'El controlador para usar la cámara no esta listo';
       case MobileScannerErrorCode.permissionDenied:
-        errorMessage = 'Permission denied';
+        errorMessage = 'No se obtuvo permiso para usar la cámara';
       case MobileScannerErrorCode.unsupported:
-        errorMessage = 'Scanning is unsupported on this device';
+        errorMessage = 'El dispositivo no es capaz de escanear';
       default:
-        errorMessage = 'Generic Error';
+        errorMessage = 'Error';
         break;
     }
 
@@ -40,6 +42,20 @@ class ScannerErrorWidget extends StatelessWidget {
               error.errorDetails?.message ?? '',
               style: const TextStyle(color: Colors.white),
             ),
+            ElevatedButton(
+            onPressed:(){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return Escanear();} ));},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black,
+            foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10)
+              ),
+            minimumSize: Size(100, 40),
+            ), 
+            child: Text("Volver",
+                style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
+            )
+            )
           ],
         ),
       ),

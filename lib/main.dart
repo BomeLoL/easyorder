@@ -1,12 +1,7 @@
 import 'package:easyorder/controllers/cart_controller.dart';
-import 'package:easyorder/models/clases/item_menu.dart';
-import 'package:easyorder/models/dbHelper/mongodb.dart';
-import 'package:easyorder/views/detallePedido.dart';
 import 'package:easyorder/views/escaneoQR.dart';
-import 'package:easyorder/views/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'controllers/main_controller.dart';
 
 
 void main()  {
