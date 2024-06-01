@@ -183,7 +183,7 @@ class _detalleProductoState extends State<detalleProducto> {
                       cartController.addProducts(
                           widget.producto,
                           cantidad);
-                      Navigator.pushReplacement(context,
+                      Navigator.pop(context,
                           MaterialPageRoute(builder: (context) {
                         return Menu(info: widget.info);
                       }));
