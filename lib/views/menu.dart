@@ -27,7 +27,7 @@ class _MenuState extends State<Menu> {
       precio: 15.1,
       categoria: "Parrilla Guanteña",
       imgUrl:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZs4XdR6VDF8inuMgk5_rLDBdQF7pVv4-b6Y63nyUF0g&s'),
+          'https://img.freepik.com/fotos-premium/plato-carnes-variadas-parrilla-gajos-patata-salsas_157927-2464.jpg'),
     ItemMenu(
       nombreProducto: 'Parrilla sin platano',
       descripcion: '',
@@ -139,13 +139,14 @@ class _MenuState extends State<Menu> {
                   ),
                   Expanded(
                   child: ListView.builder(
+                    scrollDirection: Axis.vertical,
                     padding: EdgeInsets.zero,
                     itemCount: item_menu.length,
                     itemBuilder: (context, index) {
                       if (selectedCategoria == "Todo" || item_menu[index].categoria == selectedCategoria) {
                         return Column(
                           children: [
-                          ProductCard(producto: item_menu[index], isPedido: 1, info: "hola"),
+                          ProductCard(producto: item_menu[index], isPedido: 1, info: infoQr),
                           SizedBox(height: 10,)
                           ],
                         );
@@ -169,53 +170,56 @@ class _MenuState extends State<Menu> {
               bottom: 0,
               left: 0,
               right: 0,
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 7,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: Text(
-                          nroProductos.toString() + ' producto(s) en el carrito',
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Spacer(flex: 1,),
-                    Expanded(
-                      flex: 8,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor:const Color.fromRGBO(255, 95, 4, 1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
-                            )
+              child: Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 7,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: Text(
+                            nroProductos.toString() + ' producto(s) en el carrito',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: Colors.grey,
                             ),
-                        onPressed: () {
-                          Navigator.push(
-                            context, 
-                            MaterialPageRoute(
-                              builder: (context) => detallePedido(info:infoQr)
-                              ),
-                            );
-                        },
-                        child: Text(
-                          'Ver mi pedido',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold
                           ),
                         ),
                       ),
-                    )
-                  ],
+                      Spacer(flex: 1,),
+                      Expanded(
+                        flex: 8,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:const Color.fromRGBO(255, 95, 4, 1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                              )
+                              ),
+                          onPressed: () {
+                            Navigator.push(
+                              context, 
+                              MaterialPageRoute(
+                                builder: (context) => detallePedido(info:infoQr)
+                                ),
+                              );
+                          },
+                          child: Text(
+                            'Ver mi pedido',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             );

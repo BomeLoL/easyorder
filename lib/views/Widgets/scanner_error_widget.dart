@@ -23,7 +23,6 @@ class ScannerErrorWidget extends StatelessWidget {
         errorMessage = 'Error';
         break;
     }
-
     return ColoredBox(
       color: Colors.black,
       child: Center(
@@ -43,7 +42,10 @@ class ScannerErrorWidget extends StatelessWidget {
               style: const TextStyle(color: Colors.white),
             ),
             ElevatedButton(
-            onPressed:(){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return Escanear();} ));},
+            onPressed:(){
+              Navigator.pop(context);
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return Escanear();} ));
+              },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.black,
             foregroundColor: Colors.white,
