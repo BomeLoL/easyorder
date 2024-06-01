@@ -1,3 +1,4 @@
+import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/material.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/menu.dart';
@@ -13,9 +14,6 @@ Future<bool> RevisarBd(barcode, context) async {
     String idMesa=ids[1].trim();
     restaurante= await MongoDatabase.getRestaurante(idRestaurante);
     if (restaurante==null) {//no existe el restaurante
-      
-      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      print(restaurante);
     } else if (restaurante!=null) { //si existe 
 
       bool existeMesa = false;
@@ -30,14 +28,13 @@ Future<bool> RevisarBd(barcode, context) async {
       if (existeMesa) { // el restaurante si posee la mesa escaneada
        // if (restaurante.mesa[idMesa].pedidos.length==0) {//la mesa no esta ocupada, se va al menu normal
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-            return Menu(info: restaurante.nombre);
+            return Menu(info: restaurante);
             }));
        // }
         //else { //la mesa esta ocupada
 
        // }
       } else { // no posee la mesa escaneada
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
       }
       
     }
