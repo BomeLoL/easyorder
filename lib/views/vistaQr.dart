@@ -22,6 +22,8 @@ class _BarcodeScannerWithOverlayState extends State<BarcodeScannerWithOverlay> {
     formats: const [BarcodeFormat.qrCode],
   );
 
+  int tipo=0;
+
   Future<void> pedirPermiso(error) async{
 
     final status = Permission.camera.status;
@@ -81,19 +83,19 @@ Widget build(BuildContext context) {
                 padding: const EdgeInsets.all(16.0),
                 child: Align(
                   alignment: Alignment(0.0, -0.6),
-                  child: ScannedBarcodeLabel(barcodes: controller.barcodes),
+                  child: ScannedBarcodeLabel(barcodes: controller.barcodes, tipo: tipo,),
                 ),
               );
             },
-            onDetect: (barcode){
-              if(barcode.barcodes.isNotEmpty) {
+            onDetect: (barcode)async{
+              if(barcode.barcodes.isNotEmpty){
                 // bool continuar; 
-                RevisarBd(barcode.barcodes, context);
-                // if (continuar) {
-                //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                //   return Menu(info: barcode.barcodes.first.displayValue as String);
-                // }));
-                // }
+                bool continuar = await RevisarBd(barcode.barcodes, context);
+                if (!continuar) {
+                  setState(() {
+                    tipo=1;
+                  });
+                }
                 
               }
             },

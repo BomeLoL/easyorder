@@ -13,9 +13,8 @@ Future<bool> RevisarBd(barcode, context) async {
     String idMesa=ids[1].trim();
     restaurante= await MongoDatabase.getRestaurante(idRestaurante);
     if (restaurante==null) {//no existe el restaurante
-      
-      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      print(restaurante);
+      barcode.removeAt(0);
+      return false;
     } else if (restaurante!=null) { //si existe 
 
       bool existeMesa = false;
@@ -39,7 +38,7 @@ Future<bool> RevisarBd(barcode, context) async {
       } else { // no posee la mesa escaneada
         print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
       }
-      
+      return true;
     }
     
     

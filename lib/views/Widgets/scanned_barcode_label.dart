@@ -8,61 +8,111 @@ class ScannedBarcodeLabel extends StatelessWidget {
   const ScannedBarcodeLabel({
     super.key,
     required this.barcodes,
+    required this.tipo,
   });
 
   final Stream<BarcodeCapture> barcodes;
+  final int tipo;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+
+    if (tipo==0) {
+      return StreamBuilder(
       stream: barcodes,
       builder: (context, snapshot) {
         final scannedBarcodes = snapshot.data?.barcodes ?? [];
 
-        if (scannedBarcodes.isEmpty) {
-          return Container(
-            height: 70.0,
-            width: 300.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            child: Center(
-              child: Text(
-                'Escanea el Qr para acceder al Menú',
-                overflow: TextOverflow.fade,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+        // if (scannedBarcodes.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Align(
+              alignment: Alignment(0.0, -0.6),
+              child: Container(
+                height: 70.0,
+                width: 300.0,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+                child: Center(
+                  child: Text(
+                    'Escanea el Qr para acceder al Menú',
+                    overflow: TextOverflow.fade,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
             ),
           );
-        } 
-        // else {
-        //     String infoQr=scannedBarcodes.first.displayValue as String;
-        //     if (infoQr.isNotEmpty) {
-        //       try {
-        //         var ids = infoQr.split(",");
-        //         String idRestaurante=ids[0];
-        //         String idMesa=ids[1];
-        //         List restaurantesBD;
-        //         WidgetsBinding.instance.addPostFrameCallback((_) {
-        //         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        //           return Menu(info: scannedBarcodes.first.displayValue ?? '');
-        //         }));
-        //       });
+        // } 
 
-        //       } catch (e) {
-
-                
-        //       }
-              
-        //     }      
-        // }
-
-        return Container();
+        // return Container();
       },
     );
+    } else {
+      return Stack(
+        children: [
+        StreamBuilder(
+        stream: barcodes,
+        builder: (context, snapshot) {
+          final scannedBarcodes = snapshot.data?.barcodes ?? [];
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Align(
+                alignment: Alignment(0.0, -0.6),
+                child: Container(
+                  height: 70.0,
+                  width: 300.0,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Escanea el Qr para acceder al Menú',
+                      overflow: TextOverflow.fade,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+        },
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Align(
+            alignment: Alignment(0.0, 0.6),
+            child: Container(
+                  height: 50.0,
+                  width: 150.0,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Qr invalido',
+                      overflow: TextOverflow.fade,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+          ),
+        ),
+        ]
+      );
+    }
+    
   }
 }
