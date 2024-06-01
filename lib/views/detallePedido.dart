@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:easyorder/views/pantallaCarga.dart';
 
+
 class detallePedido extends StatefulWidget {
   const detallePedido({super.key, required this.info, required this.menu, required this.restaurante});
   final String info;
@@ -220,25 +221,28 @@ class _detallePedidoState extends State<detallePedido> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
+          title: Text(
             'ERROR!!',
             textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(),
           ),
-          content: const Text(
+          content: Text(
             'Hubo un error procesando tu orden, por favor, inténtelo de nuevo',
             textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Center(
+              child: Center(
                 child: Text(
                   'OK',
-                  style: TextStyle(
-                      color: Color.fromRGBO(255, 96, 4, 1),
-                      fontWeight: FontWeight.bold),
+                  style: GoogleFonts.poppins(
+                    color: Color.fromRGBO(255, 96, 4, 1),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -255,13 +259,15 @@ class _detallePedidoState extends State<detallePedido> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
+          title: Text(
             'Pedido completado!',
             textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(),
           ),
-          content: const Text(
+          content: Text(
             'Ya tu pedido está en la cocina y estará listo dentro de poco',
             textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(),
           ),
           actions: [
             Center(
@@ -269,11 +275,12 @@ class _detallePedidoState extends State<detallePedido> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text(
+                child: Text(
                   'OK',
-                  style: TextStyle(
-                      color: Color.fromRGBO(255, 96, 4, 1),
-                      fontWeight: FontWeight.bold),
+                  style: GoogleFonts.poppins(
+                    color: Color.fromRGBO(255, 96, 4, 1),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

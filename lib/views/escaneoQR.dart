@@ -19,6 +19,7 @@ class _EscanearState extends State<Escanear> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text("EasyOrder",
           style: GoogleFonts.poppins(),
@@ -28,16 +29,10 @@ class _EscanearState extends State<Escanear> {
       ),
       body: Center(
         child:Container(
-          // height: double.infinity,
-          // width: double.infinity,
           child: ElevatedButton(
             onPressed: ()async{
-              // String info=await scannerQr(context);
               Navigator.push(context, MaterialPageRoute(builder: (context){return BarcodeScannerWithOverlay();}));
-              
-              // if (mounted && info!="-1") {
-              //   Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){return Menu(info: "yei");}));
-              // }
+
               },
             style: ElevatedButton.styleFrom(
             backgroundColor: Color(0xFFFF5F04),

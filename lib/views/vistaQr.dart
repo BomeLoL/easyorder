@@ -1,6 +1,7 @@
 import 'package:easyorder/views/escaneoQR.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../views/Widgets/scanned_barcode_label.dart';
 import '../views/Widgets/scanner_error_widget.dart';
@@ -25,33 +26,50 @@ class _BarcodeScannerWithOverlayState extends State<BarcodeScannerWithOverlay> {
   int tipo=0;
 
   Future<void> pedirPermiso(error) async{
-
     final status = Permission.camera.status;
     if (await status.isDenied || await status.isPermanentlyDenied) {
        showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Permisos de cámara'),
-        content: const Text(
+        title:Text('Permisos de cámara',
+        style: GoogleFonts.poppins(),),
+        content:Text(
           'Necesitamos acceso a la cámara para escanear códigos Qr. Por favor, otorga los permisos en la configuración de la aplicación.',
+          style: GoogleFonts.poppins(),
         ),
         actions: [
           TextButton(
-            onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return Escanear();} ));},
-            child: const Text('Cancelar'),
+            onPressed: () {
+              Navigator.pop(context);
+              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return Escanear();} ));
+              },
+            child:Text('Cancelar',
+            style: GoogleFonts.poppins(
+                    color: Color.fromRGBO(255, 96, 4, 1),
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(context); 
               openAppSettings();
+              Navigator.pop(context); 
+              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return Escanear();} ));
               },
-            child: const Text('Otorgar permiso'),
+            child:Text('Otorgar permiso',
+            style: GoogleFonts.poppins(
+                    color: Color.fromRGBO(255, 96, 4, 1),
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
           ),
         ],
       ),
     );
-
     }
+
   }
 
  @override
@@ -89,14 +107,13 @@ Widget build(BuildContext context) {
             },
             onDetect: (barcode)async{
               if(barcode.barcodes.isNotEmpty){
-                // bool continuar; 
+                // bool continuar;
                 bool continuar = await RevisarBd(barcode.barcodes, context);
                 if (!continuar) {
                   setState(() {
                     tipo=1;
                   });
                 }
-                
               }
             },
           ),

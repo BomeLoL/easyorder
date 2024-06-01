@@ -24,7 +24,6 @@ class MenuView extends StatefulWidget {
 
 class _MenuState extends State<MenuView> {
   String infoQr = "";
-
   Set <String> categorias= Set <String>();
   int selectedIndex = -1;
   String selectedCategoria = "Todo";
@@ -116,6 +115,7 @@ class _MenuState extends State<MenuView> {
                   ),
                   Expanded(
                   child: ListView.builder(
+                    scrollDirection: Axis.vertical,
                     padding: EdgeInsets.zero,
                     itemCount: widget.menu.itemsMenu.length,
                     itemBuilder: (context, index) {
@@ -146,53 +146,56 @@ class _MenuState extends State<MenuView> {
               bottom: 0,
               left: 0,
               right: 0,
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 7,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: Text(
-                          nroProductos.toString() + ' producto(s) en el carrito',
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Spacer(flex: 1,),
-                    Expanded(
-                      flex: 8,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor:const Color.fromRGBO(255, 95, 4, 1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
-                            )
+              child: Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 7,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: Text(
+                            nroProductos.toString() + ' producto(s) en el carrito',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: Colors.grey,
                             ),
-                        onPressed: () {
-                          Navigator.push(
-                            context, 
-                            MaterialPageRoute(
-                              builder: (context) => detallePedido(info:infoQr, menu: widget.menu, restaurante: widget.restaurante,)
-                              ),
-                            );
-                        },
-                        child: Text(
-                          'Ver mi pedido',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold
                           ),
                         ),
                       ),
-                    )
-                  ],
+                      Spacer(flex: 1,),
+                      Expanded(
+                        flex: 8,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:const Color.fromRGBO(255, 95, 4, 1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                              )
+                              ),
+                          onPressed: () {
+                            Navigator.push(
+                              context, 
+                              MaterialPageRoute(
+                                builder: (context) => detallePedido(info:infoQr, menu: widget.menu, restaurante: widget.restaurante,)
+                                ),
+                              );
+                          },
+                          child: Text(
+                            'Ver mi pedido',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             );
