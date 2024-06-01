@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key, required this.info});
-  final Restaurante info;
+  final String info;
 
   @override
   State<Menu> createState() => _MenuState();
@@ -60,7 +60,7 @@ class _MenuState extends State<Menu> {
   @override
   void initState() {
     super.initState();
-    infoQr = widget.info.nombre;
+    infoQr = widget.info;
     categorias.add("Todo");
     item_menu.forEach((elemento) {
     categorias.add(elemento.categoria); // Agregar la categoría al conjunto
@@ -90,7 +90,7 @@ class _MenuState extends State<Menu> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: kToolbarHeight + 40),
+                SizedBox(height: kToolbarHeight + MediaQuery.of(context).size.height * 0.03),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Text(
@@ -145,7 +145,7 @@ class _MenuState extends State<Menu> {
                       if (selectedCategoria == "Todo" || item_menu[index].categoria == selectedCategoria) {
                         return Column(
                           children: [
-                          ProductCard(producto: item_menu[index], isPedido: 1),
+                          ProductCard(producto: item_menu[index], isPedido: 1, info: "Hola"),
                           SizedBox(height: 10,)
                           ],
                         );
@@ -155,7 +155,8 @@ class _MenuState extends State<Menu> {
                     }
                     )
                   
-                  ),      
+                  ),
+              
         ]
         ),
         ),
@@ -168,50 +169,53 @@ class _MenuState extends State<Menu> {
               bottom: 0,
               left: 0,
               right: 0,
-              child: Container(
-                color: Colors.white,
-                height: 90,
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 7,
+                      child: Container(
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: Text(
-                          nroProductos.toString() + ' productos en el carrito',
+                          nroProductos.toString() + ' producto(s) en el carrito',
                           style: GoogleFonts.poppins(
                             fontSize: 16,
                             color: Colors.grey,
                           ),
                         ),
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                const Color.fromRGBO(255, 95, 4, 1),
-                              ),
-                          onPressed: () {
-                            Navigator.push(
-                              context, 
-                              MaterialPageRoute(
-                                builder: (context) => detallePedido()
-                                ),
-                              );
-                          },
-                          child: Text(
-                            'Ver mi pedido',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold
+                    ),
+                    Spacer(flex: 1,),
+                    Expanded(
+                      flex: 8,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor:const Color.fromRGBO(255, 95, 4, 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            )
                             ),
+                        onPressed: () {
+                          Navigator.push(
+                            context, 
+                            MaterialPageRoute(
+                              builder: (context) => detallePedido(info:infoQr)
+                              ),
+                            );
+                        },
+                        child: Text(
+                          'Ver mi pedido',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold
                           ),
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             );

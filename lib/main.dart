@@ -5,6 +5,7 @@ import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/detallePedido.dart';
+import 'package:easyorder/views/detalleProducto.dart';
 import 'package:easyorder/views/escaneoQR.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context){
+        ChangeNotifierProvider(create: (context) {
           return CartController();
         }),
       ],
@@ -33,6 +34,6 @@ class MyApp extends StatelessWidget {
         home: Escanear(),
         debugShowCheckedModeBanner: false,
       ),
-      );    
+    );
   }
 }
