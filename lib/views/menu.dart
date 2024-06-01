@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/detallePedido.dart';
@@ -11,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key, required this.info});
-  final String info;
+  final Restaurante info;
 
   @override
   State<Menu> createState() => _MenuState();
@@ -22,24 +23,28 @@ class _MenuState extends State<Menu> {
   List item_menu=[
     ItemMenu(
       nombreProducto: 'Parrilla con platano',
+      descripcion: '',
       precio: 15.1,
       categoria: "Parrilla Guanteña",
       imgUrl:
           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZs4XdR6VDF8inuMgk5_rLDBdQF7pVv4-b6Y63nyUF0g&s'),
     ItemMenu(
       nombreProducto: 'Parrilla sin platano',
+      descripcion: '',
       precio: 14.0,
       categoria: "Parrilla Caraqueña",
       imgUrl:
           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI0vuP2m3JkbwjczFfZwIxqAy8Ub55p1lw7rtSiREp1A&s'),
     ItemMenu(
       nombreProducto: 'Quesillo',
+      descripcion: '',
       categoria: "Postre",
       precio: 6.0,
       imgUrl:
           'https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg'),
     ItemMenu(
       nombreProducto: 'Helado',
+      descripcion: '',
       categoria: "Postre",
       precio: 1.0,
       imgUrl:
@@ -55,7 +60,7 @@ class _MenuState extends State<Menu> {
   @override
   void initState() {
     super.initState();
-    infoQr = widget.info;
+    infoQr = widget.info.nombre;
     categorias.add("Todo");
     item_menu.forEach((elemento) {
     categorias.add(elemento.categoria); // Agregar la categoría al conjunto

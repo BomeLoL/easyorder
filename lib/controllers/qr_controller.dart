@@ -1,3 +1,4 @@
+import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/material.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/menu.dart';
@@ -16,7 +17,8 @@ Future<bool> RevisarBd(barcode, context) async {
       barcode.removeAt(0);
       return false;
     } else if (restaurante!=null) { //si existe 
-
+    print("LOOOOOL");
+    print(restaurante.runtimeType);
       bool existeMesa = false;
       for (var i = 0; i < restaurante.mesas.length; i++) {//se ve si existe la mesa
          
@@ -29,14 +31,16 @@ Future<bool> RevisarBd(barcode, context) async {
       if (existeMesa) { // el restaurante si posee la mesa escaneada
        // if (restaurante.mesa[idMesa].pedidos.length==0) {//la mesa no esta ocupada, se va al menu normal
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-            return Menu(info: restaurante.nombre);
+            return 
+            
+            
+            Menu(info: restaurante);
             }));
        // }
         //else { //la mesa esta ocupada
 
        // }
       } else { // no posee la mesa escaneada
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
       }
       return true;
     }
