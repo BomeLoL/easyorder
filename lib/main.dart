@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         }),
       ],
       child: const MaterialApp(
-        home: detalleProducto(),
+        home: Escanear(),
         debugShowCheckedModeBanner: false,
       ),
     );
