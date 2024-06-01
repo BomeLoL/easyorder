@@ -89,6 +89,24 @@ static actualizarRestaurante(Restaurante restaurante) async {
     await coleccion_restaurante.deleteOne({"_id": restaurante.id});
   }
 
+static Future<Menu?> getMenu(String idRestaurante) async {
+  try {
+    final menuMap = await coleccion_menu.findOne({'idRestaurante': idRestaurante});
+    if (menuMap != null) {
+      Menu menu = Menu.fromMap(menuMap);
+      return menu;
+    } else{ 
+      return null;
+    }
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      // ignore: null_argument_to_non_null_type
+      return Future.value();
+    }
+  }
+
+
   static insertarMenu(Menu menu) async {
     await coleccion_menu.insertAll([menu.toMap()]);
   }
