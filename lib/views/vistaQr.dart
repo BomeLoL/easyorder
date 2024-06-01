@@ -89,14 +89,13 @@ Widget build(BuildContext context) {
             },
             onDetect: (barcode)async{
               if(barcode.barcodes.isNotEmpty){
-                // bool continuar; 
+                // bool continuar;
                 bool continuar = await RevisarBd(barcode.barcodes, context);
                 if (!continuar) {
                   setState(() {
                     tipo=1;
                   });
                 }
-                
               }
             },
           ),

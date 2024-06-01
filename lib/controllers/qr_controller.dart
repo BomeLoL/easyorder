@@ -30,8 +30,6 @@ Future<bool> RevisarBd(barcode, context) async {
        // if (restaurante.mesa[idMesa].pedidos.length==0) {//la mesa no esta ocupada, se va al menu normal
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
             return 
-            
-            
             Menu(info: restaurante.nombre);
             }));
        // }
