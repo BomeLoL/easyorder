@@ -1,139 +1,6 @@
-import 'package:easyorder/views/escaneoQR.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
-import '../views/Widgets/scanned_barcode_label.dart';
-import '../views/Widgets/scanner_error_widget.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
 
-
-
-// Future <String> scannerQr(context)async{
-//   String barcodeScanRes;
-//   final currentContext = context;
-//   try{
-//      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-//       "#ff6666", 
-//       "Salir", 
-//       false, 
-//       ScanMode.QR);
-    
-  
-      
-//     return barcodeScanRes;
-//   } on PlatformException {
-//       //exit(0);
-//       barcodeScanRes= "-1";
-  
-//   }
-//   return "";
-
-// }
-
-class BarcodeScannerWithOverlay extends StatefulWidget {
-  const BarcodeScannerWithOverlay({super.key});
-
-  @override
-  _BarcodeScannerWithOverlayState createState() =>
-      _BarcodeScannerWithOverlayState();
-}
-
-class _BarcodeScannerWithOverlayState extends State<BarcodeScannerWithOverlay> {
-  final MobileScannerController controller = MobileScannerController(
-    formats: const [BarcodeFormat.qrCode],
-  );
-
-  bool mostrarScanner=true;
-  Future<void> pedirPermiso(error) async{
-
-    final status = Permission.camera.status;
-    print(status);
-    if (await status.isDenied || await status.isPermanentlyDenied) {
-       showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Permisos de cámara'),
-        content: const Text(
-          'Necesitamos acceso a la cámara para escanear códigos Qr. Por favor, otorga los permisos en la configuración de la aplicación.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return Escanear();} ));},
-            child: const Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context); 
-              openAppSettings();
-              },
-            child: const Text('Otorgar permiso'),
-          ),
-        ],
-      ),
-    );
-
-    }
-  }
-
- @override
-Widget build(BuildContext context) {
-  
-  final scanWindow = Rect.fromCenter(
-    center: MediaQuery.of(context).size.center(Offset.zero),
-    width: 300,
-    height: 300,
-  );
-
-  return Scaffold(
-    backgroundColor: Colors.black,
-    body: Stack(
-      fit: StackFit.expand,
-      children: [
-        Center(
-          child: MobileScanner(
-            fit: BoxFit.contain,
-            controller: controller,
-            scanWindow: scanWindow,
-            errorBuilder: (context, error, child) {
-              pedirPermiso(error);
-              return 
-              ScannerErrorWidget(error: error);
-            },
-            overlayBuilder: (context, constraints) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Align(
-                  alignment: Alignment(0.0, -0.6),
-                  child: ScannedBarcodeLabel(barcodes: controller.barcodes),
-                ),
-              );
-            },
-          ),
-        ),
-        ValueListenableBuilder(
-          valueListenable: controller,
-          builder: (context, value, child) {
-            if (!value.isInitialized ||
-                !value.isRunning ||
-                value.error != null) {
-              return const SizedBox();
-            }
-            return CustomPaint(
-              painter: ScannerOverlay(scanWindow: scanWindow),
-            );
-          },
-        ),
-      ],
-    ),
-  );
-}
-
-  @override
-  Future<void> dispose() async {
-    super.dispose();
-    await controller.dispose();
-  }
-}
 
 class ScannerOverlay extends CustomPainter {
   const ScannerOverlay({
@@ -199,3 +66,7 @@ class ScannerOverlay extends CustomPainter {
   }
 }
 
+void RevisarBd(barcode) async {
+  final restaurantes = MongoDatabase.getRestaurantes("1");
+
+}

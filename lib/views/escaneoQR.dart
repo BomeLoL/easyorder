@@ -2,6 +2,7 @@ import 'package:easyorder/controllers/qr_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/views/menu.dart';
+import 'package:easyorder/views/vistaQr.dart';
 
 
 class Escanear extends StatefulWidget {

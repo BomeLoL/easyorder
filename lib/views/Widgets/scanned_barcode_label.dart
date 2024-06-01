@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:easyorder/views/menu.dart';
 
+
 class ScannedBarcodeLabel extends StatelessWidget {
   const ScannedBarcodeLabel({
     super.key,
@@ -37,13 +38,28 @@ class ScannedBarcodeLabel extends StatelessWidget {
               ),
             ),
           );
-        } else {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-          return Menu(info: scannedBarcodes.first.displayValue ?? '');
-        }));
-      });
-  }
+        } 
+        // else {
+        //     String infoQr=scannedBarcodes.first.displayValue as String;
+        //     if (infoQr.isNotEmpty) {
+        //       try {
+        //         var ids = infoQr.split(",");
+        //         String idRestaurante=ids[0];
+        //         String idMesa=ids[1];
+        //         List restaurantesBD;
+        //         WidgetsBinding.instance.addPostFrameCallback((_) {
+        //         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        //           return Menu(info: scannedBarcodes.first.displayValue ?? '');
+        //         }));
+        //       });
+
+        //       } catch (e) {
+
+                
+        //       }
+              
+        //     }      
+        // }
 
         return Container();
       },
