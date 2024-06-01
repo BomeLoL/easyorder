@@ -1,3 +1,4 @@
+import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

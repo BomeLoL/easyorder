@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/detalleProducto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
