@@ -13,6 +13,7 @@ class Pedido {
   Pedido({required this.productos});
 
   void addProduct(ItemMenu producto) {
+    bool contiene = productos.containsKey(producto);
     if (productos.containsKey(producto) && productos[producto]! >= 1) {
       productos[producto] = productos[producto]! + 1;
     } else {
