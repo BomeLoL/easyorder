@@ -139,7 +139,7 @@ class _MenuState extends State<Menu> {
                       if (categoria == selectedCategoria) {
                         return Column(
                           children: [
-                            ProductCard(producto: item_menu[index], isPedido: 1),
+                            ProductCard(producto: item_menu[index], isPedido: 1, info: infoQr,),
                             // ProductCardInit(
                             //   productName: item_menu[index]["Nombre"], 
                             //   productPrice: item_menu[index]["Precio"], 
@@ -200,7 +200,7 @@ class _MenuState extends State<Menu> {
                           Navigator.push(
                             context, 
                             MaterialPageRoute(
-                              builder: (context) => detallePedido()
+                              builder: (context) => detallePedido(info:infoQr)
                               ),
                             );
                         },

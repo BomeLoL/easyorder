@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:easyorder/views/pantallaCarga.dart';
 
 class detallePedido extends StatefulWidget {
-  const detallePedido({super.key});
+  const detallePedido({super.key, required this.info});
+  final String info;
 
   @override
   State<detallePedido> createState() => _detallePedidoState();
@@ -58,6 +59,7 @@ class _detallePedidoState extends State<detallePedido> {
                             ProductCard(
                               producto: producto,
                               isPedido: 0,
+                              info: widget.info,
                             ),
                             const Gap(20),
                           ],
