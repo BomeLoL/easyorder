@@ -12,8 +12,11 @@ import 'package:provider/provider.dart';
 
 Future<void> main()  async {
   WidgetsFlutterBinding.ensureInitialized;
-  await MongoDatabase.connect();
-  runApp(const MyApp());
+      try {
+      await MongoDatabase.connect();
+      // ignore: empty_catches
+      } catch (e) {
+      }  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

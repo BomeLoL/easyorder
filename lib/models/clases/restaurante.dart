@@ -21,10 +21,11 @@ class Restaurante {
   }
 
 
-  Restaurante.fromMap(Map<String, dynamic> map) //Importar
-  : id = map['_id'],
-  nombre = map['nombre'],
-  mesas = map['mesas'],
-  comentarios = map['comentarios'];
-
+  Restaurante.fromMap(Map<String, dynamic> map)
+      : id = map['_id'],
+        nombre = map['nombre'],
+        mesas = (map['mesas'] as List<dynamic>)
+            .map((item) => Mesa.fromMap(item))
+            .toList(),
+        comentarios = List<Map<String, dynamic>>.from(map['comentarios']);
 }

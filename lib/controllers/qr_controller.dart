@@ -67,6 +67,6 @@ class ScannerOverlay extends CustomPainter {
 }
 
 void RevisarBd(barcode) async {
-  final restaurantes = MongoDatabase.getRestaurantes("1");
+  final restaurantes = MongoDatabase.getRestaurante("1");
 
 }
