@@ -1,3 +1,4 @@
+import 'package:easyorder/models/clases/mesa.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/material.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
@@ -11,8 +12,10 @@ Future<bool> RevisarBd(barcode, context) async {
     var ids = infoQr.split(",");
     String idRestaurante=ids[0];
     var restaurante;
+    var menu;
     String idMesa=ids[1].trim();
     restaurante= await MongoDatabase.getRestaurante(idRestaurante);
+    menu= await MongoDatabase.getMenu(idRestaurante);
     if (restaurante==null) {//no existe el restaurante
       barcode.removeAt(0);
       return false;
@@ -32,7 +35,7 @@ Future<bool> RevisarBd(barcode, context) async {
             return 
             
             
-            Menu(info: restaurante.nombre);
+            MenuView(info: restaurante.id, restaurante: restaurante,menu: menu,);
             }));
        // }
         //else { //la mesa esta ocupada

@@ -1,4 +1,5 @@
 import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ Map<String, dynamic> toMap() {
     }
   }
 
-  void deleteProduct(ItemMenu producto, String info, context) {
+  void deleteProduct(ItemMenu producto, String info, context, Restaurante restaurante, Menu menu) {
     if (productos.containsKey(producto) && productos[producto]! > 1) {
       productos[producto] = productos[producto]! - 1;
     } else {
@@ -55,7 +56,7 @@ Map<String, dynamic> toMap() {
       if (productos.isEmpty) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Menu(info: info)),
+          MaterialPageRoute(builder: (context) => MenuView(info: info, menu: menu, restaurante: restaurante,)),
         );
       }
     }
