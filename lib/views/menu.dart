@@ -48,7 +48,7 @@ class _MenuState extends State<Menu> {
   ];
   Set <String> categorias= Set <String>();
   int selectedIndex = -1;
-  String selectedCategoria = "";
+  String selectedCategoria = "Todo";
   // List<int> botones = [0, 1, 2]; //se deberia tener un numero por cada categoria
   Color colorBoton1 = Color(0xFFFF5F04);
   //Color colorBoton2=Colors.white;
@@ -56,10 +56,11 @@ class _MenuState extends State<Menu> {
   void initState() {
     super.initState();
     infoQr = widget.info;
+    categorias.add("Todo");
     item_menu.forEach((elemento) {
     categorias.add(elemento.categoria); // Agregar la categoría al conjunto
     });
-    selectedCategoria = item_menu[0].categoria;
+    selectedCategoria = "Todo";
   }
 
   @override
@@ -136,16 +137,11 @@ class _MenuState extends State<Menu> {
                     padding: EdgeInsets.zero,
                     itemCount: item_menu.length,
                     itemBuilder: (context, index) {
-                      String categoria = item_menu[index].categoria;
-                      if (categoria == selectedCategoria) {
+                      if (selectedCategoria == "Todo" || item_menu[index].categoria == selectedCategoria) {
                         return Column(
                           children: [
-                            ProductCard(producto: item_menu[index], isPedido: 1),
-                            // ProductCardInit(
-                            //   productName: item_menu[index]["Nombre"], 
-                            //   productPrice: item_menu[index]["Precio"], 
-                            //   productImage: "https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg"),
-                            SizedBox(height: 10,)
+                          ProductCard(producto: item_menu[index], isPedido: 1),
+                          SizedBox(height: 10,)
                           ],
                         );
                       } else {

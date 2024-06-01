@@ -87,12 +87,13 @@ Widget build(BuildContext context) {
             },
             onDetect: (barcode){
               if(barcode.barcodes.isNotEmpty) {
-                bool continuar = RevisarBd(barcode.barcodes) as bool;
-                if (continuar) {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                  return Menu(info: barcode.barcodes.first.displayValue as String);
-                  }));
-                }
+                // bool continuar; 
+                RevisarBd(barcode.barcodes, context);
+                // if (continuar) {
+                //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                //   return Menu(info: barcode.barcodes.first.displayValue as String);
+                // }));
+                // }
                 
               }
             },

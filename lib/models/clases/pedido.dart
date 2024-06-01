@@ -27,4 +27,11 @@ Map<String, dynamic> toMap() {
     'productos': productosMap,
   };
 }
+  Pedido.fromMap(Map<String, dynamic> map)
+      : productos = Map.fromEntries(
+          (map['productos'] as List<dynamic>).map((item) => MapEntry(
+            ItemMenu.fromMap(item['producto']),
+            item['cantidad'],
+          )),
+        );
 }

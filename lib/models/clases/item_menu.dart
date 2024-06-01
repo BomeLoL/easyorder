@@ -20,4 +20,9 @@ class ItemMenu {
       'imgUrl': imgUrl,
     };
   }
+    ItemMenu.fromMap(Map<String, dynamic> map)
+      : nombreProducto = map['nombreProducto'],
+        precio = map['precio'],
+        categoria = map['categoria'],
+        imgUrl = map['imgUrl'];
 }
