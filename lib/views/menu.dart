@@ -24,7 +24,7 @@ class _MenuState extends State<Menu> {
       precio: 15.1,
       categoria: "Parrilla Guanteña",
       imgUrl:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZs4XdR6VDF8inuMgk5_rLDBdQF7pVv4-b6Y63nyUF0g&s'),
+          'https://img.freepik.com/fotos-premium/plato-carnes-variadas-parrilla-gajos-patata-salsas_157927-2464.jpg'),
     ItemMenu(
       nombreProducto: 'Parrilla sin platano',
       precio: 14.0,
