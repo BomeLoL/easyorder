@@ -178,7 +178,7 @@ class _detalleProductoState extends State<detalleProducto> {
               Consumer<CartController>(builder: (context, cartController, child) {
                 return Expanded(
                   flex: 10,
-                  child: TextButton(
+                  child: ElevatedButton(
                     onPressed: () {
                       cartController.addProducts(
                           widget.producto,
@@ -195,16 +195,12 @@ class _detalleProductoState extends State<detalleProducto> {
                       ),
         
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10.0), // Ajusta el padding vertical
-                      child: Text(
-                        "Agregar",
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.white,
-                        ),
+                    child: Text(
+                      "Agregar",
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
                   ),

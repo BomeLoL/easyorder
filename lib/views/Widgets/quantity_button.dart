@@ -26,44 +26,51 @@ class QuantityButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
         children: [
-          Container(
-            width: 35,
-            height: 35,
-            child: IconButton(
-              onPressed: () {
-                eliminar();
-              },
-              icon: Icon(Icons.remove),
-              style: IconButton.styleFrom(
-                  backgroundColor: Color.fromRGBO(255, 95, 4, 0.1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  )),
-              color: Color.fromRGBO(255, 95, 4, 1),
-              iconSize: 20,
+          Expanded(
+            flex: 3,
+            child: Container(
+              child: IconButton(
+                onPressed: () {
+                  eliminar();
+                },
+                icon: Icon(Icons.remove),
+                style: IconButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(255, 95, 4, 0.1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7),
+                    )),
+                color: Color.fromRGBO(255, 95, 4, 1),
+                iconSize: 20,
+              ),
             ),
           ),
-          const Gap(10),
-          Text(
-            cantidad.toString(),
-            style: GoogleFonts.poppins(),
+          const Spacer(flex: 1,),
+          Expanded(
+            flex: 2,
+            child: Text(
+              cantidad.toString(),
+              style: GoogleFonts.poppins(),
+              textAlign: TextAlign.center,
+            ),
           ), //implementar funcionalidad
-          const Gap(10),
-          Container(
-            width: 35,
-            height: 35,
-            child: IconButton(
-              onPressed: () {
-                agregar();
-              },
-              icon: Icon(Icons.add),
-              style: IconButton.styleFrom(
-                  backgroundColor: Color.fromRGBO(255, 95, 4, 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  )),
-              color: Colors.white,
-              iconSize: 20,
+          const Spacer(flex: 1,),
+          Expanded(
+            flex: 3,
+            child: Container(
+              
+              child: IconButton(
+                onPressed: () {
+                  agregar();
+                },
+                icon: Icon(Icons.add),
+                style: IconButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7),
+                    )),
+                color: Colors.white,
+                iconSize: 20,
+              ),
             ),
           ),
         ],
