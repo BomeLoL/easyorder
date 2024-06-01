@@ -145,7 +145,7 @@ class _MenuState extends State<Menu> {
                       if (selectedCategoria == "Todo" || item_menu[index].categoria == selectedCategoria) {
                         return Column(
                           children: [
-                          ProductCard(producto: item_menu[index], isPedido: 1, info: "Hola"),
+                          ProductCard(producto: item_menu[index], isPedido: 1, info: "hola"),
                           SizedBox(height: 10,)
                           ],
                         );

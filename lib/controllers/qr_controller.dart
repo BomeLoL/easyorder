@@ -17,8 +17,6 @@ Future<bool> RevisarBd(barcode, context) async {
       barcode.removeAt(0);
       return false;
     } else if (restaurante!=null) { //si existe 
-    print("LOOOOOL");
-    print(restaurante.runtimeType);
       bool existeMesa = false;
       for (var i = 0; i < restaurante.mesas.length; i++) {//se ve si existe la mesa
          
@@ -34,7 +32,7 @@ Future<bool> RevisarBd(barcode, context) async {
             return 
             
             
-            Menu(info: restaurante);
+            Menu(info: restaurante.nombre);
             }));
        // }
         //else { //la mesa esta ocupada
