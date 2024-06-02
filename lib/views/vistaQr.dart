@@ -25,53 +25,6 @@ class _BarcodeScannerWithOverlayState extends State<BarcodeScannerWithOverlay> {
 
   int tipo=0;
 
-  Future<void> pedirPermiso(error) async{
-    final status = Permission.camera.status;
-    if (await status.isDenied || await status.isPermanentlyDenied) {
-       showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AlertDialog(
-        title:Text('Permisos de cámara',
-        style: GoogleFonts.poppins(),),
-        content:Text(
-          'Necesitamos acceso a la cámara para escanear códigos Qr. Por favor, otorga los permisos en la configuración de la aplicación.',
-          style: GoogleFonts.poppins(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return Escanear();} ));
-              },
-            child:Text('Cancelar',
-            style: GoogleFonts.poppins(
-                    color: Color.fromRGBO(255, 96, 4, 1),
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            
-          ),
-          TextButton(
-            onPressed: () async {
-              openAppSettings();
-              Navigator.pop(context); 
-              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return Escanear();} ));
-              },
-            child:Text('Otorgar permiso',
-            style: GoogleFonts.poppins(
-                    color: Color.fromRGBO(255, 96, 4, 1),
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ),
-        ],
-      ),
-    );
-    }
-
-  }
-
  @override
 Widget build(BuildContext context) {
   
@@ -92,7 +45,7 @@ Widget build(BuildContext context) {
             controller: controller,
             scanWindow: scanWindow,
             errorBuilder: (context, error, child) {
-              pedirPermiso(error);
+              // pedirPermiso();
               return 
               ScannerErrorWidget(error: error);
             },
