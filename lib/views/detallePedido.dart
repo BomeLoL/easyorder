@@ -267,12 +267,14 @@ class _detallePedidoState extends State<detallePedido> {
   }
 
   //Esta función muestra la ventanilla que indica que la orden fue completada exitosamente
-  void _showSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
+void _showSuccessDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return PopScope(
+        canPop: false,
+        child: AlertDialog(
           title: Text(
             'Pedido completado!',
             textAlign: TextAlign.center,
@@ -288,10 +290,9 @@ class _detallePedidoState extends State<detallePedido> {
               child: TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-            return 
-            MenuView(info: widget.restaurante.id, restaurante: widget.restaurante,menu: widget.menu, idMesa: widget.idMesa);
-            }));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                    return MenuView(info: widget.restaurante.id, restaurante: widget.restaurante, menu: widget.menu, idMesa: widget.idMesa);
+                  }));
                 },
                 child: Text(
                   'OK',
@@ -303,10 +304,12 @@ class _detallePedidoState extends State<detallePedido> {
               ),
             ),
           ],
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
+
 
 Future<void> _showConfirmationDialog(BuildContext context) {
   bool isButtonPressed = false;
