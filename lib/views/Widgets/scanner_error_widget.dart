@@ -119,7 +119,7 @@ class ScannerErrorWidget extends StatelessWidget {
                 minimumSize: Size(100, 40),
                 ), 
                 child: Text("Volver",
-                    style: GoogleFonts.poppins(fontSize: 17, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
                 )
                 ),
           ],
