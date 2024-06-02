@@ -195,30 +195,34 @@ class ProductCard extends StatelessWidget {
               ],
             ),
           ),
-          if (isPedido != 1)
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Container(
-              width: 30,
-              height: 30,
-              child: IconButton(
-                onPressed: () {
-              
-                }, 
-                icon: Icon(
-                  Icons.close,
-                  size: 22,
-                  color: Colors.red,
-                  ),
-                style: IconButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7)
-                  )
-                ),
-                ),
-            )
+          if (isPedido != 1) 
+          Consumer<CartController>(
+            builder: (context, cartController, child) {
+              return Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  child: IconButton(
+                    onPressed: () {
+                      cartController.deleteProducts(producto, info, context, isPedido);
+                    }, 
+                    icon: Icon(
+                      Icons.close,
+                      size: 22,
+                      color: Colors.red,
+                      ),
+                    style: IconButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7)
+                      )
+                    ),
+                    ),
+                )
+              );
+            }
           ),
         ],
       ),

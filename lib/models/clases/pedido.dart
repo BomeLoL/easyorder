@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:easyorder/models/clases/itemPedido.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 
@@ -45,6 +47,17 @@ class Pedido {
       }
     }
   }
+
+void deleteProducts(ItemMenu producto, String info, context, int isPedido) {
+  productos.remove(producto);
+  if (productos.isEmpty && isPedido == 0) {
+        Navigator.pop(
+          context,
+          MaterialPageRoute(builder: (context) => Menu(info: info)),
+        );
+      }
+}
+
  // void deleteProduct(ItemMenu producto, String info, context) {
  //   if (productos.containsKey(producto) && productos[producto]! > 1) {
  //     productos[producto] = productos[producto]! - 1;
