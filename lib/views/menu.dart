@@ -12,10 +12,11 @@ import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
 class MenuView extends StatefulWidget {
-  const MenuView({super.key, required this.info, required this.menu, required this.restaurante});
+  const MenuView({super.key, required this.info, required this.menu, required this.restaurante, required this.idMesa});
   final String info;
   final Menu menu; 
   final Restaurante restaurante;
+  final int idMesa; 
 
   @override
   State<MenuView> createState() => _MenuState();
@@ -121,7 +122,7 @@ class _MenuState extends State<MenuView> {
                       if (selectedCategoria == "Todo" || widget.menu.itemsMenu[index].categoria == selectedCategoria) {
                         return Column(
                           children: [
-                          ProductCard(producto: widget.menu.itemsMenu[index], isPedido: 1, info: infoQr, menu: widget.menu, restaurante: widget.restaurante),
+                          ProductCard(producto: widget.menu.itemsMenu[index], isPedido: 1, info: infoQr, menu: widget.menu, restaurante: widget.restaurante, idMesa: widget.idMesa,),
                           SizedBox(height: 10,)
                           ],
                         );
@@ -180,7 +181,7 @@ class _MenuState extends State<MenuView> {
                             Navigator.push(
                               context, 
                               MaterialPageRoute(
-                                builder: (context) => detallePedido(info:infoQr, menu: widget.menu, restaurante: widget.restaurante,)
+                                builder: (context) => detallePedido(info:infoQr, menu: widget.menu, restaurante: widget.restaurante, idMesa: widget.idMesa)
                                 ),
                               );
                           },

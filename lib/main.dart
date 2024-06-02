@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized;
+  WidgetsFlutterBinding.ensureInitialized();
   try {
     await MongoDatabase.connect();
     // ignore: empty_catches
@@ -22,7 +22,6 @@ Future<void> main() async {
     runApp(const MyApp());
   });
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override

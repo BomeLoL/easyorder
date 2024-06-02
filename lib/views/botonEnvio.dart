@@ -1,3 +1,4 @@
+import 'package:easyorder/views/menu.dart';
 import 'package:easyorder/views/pantallaCarga.dart';
 import 'package:flutter/material.dart';
 
@@ -147,6 +148,12 @@ class BotonEnvio extends StatelessWidget {
               child: TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+          //  return 
+            
+            
+            //MenuView(info: restaurante.id, restaurante: restaurante,menu: menu,);
+            //}));
                 },
                 child: const Text(
                   'OK',

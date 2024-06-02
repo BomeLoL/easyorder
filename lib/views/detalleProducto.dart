@@ -186,6 +186,7 @@ class _detalleProductoState extends State<detalleProducto> {
                       cartController.addProducts(
                           widget.producto,
                           cantidad);
+                      
                       Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(

@@ -87,7 +87,13 @@ class ScannerErrorWidget extends StatelessWidget {
         ),
       ),
     );
-    } else {
+    
+    }
+//    else if((error.errorDetails?.message ?? '') == "The scanner was already started. Call stop() before calling start() again."){
+//      Navigator.pop(context);
+//      return Container();
+//    } 
+    else {
       return ColoredBox(
       color: Colors.black,
       child: Center(

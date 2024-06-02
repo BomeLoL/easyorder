@@ -15,13 +15,14 @@ class ProductCard extends StatelessWidget {
   final Menu menu;
   final Restaurante restaurante;
   final int isPedido;
+  final int idMesa;
 
   ProductCard({
     required this.producto,
     required this.info,
     required this.isPedido,
     required this.menu,
-    required this.restaurante,
+    required this.restaurante, required this.idMesa,
   });
 
   @override
@@ -126,7 +127,7 @@ class ProductCard extends StatelessWidget {
                         child: Container(
                           child: IconButton(
                             onPressed: () {
-                              cartController.deleteProduct(producto, info, context,restaurante, menu);
+                              cartController.deleteProduct(producto, info, context,restaurante, menu, idMesa);
                             },
                             icon: Icon(Icons.remove),
                             style: IconButton.styleFrom(

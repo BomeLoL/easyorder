@@ -23,8 +23,8 @@ class CartController extends ChangeNotifier{
  _pedido.addProducts(producto, cantidad);
     notifyListeners();
 }
-void deleteProduct(ItemMenu producto, String info, context, Restaurante restaurante, Menu menu) {
-    _pedido.deleteProduct(producto, info, context, restaurante, menu);
+void deleteProduct(ItemMenu producto, String info, context, Restaurante restaurante, Menu menu, int idMesa) {
+    _pedido.deleteProduct(producto, info, context, restaurante, menu, idMesa);
     notifyListeners();
   }
 }

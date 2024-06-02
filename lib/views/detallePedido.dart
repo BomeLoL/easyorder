@@ -1,9 +1,13 @@
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/models/clases/menu.dart';
+import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
+import 'package:easyorder/views/Widgets/bd_Error.dart';
+import 'package:easyorder/views/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,16 +19,19 @@ class detallePedido extends StatefulWidget {
       {super.key,
       required this.info,
       required this.menu,
-      required this.restaurante});
+      required this.restaurante, required this.idMesa});
+      
   final String info;
   final Restaurante restaurante;
   final Menu menu;
+  final int idMesa;
 
   @override
   State<detallePedido> createState() => _detallePedidoState();
 }
 
 class _detallePedidoState extends State<detallePedido> {
+  
   bool funciona = false;
   bool confirmation = false;
   @override
@@ -71,6 +78,7 @@ class _detallePedidoState extends State<detallePedido> {
                               info: widget.info,
                               menu: widget.menu,
                               restaurante: widget.restaurante,
+                              idMesa: widget.idMesa,
                             ),
                             const Gap(20),
                           ],
@@ -172,6 +180,11 @@ class _detallePedidoState extends State<detallePedido> {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () async {
+                              final tester = await MongoDatabase.Test();
+                              if (tester == false){
+                              // ignore: use_build_context_synchronously
+                              dbErrorDialog(context);}
+                              else{
                                 await _showConfirmationDialog(context);
                                 if (confirmation) {
                                   if (funciona) {
@@ -185,7 +198,7 @@ class _detallePedidoState extends State<detallePedido> {
                                     _showAlertDialog(context);
                                   }
                                 }
-                              },
+                              }},
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
@@ -228,7 +241,7 @@ class _detallePedidoState extends State<detallePedido> {
             style: GoogleFonts.poppins(),
           ),
           content: Text(
-            'Hubo un error procesando tu orden, por favor, inténtelo de nuevo',
+            'Hubo un error inesperado procesando tu orden, por favor, inténtelo de nuevo',
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(),
           ),
@@ -275,6 +288,10 @@ class _detallePedidoState extends State<detallePedido> {
               child: TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+            return 
+            MenuView(info: widget.restaurante.id, restaurante: widget.restaurante,menu: widget.menu, idMesa: widget.idMesa);
+            }));
                 },
                 child: Text(
                   'OK',
@@ -291,59 +308,91 @@ class _detallePedidoState extends State<detallePedido> {
     );
   }
 
-  Future<void> _showConfirmationDialog(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            'Confirmar Acción',
-            textAlign: TextAlign.center,
-          ),
-          content: const Text(
-            'Está seguro de enviar su orden?',
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (BuildContext context) {
-                        return const pantallaCarga();
-                      }),
-                    );
-                    funciona = true;
-                    confirmation = true;
-                  },
-                  child: const Text(
-                    'Si',
-                    style: TextStyle(
-                        color: Color.fromRGBO(255, 96, 4, 1),
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                    confirmation = false;
-                  },
-                  child: const Text(
-                    'No',
-                    style: TextStyle(
-                        color: Color.fromRGBO(255, 96, 4, 1),
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
+Future<void> _showConfirmationDialog(BuildContext context) {
+  bool isButtonPressed = false;
+
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: const Text(
+              'Confirmar Acción',
+              textAlign: TextAlign.center,
             ),
-          ],
-        );
-      },
-    );
-  }
+            content: const Text(
+              'Está seguro de enviar su orden?',
+              textAlign: TextAlign.center,
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                      confirmation = false;
+                    },
+                    child: const Text(
+                      'No',
+                      style: TextStyle(
+                          color: Color.fromRGBO(255, 96, 4, 1),
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: isButtonPressed
+                        ? null
+                        : () async {
+                            setState(() {
+                              isButtonPressed = true;
+                            });
+
+                            var verificador = true;
+                            try {
+                              CartController cartController = Provider.of<CartController>(context, listen: false);
+                              var r = await MongoDatabase.getRestaurante(widget.restaurante.id);
+                              if (r != null) {
+                                MongoDatabase.agregarPedidoARestaurante(r, widget.idMesa, cartController.pedido);
+                                await MongoDatabase.actualizarRestaurante(r);
+                              }
+                            } catch (e) {
+                              verificador = false;
+                            }
+                            if (verificador == true) {
+                              CartController cartController = Provider.of<CartController>(context, listen: false);
+                              Pedido pedidoVacio = Pedido(productos: {});
+                              cartController.pedido = pedidoVacio;
+                              Navigator.pop(context, true);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (BuildContext context) {
+                                  return const pantallaCarga();
+                                }),
+                              );
+                              funciona = true;
+                              confirmation = true;
+                            } else {
+                              Navigator.pop(context);
+                              _showAlertDialog(context);
+                            }
+                          },
+                    child: const Text(
+                      'Si',
+                      style: TextStyle(
+                          color: Color.fromRGBO(255, 96, 4, 1),
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
 }
