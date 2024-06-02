@@ -28,12 +28,17 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  detalleProducto(info: info, producto: producto, menu:menu, restaurante: restaurante)),
-        );
+        if (isPedido != 3) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => detalleProducto(
+                    info: info,
+                    producto: producto,
+                    menu: menu,
+                    restaurante: restaurante)),
+          );
+        }
       },
       child: Container(
         height: 115,
@@ -116,33 +121,93 @@ class ProductCard extends StatelessWidget {
             ),
             Consumer<CartController>(builder: (context, cartController, child) {
               final cantidad = cartController.pedido.productos[producto];
-              if (cantidad != null) {
-                return Expanded(
+              if (isPedido != 3) {
+                if (cantidad != null) {
+                  return Expanded(
+                    flex: 8,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 4,
+                          child: Container(
+                            child: IconButton(
+                              onPressed: () {
+                                cartController.deleteProduct(
+                                    producto, info, context, restaurante, menu);
+                              },
+                              icon: Icon(Icons.remove),
+                              style: IconButton.styleFrom(
+                                  backgroundColor:
+                                      Color.fromRGBO(255, 95, 4, 0.1),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(7),
+                                  )),
+                              color: Color.fromRGBO(255, 95, 4, 1),
+                              iconSize: 20,
+                            ),
+                          ),
+                        ),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            cantidad.toString(),
+                            style: GoogleFonts.poppins(),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: Container(
+                            child: IconButton(
+                              onPressed: () {
+                                cartController.addProduct(producto);
+                              },
+                              icon: Icon(Icons.add),
+                              style: IconButton.styleFrom(
+                                  backgroundColor:
+                                      Color.fromRGBO(255, 95, 4, 1),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(7),
+                                  )),
+                              color: Colors.white,
+                              iconSize: 20,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Flexible(
+                    flex: 2,
+                    child: Container(
+                      child: IconButton(
+                        onPressed: () {
+                          cartController.addProduct(producto);
+                        },
+                        icon: Icon(Icons.add),
+                        style: IconButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            )),
+                        color: Colors.white,
+                        iconSize: 20,
+                      ),
+                    ),
+                  );
+                }
+              } else {
+                return Flexible(
                   flex: 8,
                   child: Row(
                     children: [
-                      Expanded(
-                        flex: 4,
-                        child: Container(
-                          child: IconButton(
-                            onPressed: () {
-                              cartController.deleteProduct(producto, info, context,restaurante, menu);
-                            },
-                            icon: Icon(Icons.remove),
-                            style: IconButton.styleFrom(
-                                backgroundColor:
-                                    Color.fromRGBO(255, 95, 4, 0.1),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(7),
-                                )),
-                            color: Color.fromRGBO(255, 95, 4, 1),
-                            iconSize: 20,
-                          ),
-                        ),
-                      ),
-                      Spacer(
-                        flex: 1,
-                      ),
                       Expanded(
                         flex: 2,
                         child: Text(
@@ -151,47 +216,7 @@ class ProductCard extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      Spacer(
-                        flex: 1,
-                      ),
-                      Expanded(
-                        flex: 4,
-                        child: Container(
-                          child: IconButton(
-                            onPressed: () {
-                              cartController.addProduct(producto);
-                            },
-                            icon: Icon(Icons.add),
-                            style: IconButton.styleFrom(
-                                backgroundColor: Color.fromRGBO(255, 95, 4, 1),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(7),
-                                )),
-                            color: Colors.white,
-                            iconSize: 20,
-                          ),
-                        ),
-                      ),
                     ],
-                  ),
-                );
-              } else {
-                return Flexible(
-                  flex: 2,
-                  child: Container(
-                    child: IconButton(
-                      onPressed: () {
-                        cartController.addProduct(producto);
-                      },
-                      icon: Icon(Icons.add),
-                      style: IconButton.styleFrom(
-                          backgroundColor: Color.fromRGBO(255, 95, 4, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7),
-                          )),
-                      color: Colors.white,
-                      iconSize: 20,
-                    ),
                   ),
                 );
               }
