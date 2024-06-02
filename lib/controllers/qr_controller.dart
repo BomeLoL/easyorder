@@ -7,10 +7,12 @@ import 'package:provider/provider.dart';
 
 
 
-Future<bool> revisarBd(barcode, context) async {
+Future<int> revisarBd(barcode, context) async {
   String infoQr = barcode.first.displayValue;
 
   try {
+    bool? tester = await MongoDatabase.Test();
+    if (tester == true){
     var ids = infoQr.split(",");
     String idRestaurante=ids[0];
     var restaurante;
@@ -21,7 +23,7 @@ Future<bool> revisarBd(barcode, context) async {
     menu= await MongoDatabase.getMenu(idRestaurante);
     if (restaurante==null) {//no existe el restaurante
       barcode.removeAt(0);
-      return false;
+      return 1;
       // return [continuar, error];
     } else if (restaurante!=null) { //si existe 
       bool existeMesa = false;
@@ -59,19 +61,21 @@ Future<bool> revisarBd(barcode, context) async {
        // }
 
       } else { // no posee la mesa escaneada
-        return false;
+        return 1;
       }
       // return [continuar=true, error];
-      return true;
+      return 0;
     }
     
-    
+    }else{
+      return 2;
+    }
   } catch (e) {
     // return [continuar=true,error=true];
-    return false;
+    return 2;
   }
   
   // return [continuar=true,error=true];
-  return false;
+  return 2;
 
 }

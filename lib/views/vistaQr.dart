@@ -61,12 +61,15 @@ Widget build(BuildContext context) {
             onDetect: (barcode)async{
               if(barcode.barcodes.isNotEmpty){
                 // bool continuar;
-                bool continuarOerror = await revisarBd(barcode.barcodes, context);
-                if (!continuarOerror) {
+                int continuarOerror = await revisarBd(barcode.barcodes, context);
+                if (continuarOerror == 1) {
                   setState(() {
                     tipo=1;
                   });
-                }
+                }else if (continuarOerror == 2) {
+                  setState(() {
+                    tipo=2;
+                  });                }
               }
             },
           ),
