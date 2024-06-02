@@ -7,8 +7,13 @@ import 'package:flutter/foundation.dart';
 
 class CartController extends ChangeNotifier{
   Pedido _pedido = Pedido(productos: {});
-
+  
   Pedido get pedido => _pedido;
+
+  set pedido(Pedido nuevoPedido) {
+    _pedido = nuevoPedido;
+    notifyListeners();
+  }
 
   void addProduct(ItemMenu producto) {
     _pedido.addProduct(producto);

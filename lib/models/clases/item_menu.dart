@@ -1,5 +1,6 @@
 
 class ItemMenu {
+  final int id; 
   final String nombreProducto;
   final String descripcion;
   final double precio;
@@ -7,6 +8,7 @@ class ItemMenu {
   final String imgUrl;
 
   ItemMenu({
+    required this.id, 
     required this.nombreProducto,
     required this.descripcion,
     required this.precio,
@@ -19,6 +21,7 @@ class ItemMenu {
     if (identical(this, other)) return true;
     
     return other is ItemMenu &&
+      other.id == id &&
       other.nombreProducto == nombreProducto &&
       other.precio == precio &&
       other.categoria == categoria &&
@@ -35,6 +38,7 @@ class ItemMenu {
 
     Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'nombreProducto': nombreProducto,
       'descripcion': descripcion,
       'precio': precio,
@@ -43,7 +47,8 @@ class ItemMenu {
     };
   }
     ItemMenu.fromMap(Map<String, dynamic> map)
-      : nombreProducto = map['nombreProducto'],
+      : id = map['id'],
+        nombreProducto = map['nombreProducto'],
         descripcion = map['descripcion'],
         precio = map['precio'],
         categoria = map['categoria'],

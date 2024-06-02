@@ -1,8 +1,11 @@
+import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/mesa.dart';
+import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/material.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/menu.dart';
+import 'package:provider/provider.dart';
 
 
 
@@ -13,6 +16,7 @@ Future<bool> RevisarBd(barcode, context) async {
     String idRestaurante=ids[0];
     var restaurante;
     var menu;
+    var j;
     String idMesa=ids[1].trim();
     restaurante= await MongoDatabase.getRestaurante(idRestaurante);
     menu= await MongoDatabase.getMenu(idRestaurante);
@@ -24,14 +28,21 @@ Future<bool> RevisarBd(barcode, context) async {
       for (var i = 0; i < restaurante.mesas.length; i++) {//se ve si existe la mesa
          
         if (restaurante.mesas[i].id == int.parse(idMesa)) {
+          j=i;
           existeMesa = true;
           break;
         }
       }
 
       if (existeMesa) { // el restaurante si posee la mesa escaneada
-       // if (restaurante.mesa[idMesa].pedidos.length==0) {//la mesa no esta ocupada, se va al menu normal
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+       // if (restaurante.mesa[idMesa].pedidos.length==0) {//la mesa no esta ocupada, se va al menu normal      
+       // Obtener la instancia de CartController
+      CartController cartController = Provider.of<CartController>(context, listen: false);
+
+        Pedido pedidoVacio = Pedido(productos: {});
+        cartController.pedido = pedidoVacio;
+                  
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
             return 
             
             
