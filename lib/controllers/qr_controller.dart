@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 
 Future<bool> RevisarBd(barcode, context) async {
   String infoQr = barcode.first.displayValue;
+  // bool continuar=false;
+  // bool error=false;
   try {
     var ids = infoQr.split(",");
     String idRestaurante=ids[0];
@@ -23,6 +25,7 @@ Future<bool> RevisarBd(barcode, context) async {
     if (restaurante==null) {//no existe el restaurante
       barcode.removeAt(0);
       return false;
+      // return [continuar, error];
     } else if (restaurante!=null) { //si existe 
       bool existeMesa = false;
       for (var i = 0; i < restaurante.mesas.length; i++) {//se ve si existe la mesa
@@ -43,9 +46,7 @@ Future<bool> RevisarBd(barcode, context) async {
         cartController.pedido = pedidoVacio;
                   
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-            return 
-            
-            
+            return             
             MenuView(info: restaurante.id, restaurante: restaurante,menu: menu,);
             }));
        // }
@@ -54,14 +55,17 @@ Future<bool> RevisarBd(barcode, context) async {
        // }
       } else { // no posee la mesa escaneada
       }
+      // return [continuar=true, error];
       return true;
     }
     
     
   } catch (e) {
-    
+    // return [continuar=true,error=true];
+    return false;
   }
   
+  // return [continuar=true,error=true];
   return false;
 
 }

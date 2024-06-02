@@ -1,5 +1,6 @@
 import 'package:easyorder/views/escaneoQR.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -36,6 +37,11 @@ Widget build(BuildContext context) {
 
   return Scaffold(
     backgroundColor: Colors.black,
+    extendBodyBehindAppBar: true,
+    appBar: AppBar(
+      iconTheme: IconThemeData(color:Colors.white),
+      backgroundColor: Colors.black,
+       ),
     body: Stack(
       fit: StackFit.expand,
       children: [
@@ -61,12 +67,17 @@ Widget build(BuildContext context) {
             onDetect: (barcode)async{
               if(barcode.barcodes.isNotEmpty){
                 // bool continuar;
-                bool continuar = await RevisarBd(barcode.barcodes, context);
-                if (!continuar) {
+                bool continuarOerror = await RevisarBd(barcode.barcodes, context);
+                if (!continuarOerror) {
                   setState(() {
                     tipo=1;
                   });
                 }
+                // else if (continuarOerror[1]) {
+                //   setState(() {
+                //     tipo=2;
+                //   });
+                // }
               }
             },
           ),
