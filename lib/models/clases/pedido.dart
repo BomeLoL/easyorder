@@ -1,3 +1,4 @@
+import 'package:easyorder/models/clases/itemPedido.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 
 import 'package:flutter/material.dart';
@@ -8,16 +9,21 @@ import 'package:provider/provider.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 
 class Pedido {
-  final Map<ItemMenu, int> productos;
+  final Map<ItemMenu, itemPedido> productos;
 
   Pedido({required this.productos});
 
-  void addProduct(ItemMenu producto) {
-    bool contiene = productos.containsKey(producto);
-    if (productos.containsKey(producto) && productos[producto]! >= 1) {
-      productos[producto] = productos[producto]! + 1;
+  void addProduct(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
+    if (productos.containsKey(producto)) {
+      productos[producto]!.cantidad += 1;
+      productos[producto]!.comentario = comentario;
+      productos[producto]!.extras = extras;
     } else {
-      productos[producto] = 1;
+      productos[producto] = itemPedido(
+        cantidad: 1,
+        comentario: comentario,
+        extras: extras,
+      );
     }
   }
 
@@ -26,18 +32,37 @@ class Pedido {
       addProduct(producto);
     }
   }
-
-  void deleteProduct(ItemMenu producto, String info, context) {
-    if (productos.containsKey(producto) && productos[producto]! > 1) {
-      productos[producto] = productos[producto]! - 1;
+  void deleteProduct(ItemMenu producto, String info, context, int isPedido) {
+    if (productos.containsKey(producto) && productos[producto]!.cantidad > 1) {
+      productos[producto]!.cantidad -= 1;
     } else {
       productos.remove(producto);
-      if (productos.isEmpty) {
-        Navigator.push(
+      if (productos.isEmpty && isPedido == 0) {
+        Navigator.pop(
           context,
           MaterialPageRoute(builder: (context) => Menu(info: info)),
         );
       }
     }
+  }
+ // void deleteProduct(ItemMenu producto, String info, context) {
+ //   if (productos.containsKey(producto) && productos[producto]! > 1) {
+ //     productos[producto] = productos[producto]! - 1;
+ //   } else {
+ //     productos.remove(producto);
+ //     if (productos.isEmpty) {
+ //       Navigator.push(
+ //         context,
+ //         MaterialPageRoute(builder: (context) => Menu(info: info)),
+ //       );
+ //     }
+ //   }
+ // }
+  int totalCantidad() {
+    int total = 0;
+    productos.forEach((key, productoPedido) {
+      total += productoPedido.cantidad;
+    });
+    return total;
   }
 }
