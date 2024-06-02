@@ -10,9 +10,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:easyorder/views/pantallaCarga.dart';
 
-
 class detallePedido extends StatefulWidget {
-  const detallePedido({super.key, required this.info, required this.menu, required this.restaurante});
+  const detallePedido(
+      {super.key,
+      required this.info,
+      required this.menu,
+      required this.restaurante});
   final String info;
   final Restaurante restaurante;
   final Menu menu;
@@ -23,6 +26,7 @@ class detallePedido extends StatefulWidget {
 
 class _detallePedidoState extends State<detallePedido> {
   bool funciona = false;
+  bool confirmation = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,24 +171,21 @@ class _detallePedidoState extends State<detallePedido> {
                           child: Container(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: 
-                                () async {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                  return const pantallaCarga();
-                                }),
-                              );
-                              //Se hace una pequeña espera a la base de datos y después se continúa
-                              await Future.delayed(const Duration(seconds: 5));
-                              if (funciona) {
-                                Navigator.pop(context);
-                                _showSuccessDialog(context);
-                              } else {
-                                Navigator.pop(context);
-                                _showAlertDialog(context);
-                              }
-                            },
+                              onPressed: () async {
+                                await _showConfirmationDialog(context);
+                                if (confirmation) {
+                                  if (funciona) {
+                                    //Se hace una pequeña espera a la base de datos y después se continúa
+                                    await Future.delayed(
+                                        const Duration(seconds: 5));
+                                    Navigator.pop(context);
+                                    _showSuccessDialog(context);
+                                  } else {
+                                    Navigator.pop(context);
+                                    _showAlertDialog(context);
+                                  }
+                                }
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
@@ -283,6 +284,62 @@ class _detallePedidoState extends State<detallePedido> {
                   ),
                 ),
               ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showConfirmationDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Confirmar Acción',
+            textAlign: TextAlign.center,
+          ),
+          content: const Text(
+            'Está seguro de enviar su orden?',
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (BuildContext context) {
+                        return const pantallaCarga();
+                      }),
+                    );
+                    funciona = true;
+                    confirmation = true;
+                  },
+                  child: const Text(
+                    'Si',
+                    style: TextStyle(
+                        color: Color.fromRGBO(255, 96, 4, 1),
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                    confirmation = false;
+                  },
+                  child: const Text(
+                    'No',
+                    style: TextStyle(
+                        color: Color.fromRGBO(255, 96, 4, 1),
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
             ),
           ],
         );

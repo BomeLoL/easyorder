@@ -8,16 +8,19 @@ import 'package:easyorder/views/detallePedido.dart';
 import 'package:easyorder/views/detalleProducto.dart';
 import 'package:easyorder/views/escaneoQR.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-
-Future<void> main()  async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized;
-      try {
-      await MongoDatabase.connect();
-      // ignore: empty_catches
-      } catch (e) {
-      }  runApp(const MyApp());
+  try {
+    await MongoDatabase.connect();
+    // ignore: empty_catches
+  } catch (e) {}
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
