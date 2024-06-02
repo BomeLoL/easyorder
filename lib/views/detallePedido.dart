@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
@@ -11,8 +12,10 @@ import 'package:easyorder/views/pantallaCarga.dart';
 
 
 class detallePedido extends StatefulWidget {
-  const detallePedido({super.key, required this.info});
+  const detallePedido({super.key, required this.info, required this.menu, required this.restaurante});
   final String info;
+  final Restaurante restaurante;
+  final Menu menu;
 
   @override
   State<detallePedido> createState() => _detallePedidoState();
@@ -62,6 +65,8 @@ class _detallePedidoState extends State<detallePedido> {
                               producto: producto,
                               isPedido: 0,
                               info: widget.info,
+                              menu: widget.menu,
+                              restaurante: widget.restaurante,
                             ),
                             const Gap(20),
                           ],

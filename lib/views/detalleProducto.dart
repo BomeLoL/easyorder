@@ -1,3 +1,4 @@
+import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,11 @@ import 'package:easyorder/views/escaneoQR.dart';
 import 'package:easyorder/views/Widgets/quantity_button.dart';
 
 class detalleProducto extends StatefulWidget {
-  const detalleProducto({super.key, required this.info, required this.producto});
+  const detalleProducto({super.key, required this.info, required this.producto, required this.menu, required this.restaurante});
   final String info;
   final ItemMenu producto;
+  final Menu menu;
+  final Restaurante restaurante; 
 
   @override
   State<detalleProducto> createState() => _detalleProductoState();
@@ -120,8 +123,7 @@ class _detalleProductoState extends State<detalleProducto> {
                                       color: Colors.black),
                       
                                   textContainer(
-                                      text:
-                                          'In a medium bowl, add ground chicken, breadcrumbs, mayonnaise, onions, parsley, garlic, paprika, salt and pepper. Use your hands to combine all the ingredients together until blended, but don\'t over mix.',
+                                      text:widget.producto.descripcion,
                                       size: 14,
                                       weight: FontWeight.normal,
                                       color: Colors.black),

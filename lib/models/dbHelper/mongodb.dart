@@ -57,6 +57,8 @@ class MongoDatabase {
 static Future<Restaurante?> getRestaurante(String id) async {
   try {
     final restauranteMap = await coleccion_restaurante.findOne({'_id': id});
+
+
     if (restauranteMap != null) {
       Restaurante restaurante = Restaurante.fromMap(restauranteMap);
       return restaurante;
@@ -91,7 +93,7 @@ static actualizarRestaurante(Restaurante restaurante) async {
 
 static Future<Menu?> getMenu(String idRestaurante) async {
   try {
-    final menuMap = await coleccion_menu.findOne({'idRestaurante': idRestaurante});
+    final menuMap = await coleccion_menu.findOne( {'idRestaurante': idRestaurante});
     if (menuMap != null) {
       Menu menu = Menu.fromMap(menuMap);
       return menu;

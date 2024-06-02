@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/detalleProducto.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +12,16 @@ import 'package:provider/provider.dart';
 class ProductCard extends StatelessWidget {
   final ItemMenu producto;
   final String info;
+  final Menu menu;
+  final Restaurante restaurante;
   final int isPedido;
 
   ProductCard({
     required this.producto,
     required this.info,
     required this.isPedido,
+    required this.menu,
+    required this.restaurante,
   });
 
   @override
@@ -27,7 +32,7 @@ class ProductCard extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  detalleProducto(info: info, producto: producto)),
+                  detalleProducto(info: info, producto: producto, menu:menu, restaurante: restaurante)),
         );
       },
       child: Container(
@@ -80,7 +85,7 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'daaaaaaa aaaaaaaaaa ddd',
+                    producto.descripcion,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
@@ -121,7 +126,7 @@ class ProductCard extends StatelessWidget {
                         child: Container(
                           child: IconButton(
                             onPressed: () {
-                              cartController.deleteProduct(producto, info, context);
+                              cartController.deleteProduct(producto, info, context,restaurante, menu);
                             },
                             icon: Icon(Icons.remove),
                             style: IconButton.styleFrom(
