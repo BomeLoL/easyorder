@@ -106,6 +106,22 @@ class ScannerErrorWidget extends StatelessWidget {
               error.errorDetails?.message ?? '',
               style: const TextStyle(color: Colors.white),
             ),
+            ElevatedButton(
+                onPressed:(){
+                  Navigator.pop(context);
+                  },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                  ),
+                minimumSize: Size(100, 40),
+                ), 
+                child: Text("Volver",
+                    style: GoogleFonts.poppins(fontSize: 17, fontWeight: FontWeight.bold),
+                )
+                ),
           ],
         ),
       ),
