@@ -167,7 +167,7 @@ class _MenuState extends State<Menu> {
           Consumer<CartController>(builder: (context, cartController, child) {
                 if (cartController.pedido.productos.isNotEmpty) {
                   final nroProductos =
-                      cartController.pedido.productos.values.reduce((a, b) => a + b);
+                      cartController.totalCantidad();
                   return Container(
                     color: Colors.white,
                     child: Padding(

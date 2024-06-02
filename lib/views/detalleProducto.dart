@@ -78,6 +78,13 @@ class _detalleProductoState extends State<detalleProducto> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
+        title: Text(
+          'Detalles del producto',
+          style: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.bold
+          ),
+        ),
       ),
       body: CustomScrollView(
         slivers: [
