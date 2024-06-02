@@ -1,5 +1,7 @@
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:easyorder/models/clases/menu.dart';
+import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +11,14 @@ import 'package:provider/provider.dart';
 import 'package:easyorder/views/pantallaCarga.dart';
 
 class detallePedido extends StatefulWidget {
-  const detallePedido({super.key});
+  const detallePedido(
+      {super.key,
+      required this.info,
+      required this.menu,
+      required this.restaurante});
+  final String info;
+  final Restaurante restaurante;
+  final Menu menu;
 
   @override
   State<detallePedido> createState() => _detallePedidoState();
@@ -35,7 +44,9 @@ class _detallePedidoState extends State<detallePedido> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: kToolbarHeight + 40),
+                  SizedBox(
+                      height: kToolbarHeight +
+                          MediaQuery.of(context).size.height * 0.03),
                   Text(
                     'Detalles del pedido',
                     style: GoogleFonts.poppins(
@@ -43,8 +54,9 @@ class _detallePedidoState extends State<detallePedido> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Gap(20),
+                  Spacer(),
                   Expanded(
+                    flex: 25,
                     child: ListView.builder(
                       padding: EdgeInsets.zero,
                       itemCount: cartController.pedido.productos.length,
@@ -56,6 +68,9 @@ class _detallePedidoState extends State<detallePedido> {
                             ProductCard(
                               producto: producto,
                               isPedido: 0,
+                              info: widget.info,
+                              menu: widget.menu,
+                              restaurante: widget.restaurante,
                             ),
                             const Gap(20),
                           ],
@@ -63,8 +78,9 @@ class _detallePedidoState extends State<detallePedido> {
                       },
                     ),
                   ),
-                  Gap(40),
+                  Spacer(),
                   Container(
+                    height: 180,
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(7),
@@ -76,101 +92,113 @@ class _detallePedidoState extends State<detallePedido> {
                         )),
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Sub-Total:',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Sub-Total:',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '1111',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
+                              Text(
+                                '1111',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Descuento:',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Descuento:',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '0',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
+                              Text(
+                                '0',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                        Gap(10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Total:',
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                        Spacer(),
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Total:',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '1111',
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
+                              Text(
+                                '1111',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                        Gap(10),
-                        Container(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              await _showConfirmationDialog(context);
-                              if (confirmation) {
-                                if (funciona) {
-                                  //Se hace una pequeña espera a la base de datos y después se continúa
-                                  await Future.delayed(
-                                      const Duration(seconds: 5));
-                                  Navigator.pop(context);
-                                  _showSuccessDialog(context);
-                                } else {
-                                  Navigator.pop(context);
-                                  _showAlertDialog(context);
+                        Spacer(),
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                await _showConfirmationDialog(context);
+                                if (confirmation) {
+                                  if (funciona) {
+                                    //Se hace una pequeña espera a la base de datos y después se continúa
+                                    await Future.delayed(
+                                        const Duration(seconds: 5));
+                                    Navigator.pop(context);
+                                    _showSuccessDialog(context);
+                                  } else {
+                                    Navigator.pop(context);
+                                    _showAlertDialog(context);
+                                  }
                                 }
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(7),
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              'Ordenar',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromRGBO(255, 95, 4, 1),
+                              child: Text(
+                                'Ordenar',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromRGBO(255, 95, 4, 1),
+                                ),
                               ),
                             ),
                           ),
@@ -194,25 +222,28 @@ class _detallePedidoState extends State<detallePedido> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
+          title: Text(
             'ERROR!!',
             textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(),
           ),
-          content: const Text(
+          content: Text(
             'Hubo un error procesando tu orden, por favor, inténtelo de nuevo',
             textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Center(
+              child: Center(
                 child: Text(
                   'OK',
-                  style: TextStyle(
-                      color: Color.fromRGBO(255, 96, 4, 1),
-                      fontWeight: FontWeight.bold),
+                  style: GoogleFonts.poppins(
+                    color: Color.fromRGBO(255, 96, 4, 1),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -229,13 +260,15 @@ class _detallePedidoState extends State<detallePedido> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
+          title: Text(
             'Pedido completado!',
             textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(),
           ),
-          content: const Text(
+          content: Text(
             'Ya tu pedido está en la cocina y estará listo dentro de poco',
             textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(),
           ),
           actions: [
             Center(
@@ -243,11 +276,12 @@ class _detallePedidoState extends State<detallePedido> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text(
+                child: Text(
                   'OK',
-                  style: TextStyle(
-                      color: Color.fromRGBO(255, 96, 4, 1),
-                      fontWeight: FontWeight.bold),
+                  style: GoogleFonts.poppins(
+                    color: Color.fromRGBO(255, 96, 4, 1),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

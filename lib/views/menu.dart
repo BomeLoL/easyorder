@@ -1,66 +1,48 @@
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:easyorder/models/clases/menu.dart';
+import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/detallePedido.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
-class Menu extends StatefulWidget {
-  const Menu({super.key, required this.info});
+class MenuView extends StatefulWidget {
+  const MenuView({super.key, required this.info, required this.menu, required this.restaurante});
   final String info;
+  final Menu menu; 
+  final Restaurante restaurante;
 
   @override
-  State<Menu> createState() => _MenuState();
+  State<MenuView> createState() => _MenuState();
 }
 
-class _MenuState extends State<Menu> {
+class _MenuState extends State<MenuView> {
   String infoQr = "";
-  List item_menu=[
-    ItemMenu(
-      nombreProducto: 'Parrilla con platano',
-      precio: 15.1,
-      categoria: "Parrilla Guanteña",
-      imgUrl:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZs4XdR6VDF8inuMgk5_rLDBdQF7pVv4-b6Y63nyUF0g&s'),
-    ItemMenu(
-      nombreProducto: 'Parrilla sin platano',
-      precio: 14.0,
-      categoria: "Parrilla Caraqueña",
-      imgUrl:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI0vuP2m3JkbwjczFfZwIxqAy8Ub55p1lw7rtSiREp1A&s'),
-    ItemMenu(
-      nombreProducto: 'Quesillo',
-      categoria: "Postre",
-      precio: 6.0,
-      imgUrl:
-          'https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg'),
-    ItemMenu(
-      nombreProducto: 'Helado',
-      categoria: "Postre",
-      precio: 1.0,
-      imgUrl:
-          'https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg'),
-      
-  ];
   Set <String> categorias= Set <String>();
   int selectedIndex = -1;
-  String selectedCategoria = "";
+  String selectedCategoria = "Todo";
   // List<int> botones = [0, 1, 2]; //se deberia tener un numero por cada categoria
   Color colorBoton1 = Color(0xFFFF5F04);
   //Color colorBoton2=Colors.white;
-
   @override
+  
   void initState() {
     super.initState();
-    infoQr = widget.info;
-    item_menu.forEach((elemento) {
+    infoQr = widget.restaurante.nombre;
+    categorias.add("Todo");
+    for (var elemento in widget.menu.itemsMenu) {
     categorias.add(elemento.categoria); // Agregar la categoría al conjunto
-    });
-    selectedCategoria = item_menu[0].categoria;
+    }
+    selectedCategoria = "Todo";
+    
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +50,7 @@ class _MenuState extends State<Menu> {
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(0, 255, 255, 255),
         scrolledUnderElevation: 0,
         centerTitle: true,
@@ -83,7 +66,7 @@ class _MenuState extends State<Menu> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: kToolbarHeight + 40),
+                SizedBox(height: kToolbarHeight + MediaQuery.of(context).size.height * 0.03),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Text(
@@ -132,19 +115,15 @@ class _MenuState extends State<Menu> {
                   ),
                   Expanded(
                   child: ListView.builder(
+                    scrollDirection: Axis.vertical,
                     padding: EdgeInsets.zero,
-                    itemCount: item_menu.length,
+                    itemCount: widget.menu.itemsMenu.length,
                     itemBuilder: (context, index) {
-                      String categoria = item_menu[index].categoria;
-                      if (categoria == selectedCategoria) {
+                      if (selectedCategoria == "Todo" || widget.menu.itemsMenu[index].categoria == selectedCategoria) {
                         return Column(
                           children: [
-                            ProductCard(producto: item_menu[index], isPedido: 1),
-                            // ProductCardInit(
-                            //   productName: item_menu[index]["Nombre"], 
-                            //   productPrice: item_menu[index]["Precio"], 
-                            //   productImage: "https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg"),
-                            SizedBox(height: 10,)
+                          ProductCard(producto: widget.menu.itemsMenu[index], isPedido: 1, info: infoQr, menu: widget.menu, restaurante: widget.restaurante),
+                          SizedBox(height: 10,)
                           ],
                         );
                       } else {
@@ -154,7 +133,12 @@ class _MenuState extends State<Menu> {
                     )
                   
                   ),
-                Consumer<CartController>(builder: (context, cartController, child) {
+              
+        ]
+        ),
+        ),
+        ),
+        Consumer<CartController>(builder: (context, cartController, child) {
           if (cartController.pedido.productos.isNotEmpty) {
             final nroProductos =
                 cartController.pedido.productos.values.reduce((a, b) => a + b);
@@ -164,34 +148,40 @@ class _MenuState extends State<Menu> {
               right: 0,
               child: Container(
                 color: Colors.white,
-                height: 90,
                 child: Padding(
                   padding: EdgeInsets.all(16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: Text(
-                          nroProductos.toString() + ' productos en el carrito',
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            color: Colors.grey,
+                      Expanded(
+                        flex: 7,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: Text(
+                            nroProductos.toString() + ' producto(s) en el carrito',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
+                      Spacer(flex: 1,),
+                      Expanded(
+                        flex: 8,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                const Color.fromRGBO(255, 95, 4, 1),
+                              backgroundColor:const Color.fromRGBO(255, 95, 4, 1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                              )
                               ),
                           onPressed: () {
                             Navigator.push(
                               context, 
                               MaterialPageRoute(
-                                builder: (context) => detallePedido()
+                                builder: (context) => detallePedido(info:infoQr, menu: widget.menu, restaurante: widget.restaurante,)
                                 ),
                               );
                           },
@@ -215,11 +205,7 @@ class _MenuState extends State<Menu> {
               height: 0,
             );
           }
-        })        
-        ]
-        ),
-        ),
-        ),
+        })  
         ]
       ),
       bottomNavigationBar: BottomNavigationBar(

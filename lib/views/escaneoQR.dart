@@ -1,7 +1,9 @@
-import 'package:easyorder/controllers/main_controller.dart';
+import 'package:easyorder/controllers/qr_controller.dart';
+import 'package:easyorder/views/detalleProducto.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/views/menu.dart';
+import 'package:easyorder/views/vistaQr.dart';
 
 
 class Escanear extends StatefulWidget {
@@ -17,6 +19,7 @@ class _EscanearState extends State<Escanear> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text("EasyOrder",
           style: GoogleFonts.poppins(),
@@ -26,14 +29,10 @@ class _EscanearState extends State<Escanear> {
       ),
       body: Center(
         child:Container(
-          // height: double.infinity,
-          // width: double.infinity,
           child: ElevatedButton(
             onPressed: ()async{
-              String info=await scannerQr();
-              if (mounted && info!="-1") {
-                Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){return Menu(info: info);}));
-              }
+              Navigator.push(context, MaterialPageRoute(builder: (context){return BarcodeScannerWithOverlay();}));
+
               },
             style: ElevatedButton.styleFrom(
             backgroundColor: Color(0xFFFF5F04),

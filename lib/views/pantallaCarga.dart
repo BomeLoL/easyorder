@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class pantallaCarga extends StatelessWidget {
   const pantallaCarga({super.key});
@@ -16,22 +17,22 @@ class pantallaCarga extends StatelessWidget {
             width: double.infinity,
             height: double.infinity,
             color: Color.fromRGBO(255, 96, 4, 1),
-            child: const Column(
+            child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SpinKitPouringHourGlassRefined(
+                  const SpinKitPouringHourGlassRefined(
                     size: 250,
                     color: Colors.white,
                   ),
-                  SizedBox(height: 45),
+                  const SizedBox(height: 45),
                   Text(
                     'Su pedido se esta realizando',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
+                      ),
                   )
                 ]),
           ),
