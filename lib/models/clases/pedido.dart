@@ -94,4 +94,16 @@ void deleteProducts(ItemMenu producto, String info, context, int isPedido) {
   int getOneProductQuantity(ItemMenu producto) {
   return productos[producto]?.cantidad ?? 0;
 }
+
+  double getTotalAmount() {
+    double total = 0;
+    productos.forEach((productoMenu, productoPedido) {
+      total += productoPedido.cantidad * productoMenu.precio;
+    });
+    String totalFormateado = total.toStringAsFixed(2); // Limita a 2 posiciones decimales
+    return double.parse(totalFormateado); 
+  }
+
+
 }
+
