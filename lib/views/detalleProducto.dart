@@ -41,7 +41,7 @@ class textContainer extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12.5),
       child: Text(
         text,
-        textAlign: TextAlign.left,
+        textAlign: TextAlign.justify,
         style: GoogleFonts.poppins(
           fontSize: size,
           fontWeight: weight,
@@ -101,10 +101,12 @@ class _detalleProductoState extends State<detalleProducto> {
                         ),
                         child: Column(
                           children: [
-                            ClipRRect(
+                            Container(
                               child: Padding(
-                                padding: const EdgeInsets.all(25.0),
-                                child: Column(children: [
+                                padding: const EdgeInsets.all(30),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
                                   //Icon(icon);
                                   textContainer(
                                       text: widget.producto.nombreProducto,
