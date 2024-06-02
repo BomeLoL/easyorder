@@ -20,6 +20,14 @@ void deleteProduct(ItemMenu producto, String info, context, isPedido) {
     _pedido.deleteProduct(producto, info, context, isPedido);
     notifyListeners();
   }
+  void updateProductQuantity(ItemMenu producto, int cantidad) {
+    _pedido.updateProductQuantity(producto, cantidad);
+    notifyListeners();
+  }
+
+  int getOneProductQuantity(ItemMenu producto) {
+    return _pedido.getOneProductQuantity(producto);
+  }
  int totalCantidad() {
     return _pedido.totalCantidad();
   } 

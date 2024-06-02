@@ -25,7 +25,19 @@ class detalleProducto extends StatefulWidget {
 
 
 class _detalleProductoState extends State<detalleProducto> {
-  int cantidad = 1;
+  bool isCarrito = true;
+  late int cantidad;
+
+  @override
+  void initState() {
+    super.initState();
+    cantidad = context.read<CartController>().getOneProductQuantity(widget.producto);
+    if(cantidad == 0){
+      cantidad = 1;
+      isCarrito = false;
+    }
+    
+  }
 
   void agregar() {
     setState(() {
@@ -34,7 +46,7 @@ class _detalleProductoState extends State<detalleProducto> {
   }
 
   void eliminar() {
-    if (cantidad > 1) {
+    if ((isCarrito == true && cantidad > 0) || (isCarrito == false && cantidad > 1)) {
       setState(() {
         cantidad--;
       });
@@ -167,10 +179,10 @@ class _detalleProductoState extends State<detalleProducto> {
               Expanded(
                 flex: 6,
                 child: QuantityButton(
-                  agregar: agregar,
-                  eliminar: eliminar,
-                  cantidad: cantidad,
-                ),
+                      agregar: agregar,
+                      eliminar: eliminar,
+                      cantidad: cantidad,
+                    )
               ),
               Spacer(
                 flex: 1,
@@ -181,7 +193,7 @@ class _detalleProductoState extends State<detalleProducto> {
                   flex: 10,
                   child: ElevatedButton(
                     onPressed: () {
-                      cartController.addProducts(widget.producto, cantidad);
+                      cartController.updateProductQuantity(widget.producto, cantidad);
                       Navigator.pop(context,
                           MaterialPageRoute(builder: (context) {
                         return Menu(info: widget.info);
@@ -193,13 +205,21 @@ class _detalleProductoState extends State<detalleProducto> {
                         borderRadius: BorderRadius.circular(7),
                       ),
                     ),
-                    child: Text(
-                      "Agregar",
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    child: Builder(
+                      builder: (context) {
+                        String textOfbutton = 'Agregar';
+                        if(isCarrito == true){
+                          textOfbutton = 'Modificar';
+                        }
+                        return Text(
+                          textOfbutton,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        );
+                      }
                     ),
                   ),
                 );

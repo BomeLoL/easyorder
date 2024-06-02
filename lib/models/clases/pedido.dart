@@ -45,6 +45,18 @@ class Pedido {
       }
     }
   }
+  void updateProductQuantity(ItemMenu producto, int cantidad) {
+
+    if (productos.containsKey(producto)) {
+      if (cantidad == 0) {
+        productos.remove(producto);
+      }else {
+      productos[producto]!.cantidad = cantidad;
+      }    
+  }else if (cantidad >= 1){
+    addProducts(producto, cantidad);
+  }
+  }
  // void deleteProduct(ItemMenu producto, String info, context) {
  //   if (productos.containsKey(producto) && productos[producto]! > 1) {
  //     productos[producto] = productos[producto]! - 1;
@@ -65,4 +77,8 @@ class Pedido {
     });
     return total;
   }
+
+  int getOneProductQuantity(ItemMenu producto) {
+  return productos[producto]?.cantidad ?? 0;
+}
 }
