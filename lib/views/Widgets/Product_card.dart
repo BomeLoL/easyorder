@@ -85,7 +85,7 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'daaaaaaa aaaaaaaaaa ddd',
+                    producto.descripcion,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,

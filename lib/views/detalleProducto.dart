@@ -123,8 +123,7 @@ class _detalleProductoState extends State<detalleProducto> {
                                       color: Colors.black),
                       
                                   textContainer(
-                                      text:
-                                          'In a medium bowl, add ground chicken, breadcrumbs, mayonnaise, onions, parsley, garlic, paprika, salt and pepper. Use your hands to combine all the ingredients together until blended, but don\'t over mix.',
+                                      text:widget.producto.descripcion,
                                       size: 14,
                                       weight: FontWeight.normal,
                                       color: Colors.black),
