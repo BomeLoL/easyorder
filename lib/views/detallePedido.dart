@@ -17,6 +17,7 @@ class detallePedido extends StatefulWidget {
 
 class _detallePedidoState extends State<detallePedido> {
   bool funciona = false;
+  bool confirmation = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,20 +145,18 @@ class _detallePedidoState extends State<detallePedido> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () async {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                  return const pantallaCarga();
-                                }),
-                              );
-                              //Se hace una pequeña espera a la base de datos y después se continúa
-                              await Future.delayed(const Duration(seconds: 5));
-                              if (funciona) {
-                                Navigator.pop(context);
-                                _showSuccessDialog(context);
-                              } else {
-                                Navigator.pop(context);
-                                _showAlertDialog(context);
+                              await _showConfirmationDialog(context);
+                              if (confirmation) {
+                                if (funciona) {
+                                  //Se hace una pequeña espera a la base de datos y después se continúa
+                                  await Future.delayed(
+                                      const Duration(seconds: 5));
+                                  Navigator.pop(context);
+                                  _showSuccessDialog(context);
+                                } else {
+                                  Navigator.pop(context);
+                                  _showAlertDialog(context);
+                                }
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -251,6 +250,62 @@ class _detallePedidoState extends State<detallePedido> {
                       fontWeight: FontWeight.bold),
                 ),
               ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showConfirmationDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Confirmar Acción',
+            textAlign: TextAlign.center,
+          ),
+          content: const Text(
+            'Está seguro de enviar su orden?',
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (BuildContext context) {
+                        return const pantallaCarga();
+                      }),
+                    );
+                    funciona = true;
+                    confirmation = true;
+                  },
+                  child: const Text(
+                    'Si',
+                    style: TextStyle(
+                        color: Color.fromRGBO(255, 96, 4, 1),
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                    confirmation = false;
+                  },
+                  child: const Text(
+                    'No',
+                    style: TextStyle(
+                        color: Color.fromRGBO(255, 96, 4, 1),
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
             ),
           ],
         );
