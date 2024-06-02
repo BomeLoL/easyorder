@@ -36,5 +36,10 @@ void deleteProduct(ItemMenu producto, String info, context, isPedido) {
   _pedido.deleteProducts(producto, info, context, isPedido);
   notifyListeners();
 }
+  double getTotalAmount() {
+   return _pedido.getTotalAmount();
+   
+ }
+
 }
 

@@ -76,7 +76,7 @@ class _detallePedidoState extends State<detallePedido> {
                   ),
                   Spacer(),
                   Container(
-                    height: 180,
+                    height: 150, // Cambiar a 180 con Sub-total y Descuentos
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(7),
@@ -88,55 +88,55 @@ class _detallePedidoState extends State<detallePedido> {
                         )),
                     child: Column(
                       children: [
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Sub-Total:',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '1111',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Descuento:',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '0',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Spacer(),
+                        // Expanded(
+                        //   flex: 2,
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     children: [
+                        //       // Text(
+                        //       //   'Sub-Total:',
+                        //       //   style: GoogleFonts.poppins(
+                        //       //     fontSize: 16,
+                        //       //     color: Colors.white,
+                        //       //     fontWeight: FontWeight.bold,
+                        //       //   ),
+                        //       // ),
+                        //       // Text(
+                        //       //   cartController.getTotalAmount().toString(),
+                        //       //   style: GoogleFonts.poppins(
+                        //       //     fontSize: 16,
+                        //       //     color: Colors.white,
+                        //       //     fontWeight: FontWeight.bold,
+                        //       //   ),
+                        //       // )
+                        //     ],
+                        //   ),
+                        // ),
+                        // Expanded(
+                        //   flex: 2,
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     children: [
+                        //       // Text(
+                        //       //   'Descuento:',
+                        //       //   style: GoogleFonts.poppins(
+                        //       //     fontSize: 16,
+                        //       //     color: Colors.white,
+                        //       //     fontWeight: FontWeight.bold,
+                        //       //   ),
+                        //       // ),
+                        //       // Text(
+                        //       //   '0',
+                        //       //   style: GoogleFonts.poppins(
+                        //       //     fontSize: 16,
+                        //       //     color: Colors.white,
+                        //       //     fontWeight: FontWeight.bold,
+                        //       //   ),
+                        //       // )
+                        //     ],
+                        //   ),
+                        // ),
+                    
                         Expanded(
                           flex: 2,
                           child: Row(
@@ -151,7 +151,7 @@ class _detallePedidoState extends State<detallePedido> {
                                 ),
                               ),
                               Text(
-                                '1111',
+                                '\$${cartController.getTotalAmount()}',
                                 style: GoogleFonts.roboto(
                                   fontSize: 18,
                                   color: Colors.white,
@@ -161,9 +161,9 @@ class _detallePedidoState extends State<detallePedido> {
                             ],
                           ),
                         ),
-                        Spacer(),
+                       
                         Expanded(
-                          flex: 3,
+                          flex: 1, //Cambiar a 3 cuando se agrege nuevamente el Sub-total y Descuento
                           child: Container(
                             width: double.infinity,
                             child: ElevatedButton(

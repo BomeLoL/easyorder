@@ -108,7 +108,7 @@ class _detalleProductoState extends State<detalleProducto> {
                                 SizedBox(height: 25),
 
                                 Text(
-                                  '${widget.producto.precio}\$',
+                                  '\$${widget.producto.precio}',
                                   textAlign: TextAlign.justify,
                                   style: GoogleFonts.poppins(
                                     fontSize: 18,

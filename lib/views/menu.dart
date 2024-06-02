@@ -94,7 +94,7 @@ class _MenuState extends State<Menu> {
                     child: Text(
                       "Menú del Restaurante",
                       style: GoogleFonts.poppins(
-                        fontSize: 20,
+                        fontSize: 25,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
