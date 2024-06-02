@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:easyorder/views/menu.dart';
-
 
 class ScannedBarcodeLabel extends StatelessWidget {
   const ScannedBarcodeLabel({
@@ -21,9 +19,7 @@ class ScannedBarcodeLabel extends StatelessWidget {
       return StreamBuilder(
       stream: barcodes,
       builder: (context, snapshot) {
-        final scannedBarcodes = snapshot.data?.barcodes ?? [];
 
-        // if (scannedBarcodes.isEmpty) {
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Align(
@@ -48,9 +44,6 @@ class ScannedBarcodeLabel extends StatelessWidget {
               ),
             ),
           );
-        // } 
-
-        // return Container();
       },
     );
     } else {
@@ -59,7 +52,6 @@ class ScannedBarcodeLabel extends StatelessWidget {
         StreamBuilder(
         stream: barcodes,
         builder: (context, snapshot) {
-          final scannedBarcodes = snapshot.data?.barcodes ?? [];
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Align(
