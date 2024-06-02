@@ -38,13 +38,7 @@ class Pedido {
     if (productos.containsKey(producto) && productos[producto]!.cantidad > 1) {
       productos[producto]!.cantidad -= 1;
     } else {
-      productos.remove(producto);
-      if (productos.isEmpty && isPedido == 0) {
-        Navigator.pop(
-          context,
-          MaterialPageRoute(builder: (context) => Menu(info: info)),
-        );
-      }
+      deleteProducts(producto, info, context, isPedido);
     }
   }
   void updateProductQuantity(ItemMenu producto, int cantidad) {
@@ -62,12 +56,6 @@ class Pedido {
 
 void deleteProducts(ItemMenu producto, String info, context, int isPedido) {
   productos.remove(producto);
-  if (productos.isEmpty && isPedido == 0) {
-        Navigator.pop(
-          context,
-          MaterialPageRoute(builder: (context) => Menu(info: info)),
-        );
-      }
 }
 
  // void deleteProduct(ItemMenu producto, String info, context) {

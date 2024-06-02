@@ -2,6 +2,7 @@ import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
+import 'package:easyorder/views/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +30,13 @@ class _detallePedidoState extends State<detallePedido> {
       ),
       body: Consumer<CartController>(
         builder: (context, cartController, child) {
-          return Background_image(
+          if (cartController.totalCantidad() == 0){
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            });
+            return SizedBox();
+          } else {
+            return Background_image(
             child: Padding(
               padding: EdgeInsets.all(16.0),
               child: Column(
@@ -202,6 +209,8 @@ class _detallePedidoState extends State<detallePedido> {
               ),
             ),
           );
+          }
+          
         },
       ),
     );
