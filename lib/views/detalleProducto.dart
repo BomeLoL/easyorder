@@ -13,7 +13,8 @@ import 'package:easyorder/views/escaneoQR.dart';
 import 'package:easyorder/views/Widgets/quantity_button.dart';
 
 class detalleProducto extends StatefulWidget {
-  const detalleProducto({super.key, required this.info, required this.producto});
+  const detalleProducto(
+      {super.key, required this.info, required this.producto});
   final String info;
   final ItemMenu producto;
 
@@ -21,36 +22,6 @@ class detalleProducto extends StatefulWidget {
   State<detalleProducto> createState() => _detalleProductoState();
 }
 
-class textContainer extends StatelessWidget {
-  const textContainer({
-    super.key,
-    required this.text,
-    required this.size,
-    required this.weight,
-    required this.color,
-  });
-
-  final String text;
-  final double size;
-  final FontWeight weight;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.5),
-      child: Text(
-        text,
-        textAlign: TextAlign.justify,
-        style: GoogleFonts.poppins(
-          fontSize: size,
-          fontWeight: weight,
-          color: color,
-        ),
-      ),
-    );
-  }
-}
 
 
 class _detalleProductoState extends State<detalleProducto> {
@@ -70,7 +41,6 @@ class _detalleProductoState extends State<detalleProducto> {
     }
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,93 +50,112 @@ class _detalleProductoState extends State<detalleProducto> {
         scrolledUnderElevation: 0,
         title: Text(
           'Detalles del producto',
-          style: GoogleFonts.poppins(
-            fontSize: 20,
-            fontWeight: FontWeight.bold
-          ),
+          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
-      body: CustomScrollView(
-        slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index){
-                  return Column(
+      body: CustomScrollView(slivers: [
+        SliverList(
+            delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            return Column(
+              children: [
+                Container(
+                  height: 350,
+                  width: double.infinity,
+                  child: Image.network(
+                    widget.producto.imgUrl,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.high,
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.white,
+                  ),
+                  child: Column(
                     children: [
                       Container(
-                        height: 350,
-                        width: double.infinity,
-                        child: Image.network(
-                        widget.producto.imgUrl,
-                        fit: BoxFit.cover,
-                        filterQuality: FilterQuality.high,
-                      ),),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          color: Colors.white,
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              child: Padding(
-                                padding: const EdgeInsets.all(30),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                  //Icon(icon);
-                                  textContainer(
-                                      text: widget.producto.nombreProducto,
-                                      size: 25,
-                                      weight: FontWeight.normal,
-                                      color: Colors.black),
-                      
-                                  textContainer(
-                                      text: '${widget.producto.precio}\$',
-                                      size: 18,
-                                      weight: FontWeight.bold,
-                                      color: Colors.black),
-                      
-                                  textContainer(
-                                      text:
-                                          'In a medium bowl, add ground chicken, breadcrumbs, mayonnaise, onions, parsley, garlic, paprika, salt and pepper. Use your hands to combine all the ingredients together until blended, but don\'t over mix.',
-                                      size: 14,
-                                      weight: FontWeight.normal,
-                                      color: Colors.black),
-                      
-                                  textContainer(
-                                      text: 'Comentarios adicionales',
-                                      size: 18,
-                                      weight: FontWeight.bold,
-                                      color: Colors.black),
-                      
-                                  textContainer(
-                                      text:
-                                          'Hazle saber al restaurante los detalles a tener en cuenta al preparar tu pedido.',
-                                      size: 14,
-                                      weight: FontWeight.normal,
-                                      color: Colors.black38),
-                      
-                                  TextField(
-                                    decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        hintText: '(Opcional)',
-                                        hintStyle: const TextStyle(
-                                            fontSize: 14.0, color: Colors.black38)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(35),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                //Icon(icon);
+                                Text(
+                                  widget.producto.nombreProducto,
+                                  textAlign: TextAlign.justify,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
                                   ),
-                                ]),
-                              ),
-                            ),
-                          ],
+                                ),
+
+                                SizedBox(height: 25),
+
+                                Text(
+                                  '${widget.producto.precio}\$',
+                                  textAlign: TextAlign.justify,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+
+                              SizedBox(height: 25),
+
+                                Text(
+                                  'In a medium bowl, add ground chicken, breadcrumbs, mayonnaise, onions, parsley, garlic, paprika, salt and pepper. Use your hands to combine all the ingredients together until blended, but don\'t over mix.',
+                                  textAlign: TextAlign.justify,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black,
+                                  ),
+                                ),
+
+                                // Text(
+                                //   'Comentarios adicionales',
+                                //   style: GoogleFonts.poppins(
+                                //     fontSize: 18,
+                                //     fontWeight: FontWeight.bold,
+                                //     color: Colors.black,
+                                //   ),
+                                // ),
+
+                                // Text(
+                                //   text:
+                                //       'Hazle saber al restaurante los detalles a tener en cuenta al preparar tu pedido.',
+                                //   style: GoogleFonts.poppins(
+                                //     fontSize: 14,
+                                //     fontWeight: FontWeight.normal,
+                                //     color: Colors.black38,
+                                //   ),
+                                // ),
+
+                                // TextField(
+                                //   decoration: InputDecoration(
+                                //       border: OutlineInputBorder(),
+                                //       hintText: '(Opcional)',
+                                //       hintStyle: const TextStyle(
+                                //           fontSize: 14.0,
+                                //           color: Colors.black38)),
+                                // ),
+                              ]),
                         ),
                       ),
                     ],
-                  );
-                },
-                childCount: 1,
-              ) )
-          ]
-      ),
+                  ),
+                ),
+              ],
+            );
+          },
+          childCount: 1,
+        ))
+      ]),
       bottomNavigationBar: Container(
         color: Colors.grey[50],
         child: Padding(
@@ -183,15 +172,16 @@ class _detalleProductoState extends State<detalleProducto> {
                   cantidad: cantidad,
                 ),
               ),
-             Spacer(flex: 1,),
-              Consumer<CartController>(builder: (context, cartController, child) {
+              Spacer(
+                flex: 1,
+              ),
+              Consumer<CartController>(
+                  builder: (context, cartController, child) {
                 return Expanded(
                   flex: 10,
                   child: ElevatedButton(
                     onPressed: () {
-                      cartController.addProducts(
-                          widget.producto,
-                          cantidad);
+                      cartController.addProducts(widget.producto, cantidad);
                       Navigator.pop(context,
                           MaterialPageRoute(builder: (context) {
                         return Menu(info: widget.info);
@@ -202,7 +192,6 @@ class _detalleProductoState extends State<detalleProducto> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(7),
                       ),
-        
                     ),
                     child: Text(
                       "Agregar",
