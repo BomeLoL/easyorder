@@ -13,15 +13,17 @@ class _DbErrorDialogState extends State<DbErrorDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       title: Text(
         'Error en la conexión',
         textAlign: TextAlign.center,
-        style: GoogleFonts.poppins(),
+        style: GoogleFonts.poppins(
+          fontSize: 16,
+          fontWeight: FontWeight.bold
+        ),
       ),
       content: Text(
         'Verifique su conexión y presione el botón para intentarlo nuevamente. Por favor, espere unos segundos para reestablecer la conexión.',
-        textAlign: TextAlign.center,
-        style: GoogleFonts.poppins(),
       ),
       actions: [
         Center(

@@ -53,11 +53,11 @@ Future<int> revisarBd(barcode, context) async {
         cartController.pedido = pedidoVacio;
 //        }          
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-            return 
-            
-            
+            return   
             MenuView(info: restaurante.id, restaurante: restaurante,menu: menu, idMesa: int.parse(idMesa));
-            }));
+            },
+            settings: const RouteSettings(name: 'menu'),
+            ));
        // }
 
       } else { // no posee la mesa escaneada

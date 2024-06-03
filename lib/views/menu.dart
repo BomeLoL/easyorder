@@ -59,202 +59,177 @@ class _MenuState extends State<MenuView> {
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
         ),
       ),
-      body: Stack(children: [
-        Background_image(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(
-                  height: kToolbarHeight +
-                      MediaQuery.of(context).size.height * 0.03),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(
-                  "Menú del Restaurante",
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+      body: Background_image(
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 16,
+                  right: 16,
+                  left: 16,
                 ),
-              ),
-              Gap(20),
-              Container(
-                width: double.infinity,
-                height: 50,
-                child: ListView(scrollDirection: Axis.horizontal, children: [
-                  Row(
-                      children: categorias
-                          .map((elemento) {
-                            Color color = elemento == selectedCategoria
-                                ? Color(0xFFFF5F04)
-                                : Colors.white;
-                            Color color1 = elemento == selectedCategoria
-                                ? Colors.white
-                                : Colors.black;
-                            return [
-                              OutlinedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedCategoria = elemento;
-                                    });
-                                  },
-                                  style: OutlinedButton.styleFrom(
-                                    backgroundColor: color,
-                                    foregroundColor: color1,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    minimumSize: Size(45, 40),
-                                  ),
-                                  child: Text(elemento)),
-                              SizedBox(
-                                width: 10,
-                              ),
-                            ];
-                          })
-                          .expand((widgets) => widgets)
-                          .toList()),
-                ]),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                  child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      padding: EdgeInsets.zero,
-                      itemCount: widget.menu.itemsMenu.length,
-                      itemBuilder: (context, index) {
-                        if (selectedCategoria == "Todo" ||
-                            widget.menu.itemsMenu[index].categoria ==
-                                selectedCategoria) {
-                          return Column(
-                            children: [
-                              ProductCard(
-                                producto: widget.menu.itemsMenu[index],
-                                isPedido: 1,
-                                info: nombreRes,
-                                menu: widget.menu,
-                                restaurante: widget.restaurante,
-                                idMesa: widget.idMesa,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              )
-                            ],
-                          );
-                        } else {
-                          return Container();
-                        }
-                      })),
-            ]),
-          ),
-        ),
-        Consumer<CartController>(builder: (context, cartController, child) {
-          if (cartController.pedido.productos.isNotEmpty) {
-            final nroProductos =
-                cartController.pedido.productos.values.reduce((a, b) => a + b);
-            return Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(
+                          height: kToolbarHeight +
+                              MediaQuery.of(context).size.height * 0.03),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text(
+                          "Menú del Restaurante",
+                          style: GoogleFonts.poppins(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Gap(20),
+                      Container(
+                        width: double.infinity,
+                        height: 50,
+                        child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              Row(
+                                  children: categorias
+                                      .map((elemento) {
+                                        Color color =
+                                            elemento == selectedCategoria
+                                                ? Color(0xFFFF5F04)
+                                                : Colors.white;
+                                        Color color1 =
+                                            elemento == selectedCategoria
+                                                ? Colors.white
+                                                : Colors.black;
+                                        return [
+                                          OutlinedButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  selectedCategoria = elemento;
+                                                });
+                                              },
+                                              style: OutlinedButton.styleFrom(
+                                                backgroundColor: color,
+                                                foregroundColor: color1,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                minimumSize: Size(45, 40),
+                                              ),
+                                              child: Text(elemento)),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                        ];
+                                      })
+                                      .expand((widgets) => widgets)
+                                      .toList()),
+                            ]),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Expanded(
-                        flex: 7,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          child: Text(
-                            nroProductos.toString() +
-                                ' producto(s) en el carrito',
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              color: Colors.grey,
+                          child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              padding: EdgeInsets.zero,
+                              itemCount: widget.menu.itemsMenu.length,
+                              itemBuilder: (context, index) {
+                                if (selectedCategoria == "Todo" ||
+                                    widget.menu.itemsMenu[index].categoria ==
+                                        selectedCategoria) {
+                                  return Column(
+                                    children: [
+                                      ProductCard(
+                                          producto:
+                                              widget.menu.itemsMenu[index],
+                                          isPedido: 1,
+                                          info: nombreRes),
+                                      SizedBox(
+                                        height: 10,
+                                      )
+                                    ],
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              })),
+                    ]),
+              ),
+            ),
+            Consumer<CartController>(builder: (context, cartController, child) {
+              if (cartController.pedido.productos.isNotEmpty) {
+                final nroProductos = cartController.totalCantidad();
+                return Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 7,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Text(
+                              nroProductos.toString() +
+                                  ' producto(s) en el carrito',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Spacer(
-                        flex: 1,
-                      ),
-                      Expanded(
-                        flex: 8,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromRGBO(255, 95, 4, 1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(7),
-                              )),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => detallePedido(
-                                      info: nombreRes,
-                                      menu: widget.menu,
-                                      restaurante: widget.restaurante,
-                                      idMesa: widget.idMesa)),
-                            );
-                          },
-                          child: Text(
-                            'Ver mi pedido',
-                            style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
+                        Spacer(
+                          flex: 1,
                         ),
-                      ),
-                      //ESTO ES SOLO PARA QUE SE MUESTRE LA FACTURA
-                      Expanded(
-                        flex: 8,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromRGBO(255, 95, 4, 1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(7),
-                              )),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => finalizarPedido(
-                                    info: nombreRes,
-                                    menu: widget.menu,
-                                    restaurante: widget.restaurante,
-                                    idMesa: widget.idMesa),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            'Finalizar orden',
-                            style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                        Expanded(
+                          flex: 8,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromRGBO(255, 95, 4, 1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                )),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => detallePedido(
+                                        info: nombreRes,
+                                        menu: widget.menu,
+                                        restaurante: widget.restaurante,
+                                        idMesa: widget.idMesa)),
+                              );
+                            },
+                            child: Text(
+                              'Ver mi pedido',
+                              style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ),
-            );
-          } else {
-            return Container(
-              width: 0,
-              height: 0,
-            );
-          }
-        })
-      ]),
+                );
+              } else {
+                return Container(
+                  width: 0,
+                  height: 0,
+                );
+              }
+            })
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Colors.white,
           fixedColor: Color.fromRGBO(142, 142, 142, 1),

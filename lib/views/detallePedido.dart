@@ -33,6 +33,7 @@ class detallePedido extends StatefulWidget {
 class _detallePedidoState extends State<detallePedido> {
   bool funciona = false;
   bool confirmation = false;
+  bool shouldPop = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,186 +45,192 @@ class _detallePedidoState extends State<detallePedido> {
       ),
       body: Consumer<CartController>(
         builder: (context, cartController, child) {
-          return Background_image(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                      height: kToolbarHeight +
-                          MediaQuery.of(context).size.height * 0.03),
-                  Text(
-                    'Detalles del pedido',
-                    style: GoogleFonts.poppins(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
+          if (cartController.totalCantidad() == 0 && shouldPop == true) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).popUntil((route) {
+                return route.settings.name == 'menu';
+              });
+            });
+            return SizedBox();
+          } else {
+            return Background_image(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                        height: kToolbarHeight +
+                            MediaQuery.of(context).size.height * 0.03),
+                    Text(
+                      'Detalles del pedido',
+                      style: GoogleFonts.poppins(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                  Expanded(
-                    flex: 25,
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: cartController.pedido.productos.length,
-                      itemBuilder: (context, index) {
-                        final producto = cartController.pedido.productos.keys
-                            .elementAt(index);
-                        return Column(
-                          children: [
-                            ProductCard(
-                              producto: producto,
-                              isPedido: 0,
-                              info: widget.info,
-                              menu: widget.menu,
-                              restaurante: widget.restaurante,
-                              idMesa: widget.idMesa,
+                    Spacer(),
+                    Expanded(
+                      flex: 25,
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: cartController.pedido.productos.length,
+                        itemBuilder: (context, index) {
+                          final producto = cartController.pedido.productos.keys
+                              .elementAt(index);
+                          return Column(
+                            children: [
+                              ProductCard(
+                                producto: producto,
+                                isPedido: 0,
+                                info: widget.info,
+                              ),
+                              const Gap(20),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    Spacer(),
+                    Container(
+                      height: 150, // Cambiar a 180 con Sub-total y Descuentos
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7),
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color.fromRGBO(255, 95, 4, 1),
+                              Colors.red,
+                            ],
+                          )),
+                      child: Column(
+                        children: [
+                          // Expanded(
+                          //   flex: 2,
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       // Text(
+                          //       //   'Sub-Total:',
+                          //       //   style: GoogleFonts.poppins(
+                          //       //     fontSize: 16,
+                          //       //     color: Colors.white,
+                          //       //     fontWeight: FontWeight.bold,
+                          //       //   ),
+                          //       // ),
+                          //       // Text(
+                          //       //   cartController.getTotalAmount().toString(),
+                          //       //   style: GoogleFonts.poppins(
+                          //       //     fontSize: 16,
+                          //       //     color: Colors.white,
+                          //       //     fontWeight: FontWeight.bold,
+                          //       //   ),
+                          //       // )
+                          //     ],
+                          //   ),
+                          // ),
+                          // Expanded(
+                          //   flex: 2,
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       // Text(
+                          //       //   'Descuento:',
+                          //       //   style: GoogleFonts.poppins(
+                          //       //     fontSize: 16,
+                          //       //     color: Colors.white,
+                          //       //     fontWeight: FontWeight.bold,
+                          //       //   ),
+                          //       // ),
+                          //       // Text(
+                          //       //   '0',
+                          //       //   style: GoogleFonts.poppins(
+                          //       //     fontSize: 16,
+                          //       //     color: Colors.white,
+                          //       //     fontWeight: FontWeight.bold,
+                          //       //   ),
+                          //       // )
+                          //     ],
+                          //   ),
+                          // ),
+
+                          Expanded(
+                            flex: 2,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Total:',
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '\$${cartController.getTotalAmount()}',
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ],
                             ),
-                            const Gap(20),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  Spacer(),
-                  Container(
-                    height: 180,
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color.fromRGBO(255, 95, 4, 1),
-                            Colors.red,
-                          ],
-                        )),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Sub-Total:',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '1111',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                            ],
                           ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Descuento:',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '0',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Spacer(),
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Total:',
-                                style: GoogleFonts.roboto(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '1111',
-                                style: GoogleFonts.roboto(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Spacer(),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                final tester = await MongoDatabase.Test();
-                                if (tester == false) {
-                                  // ignore: use_build_context_synchronously
-                                  dbErrorDialog(context);
-                                } else {
-                                  await _showConfirmationDialog(context);
-                                  if (confirmation) {
-                                    if (funciona) {
-                                      //Se hace una pequeña espera a la base de datos y después se continúa
-                                      await Future.delayed(
-                                          const Duration(seconds: 5));
-                                      Navigator.pop(context);
-                                      await _showSuccessDialog(context);
-                                      Navigator.pop(context);
-                                    } else {
-                                      Navigator.pop(context);
-                                      _showAlertDialog(context);
+
+                          Expanded(
+                            flex:
+                                1, //Cambiar a 3 cuando se agrege nuevamente el Sub-total y Descuento
+                            child: Container(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  final tester = await MongoDatabase.Test();
+                                  if (tester == false) {
+                                    // ignore: use_build_context_synchronously
+                                    dbErrorDialog(context);
+                                  } else {
+                                    await _showConfirmationDialog(context);
+                                    if (confirmation) {
+                                      if (funciona) {
+                                        //Se hace una pequeña espera a la base de datos y después se continúa
+                                        await Future.delayed(
+                                            const Duration(seconds: 5));
+                                        Navigator.pop(context);
+                                        _showSuccessDialog(context);
+                                      } else {
+                                        Navigator.pop(context);
+                                        _showAlertDialog(context);
+                                      }
                                     }
                                   }
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(7),
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(7),
+                                  ),
                                 ),
-                              ),
-                              child: Text(
-                                'Ordenar',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromRGBO(255, 95, 4, 1),
+                                child: Text(
+                                  'Ordenar',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromRGBO(255, 95, 4, 1),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          );
+            );
+          }
         },
       ),
     );
@@ -374,6 +381,7 @@ class _detallePedidoState extends State<detallePedido> {
                                 verificador = false;
                               }
                               if (verificador == true) {
+                                shouldPop = false;
                                 CartController cartController =
                                     Provider.of<CartController>(context,
                                         listen: false);

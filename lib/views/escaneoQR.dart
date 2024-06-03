@@ -1,5 +1,6 @@
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
+import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/views/vistaQr.dart';
@@ -13,6 +14,9 @@ class Escanear extends StatefulWidget {
 }
 
 class _EscanearState extends State<Escanear> {
+
+  bool isButtonPressed = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

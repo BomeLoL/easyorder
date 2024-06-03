@@ -1,6 +1,6 @@
 
 class ItemMenu {
-  final int id; 
+  final int id;
   final String nombreProducto;
   final String descripcion;
   final double precio;
@@ -8,7 +8,7 @@ class ItemMenu {
   final String imgUrl;
 
   ItemMenu({
-    required this.id, 
+    required this.id,
     required this.nombreProducto,
     required this.descripcion,
     required this.precio,
@@ -19,24 +19,26 @@ class ItemMenu {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    
+
     return other is ItemMenu &&
-      other.id == id &&
-      other.nombreProducto == nombreProducto &&
-      other.precio == precio &&
-      other.categoria == categoria &&
-      other.imgUrl == imgUrl;
+        other.id == id &&
+        other.nombreProducto == nombreProducto &&
+        other.precio == precio &&
+        other.categoria == categoria &&
+        other.imgUrl == imgUrl;
   }
 
   @override
   int get hashCode {
-    return nombreProducto.hashCode ^
-      precio.hashCode ^
-      categoria.hashCode ^
-      imgUrl.hashCode;
+    return id.hashCode ^
+        nombreProducto.hashCode ^
+        descripcion.hashCode ^
+        precio.hashCode ^
+        categoria.hashCode ^
+        imgUrl.hashCode;
   }
 
-    Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'nombreProducto': nombreProducto,
@@ -46,7 +48,8 @@ class ItemMenu {
       'imgUrl': imgUrl,
     };
   }
-    ItemMenu.fromMap(Map<String, dynamic> map)
+
+  ItemMenu.fromMap(Map<String, dynamic> map)
       : id = map['id'],
         nombreProducto = map['nombreProducto'],
         descripcion = map['descripcion'],
