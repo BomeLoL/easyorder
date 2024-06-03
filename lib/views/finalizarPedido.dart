@@ -104,7 +104,7 @@ class _finalizarPedidoState extends State<finalizarPedido> {
                                 ),
                               ),
                               Text(
-                                '1111',
+                                '\$${cartController.getTotalAmount()}',
                                 style: GoogleFonts.roboto(
                                   fontSize: 18,
                                   color: Colors.white,

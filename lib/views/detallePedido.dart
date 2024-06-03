@@ -198,7 +198,8 @@ class _detallePedidoState extends State<detallePedido> {
                                         await Future.delayed(
                                             const Duration(seconds: 5));
                                         Navigator.pop(context);
-                                        _showSuccessDialog(context);
+                                        await _showSuccessDialog(context);
+                                        Navigator.of(context).pop();
                                       } else {
                                         Navigator.pop(context);
                                         _showAlertDialog(context);
@@ -298,14 +299,14 @@ class _detallePedidoState extends State<detallePedido> {
                 child: TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    Navigator.pushReplacement(context,
+                    /*Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) {
                       return MenuView(
                           info: widget.restaurante.id,
                           restaurante: widget.restaurante,
                           menu: widget.menu,
                           idMesa: widget.idMesa);
-                    }));
+                    }));*/
                   },
                   child: Text(
                     'OK',

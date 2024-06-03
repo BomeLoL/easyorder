@@ -32,6 +32,7 @@ class _MenuState extends State<MenuView> {
   int selectedIndex = -1;
   String selectedCategoria = "Todo";
   Color colorBoton1 = Color(0xFFFF5F04);
+  bool confirmation = false;
 
   @override
   void initState() {
@@ -242,14 +243,6 @@ class _MenuState extends State<MenuView> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.home,
-              size: 45.0,
-              color: Color.fromRGBO(255, 95, 4, 1),
-            ),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
               Icons.qr_code,
               size: 45.0,
               color: Color.fromRGBO(255, 95, 4, 1),
@@ -258,27 +251,76 @@ class _MenuState extends State<MenuView> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.account_box,
+              Icons.exit_to_app,
               size: 45.0,
               color: Color.fromRGBO(255, 95, 4, 1),
             ),
-            label: "Factura",
+            label: "Terminar sesion",
           )
         ],
-        onTap: (int clickedIndex) {
+        onTap: (int clickedIndex) async {
           if (clickedIndex == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => finalizarPedido(
-                      info: nombreRes,
-                      menu: widget.menu,
-                      restaurante: widget.restaurante,
-                      idMesa: widget.idMesa)),
-            );
+            await _showConfirmationDialog(context);
+            if (confirmation == true) {
+              Navigator.pop(context);
+            }
           }
         },
       ),
+    );
+  }
+
+  Future<void> _showConfirmationDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Confirmar Acción',
+            textAlign: TextAlign.center,
+          ),
+          content: const Text(
+            'Está seguro de terminar su sesión?',
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      confirmation = false;
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'No',
+                    style: TextStyle(
+                        color: Color.fromRGBO(255, 96, 4, 1),
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      confirmation = true;
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Si',
+                    style: TextStyle(
+                        color: Color.fromRGBO(255, 96, 4, 1),
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }
