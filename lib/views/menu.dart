@@ -260,18 +260,16 @@ class _MenuState extends State<MenuView> {
           )
         ],
         onTap: (int clickedIndex) async {
-          if (clickedIndex == 2) {
+          if (clickedIndex == 1) {
             await _showConfirmationDialog(context);
             if (confirmation == true) {
               Navigator.pop(context);
             }
-          } else if (clickedIndex == 1) {
-            if (clickedIndex == 1) {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) {
-                return BarcodeScannerWithOverlay();
-              }));
-            }
+          } else if (clickedIndex == 0) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+              return BarcodeScannerWithOverlay();
+            }));
           }
         },
       ),
