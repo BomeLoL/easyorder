@@ -16,9 +16,8 @@ Map<String, dynamic> toMap() {
     'pedidos': pedidosMap,
   };
 }
-  Mesa.fromMap(Map<String, dynamic> map)
+Mesa.fromMap(Map<String, dynamic> map)
       : id = map['id'],
-        pedidos = (map['pedidos'] as List<dynamic>)
-            .map((item) => Pedido.fromMap(item))
-            .toList();
+        pedidos = (map['pedidos'] as List<dynamic>?)?.map((item) => Pedido.fromMap(item)).toList() ?? [];
+
 }

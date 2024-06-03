@@ -2,7 +2,7 @@ import 'item_menu.dart';
 
 class Menu {
   final String idRestaurante;
-  List<ItemMenu> itemsMenu;  
+  List<ItemMenu> itemsMenu;
 
   Menu({required this.idRestaurante, required this.itemsMenu });
 

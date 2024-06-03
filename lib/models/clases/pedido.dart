@@ -1,15 +1,4 @@
-import 'dart:ffi';
-
 import 'package:easyorder/models/clases/itemPedido.dart';
-import 'package:easyorder/models/clases/item_menu.dart';
-import 'package:easyorder/models/clases/menu.dart';
-import 'package:easyorder/models/clases/restaurante.dart';
-
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:easyorder/controllers/cart_controller.dart';
-import 'package:easyorder/views/menu.dart';
-import 'package:provider/provider.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 
 class Pedido {
@@ -31,25 +20,26 @@ class Pedido {
     }
   }
 
-Map<String, dynamic> toMap() {
-  List<Map<String, dynamic>> productosMap = [];
-  productos.forEach((producto, cantidad) {
-    productosMap.add({
-      'producto': producto.toMap(),
-      'cantidad': cantidad,
-    });
-  });
-  return {
-    'productos': productosMap,
-  };
-}
-  Pedido.fromMap(Map<String, dynamic> map)
+  Map<String, dynamic> toMap() {
+    List<Map<String, dynamic>> productosMap = productos.entries.map((entry) {
+      return {
+        'producto': entry.key.toMap(),
+        'pedido': entry.value.toMap(),
+      };
+    }).toList();
+    return {
+      'productos': productosMap,
+    };
+  }
+
+Pedido.fromMap(Map<String, dynamic> map)
       : productos = Map.fromEntries(
-          (map['productos'] as List<dynamic>).map((item) => MapEntry(
+          (map['productos'] as List<dynamic>?)?.map((item) => MapEntry(
             ItemMenu.fromMap(item['producto']),
-            item['cantidad'],
-          )),
-        );
+            itemPedido.fromMap(item['pedido']),
+          )).toList() ?? {});
+
+
 
   void addProducts(ItemMenu producto, int cantidad) {
     for (int i = 0; i < cantidad; i++) {
@@ -63,24 +53,23 @@ Map<String, dynamic> toMap() {
     } else {
       deleteProducts(producto, info, context, isPedido);
     }
-    }
-  
-  void updateProductQuantity(ItemMenu producto, int cantidad) {
+  }
 
+  void updateProductQuantity(ItemMenu producto, int cantidad) {
     if (productos.containsKey(producto)) {
       if (cantidad == 0) {
         productos.remove(producto);
-      }else {
-      productos[producto]!.cantidad = cantidad;
-      }    
-  }else if (cantidad >= 1){
-    addProducts(producto, cantidad);
-  }
+      } else {
+        productos[producto]!.cantidad = cantidad;
+      }
+    } else if (cantidad >= 1) {
+      addProducts(producto, cantidad);
+    }
   }
 
-void deleteProducts(ItemMenu producto, String info, context, int isPedido) {
-  productos.remove(producto);
-}
+  void deleteProducts(ItemMenu producto, String info, context, int isPedido) {
+    productos.remove(producto);
+  }
 
   int totalCantidad() {
     int total = 0;
@@ -91,8 +80,8 @@ void deleteProducts(ItemMenu producto, String info, context, int isPedido) {
   }
 
   int getOneProductQuantity(ItemMenu producto) {
-  return productos[producto]?.cantidad ?? 0;
-}
+    return productos[producto]?.cantidad ?? 0;
+  }
 
   double getTotalAmount() {
     double total = 0;
@@ -100,9 +89,6 @@ void deleteProducts(ItemMenu producto, String info, context, int isPedido) {
       total += productoPedido.cantidad * productoMenu.precio;
     });
     String totalFormateado = total.toStringAsFixed(2); // Limita a 2 posiciones decimales
-    return double.parse(totalFormateado); 
+    return double.parse(totalFormateado);
   }
-
-
 }
-

@@ -5,7 +5,7 @@ class Restaurante {
   String nombre; 
   List<Mesa> mesas;
   List<Map<String, dynamic>> comentarios; 
-  
+
 
   Restaurante({required this.id, required this.nombre, required this.mesas, required this.comentarios});
 
