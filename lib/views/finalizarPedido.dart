@@ -14,10 +14,12 @@ class finalizarPedido extends StatefulWidget {
       {super.key,
       required this.info,
       required this.menu,
-      required this.restaurante});
+      required this.restaurante,
+      required this.idMesa});
   final String info;
   final Restaurante restaurante;
   final Menu menu;
+  final int idMesa;
 
   @override
   State<finalizarPedido> createState() => _finalizarPedidoState();
@@ -69,6 +71,7 @@ class _finalizarPedidoState extends State<finalizarPedido> {
                               info: widget.info,
                               menu: widget.menu,
                               restaurante: widget.restaurante,
+                              idMesa: widget.idMesa,
                             ),
                             const Gap(20),
                           ],

@@ -133,8 +133,8 @@ class ProductCard extends StatelessWidget {
                           child: Container(
                             child: IconButton(
                               onPressed: () {
-                                cartController.deleteProduct(
-                                    producto, info, context, restaurante, menu);
+                                cartController.deleteProduct(producto, info,
+                                    context, restaurante, menu, idMesa);
                               },
                               icon: Icon(Icons.remove),
                               style: IconButton.styleFrom(

@@ -227,10 +227,10 @@ class _MenuState extends State<MenuView> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => finalizarPedido(
-                                  info: infoQr,
-                                  menu: widget.menu,
-                                  restaurante: widget.restaurante,
-                                ),
+                                    info: nombreRes,
+                                    menu: widget.menu,
+                                    restaurante: widget.restaurante,
+                                    idMesa: widget.idMesa),
                               ),
                             );
                           },

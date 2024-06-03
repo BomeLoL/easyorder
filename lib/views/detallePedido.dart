@@ -268,8 +268,8 @@ class _detallePedidoState extends State<detallePedido> {
   }
 
   //Esta función muestra la ventanilla que indica que la orden fue completada exitosamente
-  void _showSuccessDialog(BuildContext context) {
-    showDialog(
+  Future<void> _showSuccessDialog(BuildContext context) {
+    return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {

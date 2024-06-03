@@ -20,8 +20,8 @@ class CheckController extends ChangeNotifier {
   }
 
   void deleteProduct(ItemMenu producto, String info, context,
-      Restaurante restaurante, Menu menu) {
-    _pedido.deleteProduct(producto, info, context, restaurante, menu);
+      Restaurante restaurante, Menu menu, int idMesa) {
+    _pedido.deleteProduct(producto, info, context, restaurante, menu, idMesa);
     notifyListeners();
   }
 }
