@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/cart_controller.dart';
-import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:easyorder/models/clases/menu.dart';
+import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/detallePedido.dart';
@@ -8,59 +9,37 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
-class Menu extends StatefulWidget {
-  const Menu({super.key, required this.info});
+class MenuView extends StatefulWidget {
+  const MenuView({super.key, required this.info, required this.menu, required this.restaurante, required this.idMesa});
   final String info;
+  final Menu menu; 
+  final Restaurante restaurante;
+  final int idMesa; 
 
   @override
-  State<Menu> createState() => _MenuState();
+  State<MenuView> createState() => _MenuState();
 }
 
-class _MenuState extends State<Menu> {
-  String infoQr = "";
-  List item_menu=[
-    ItemMenu(
-      nombreProducto: 'Parrilla con platano',
-      precio: 15.1,
-      categoria: "Parrilla Guanteña",
-      imgUrl:
-          'https://img.freepik.com/fotos-premium/plato-carnes-variadas-parrilla-gajos-patata-salsas_157927-2464.jpg'),
-    ItemMenu(
-      nombreProducto: 'Parrilla sin platano',
-      precio: 14.0,
-      categoria: "Parrilla Caraqueña",
-      imgUrl:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI0vuP2m3JkbwjczFfZwIxqAy8Ub55p1lw7rtSiREp1A&s'),
-    ItemMenu(
-      nombreProducto: 'Quesillo',
-      categoria: "Postre",
-      precio: 6.0,
-      imgUrl:
-          'https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg'),
-    ItemMenu(
-      nombreProducto: 'Helado',
-      categoria: "Postre",
-      precio: 1.0,
-      imgUrl:
-          'https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg'),
-      
-  ];
+class _MenuState extends State<MenuView> {
+  String nombreRes = "";
   Set <String> categorias= Set <String>();
   int selectedIndex = -1;
-  String selectedCategoria = "";
-  // List<int> botones = [0, 1, 2]; //se deberia tener un numero por cada categoria
+  String selectedCategoria = "Todo";
   Color colorBoton1 = Color(0xFFFF5F04);
-  //Color colorBoton2=Colors.white;
-
+  
   @override
+  
   void initState() {
     super.initState();
-    infoQr = widget.info;
-    item_menu.forEach((elemento) {
-    categorias.add(elemento.categoria); // Agregar la categoría al conjunto
-    });
-    selectedCategoria = item_menu[0].categoria;
+    nombreRes = widget.restaurante.nombre;
+    categorias.add("Todo");
+    for (var elemento in widget.menu.itemsMenu) {
+    categorias.add(elemento.categoria);
+    }
+    selectedCategoria = "Todo";
+    
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +47,11 @@ class _MenuState extends State<Menu> {
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(0, 255, 255, 255),
         scrolledUnderElevation: 0,
         centerTitle: true,
-        title: Text(infoQr, //tecnicamente infoQr tendra info que debera separarse, en esta parte iria el nombre del restaurante
+        title: Text(nombreRes,
            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
            ),
       ),
@@ -136,29 +116,25 @@ class _MenuState extends State<Menu> {
                     height: 10,
                     ),
                     Expanded(
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: item_menu.length,
-                      itemBuilder: (context, index) {
-                        String categoria = item_menu[index].categoria;
-                        if (categoria == selectedCategoria) {
-                          return Column(
-                            children: [
-                              ProductCard(producto: item_menu[index], isPedido: 1, info: infoQr,),
-                              // ProductCardInit(
-                              //   productName: item_menu[index]["Nombre"], 
-                              //   productPrice: item_menu[index]["Precio"], 
-                              //   productImage: "https://mmedia.estampas.com/18856/quesillo-sin-huequitos-81792.jpg"),
-                              SizedBox(height: 10,)
-                            ],
-                          );
-                        } else {
-                          return Container();
-                        }
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    padding: EdgeInsets.zero,
+                    itemCount: widget.menu.itemsMenu.length,
+                    itemBuilder: (context, index) {
+                      if (selectedCategoria == "Todo" || widget.menu.itemsMenu[index].categoria == selectedCategoria) {
+                        return Column(
+                          children: [
+                          ProductCard(producto: widget.menu.itemsMenu[index], isPedido: 1, info: nombreRes),
+                          SizedBox(height: 10,)
+                          ],
+                        );
+                      } else {
+                        return Container();
                       }
-                      )
-                    
-                    ),
+                    }
+                    )
+                  
+                  ),
                     
                     ]
                     ),
@@ -200,13 +176,13 @@ class _MenuState extends State<Menu> {
                                   )
                                   ),
                               onPressed: () {
-                                Navigator.push(
-                                  context, 
-                                  MaterialPageRoute(
-                                    builder: (context) => detallePedido(info:infoQr)
-                                    ),
-                                  );
-                              },
+                            Navigator.push(
+                              context, 
+                              MaterialPageRoute(
+                                builder: (context) => detallePedido(info:nombreRes, menu: widget.menu, restaurante: widget.restaurante, idMesa: widget.idMesa)
+                                ),
+                              );
+                          },
                               child: Text(
                                 'Ver mi pedido',
                                 style: GoogleFonts.poppins(

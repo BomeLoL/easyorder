@@ -1,15 +1,14 @@
+import 'package:easyorder/models/clases/menu.dart';
+import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/controllers/cart_controller.dart';
-import 'package:easyorder/views/menu.dart';
 import 'package:provider/provider.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
-import 'package:easyorder/views/escaneoQR.dart';
 import 'package:easyorder/views/Widgets/quantity_button.dart';
 
 class detalleProducto extends StatefulWidget {
@@ -21,8 +20,6 @@ class detalleProducto extends StatefulWidget {
   @override
   State<detalleProducto> createState() => _detalleProductoState();
 }
-
-
 
 class _detalleProductoState extends State<detalleProducto> {
   bool isCarrito = true;
@@ -194,10 +191,7 @@ class _detalleProductoState extends State<detalleProducto> {
                   child: ElevatedButton(
                     onPressed: () {
                       cartController.updateProductQuantity(widget.producto, cantidad);
-                      Navigator.pop(context,
-                          MaterialPageRoute(builder: (context) {
-                        return Menu(info: widget.info);
-                      }));
+                      Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Color.fromRGBO(255, 95, 4, 1),

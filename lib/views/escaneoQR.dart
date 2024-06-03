@@ -1,8 +1,8 @@
-import 'package:easyorder/controllers/main_controller.dart';
-import 'package:easyorder/views/detalleProducto.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:easyorder/views/menu.dart';
+import 'package:easyorder/views/vistaQr.dart';
 
 
 class Escanear extends StatefulWidget {
@@ -18,22 +18,23 @@ class _EscanearState extends State<Escanear> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text("EasyOrder",
           style: GoogleFonts.poppins(),
         ),
         elevation: 0,
-        //backgroundColor: Colors.white,
       ),
       body: Center(
         child:Container(
-          // height: double.infinity,
-          // width: double.infinity,
           child: ElevatedButton(
             onPressed: ()async{
-              String info=await scannerQr();
-              if (mounted && info!="-1") {
-                Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){return Menu(info: info);}));
+              final tester = await MongoDatabase.Test();
+              if (tester == false){
+                // ignore: use_build_context_synchronously
+                dbErrorDialog(context);
+              } else{ 
+              Navigator.push(context, MaterialPageRoute(builder: (context){return BarcodeScannerWithOverlay();}));
               }
               },
             style: ElevatedButton.styleFrom(

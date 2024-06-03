@@ -4,7 +4,6 @@ import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/detalleProducto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -82,7 +81,7 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'daaaaaaa aaaaaaaaaa ddd',
+                        producto.descripcion,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w500,
