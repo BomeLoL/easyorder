@@ -8,7 +8,7 @@ class DbErrorDialog extends StatefulWidget {
 }
 
 class _DbErrorDialogState extends State<DbErrorDialog> {
-  bool isButtonPressed = false;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,17 +24,29 @@ class _DbErrorDialogState extends State<DbErrorDialog> {
       ),
       content: Text(
         'Verifique su conexión y presione el botón para intentarlo nuevamente. Por favor, espere unos segundos para reestablecer la conexión.',
+        textAlign: TextAlign.justify,
       ),
       actions: [
         Center(
-          child: TextButton(
-            onPressed: isButtonPressed ? null : () async {
+          child: isLoading 
+          ? const CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(255, 96, 4, 1)),
+          )
+          :
+          TextButton(
+            onPressed: () async {
               setState(() {
-                isButtonPressed = true;
+                isLoading = true; // Mostrar spinner
               });
               try {
                 await MongoDatabase.connect();
-              } catch (e) {}
+              } catch (e) {
+
+              } finally {
+                setState(() {
+                  isLoading = false; // Ocultar spinner
+                });
+              }
               Navigator.of(context).pop();
             },
             child: Text(

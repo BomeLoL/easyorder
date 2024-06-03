@@ -36,14 +36,18 @@ void showCustomPopup({
   required String title,
   required Widget content,
   List<Widget> actions = const [],
+  bool pop = true,
 }) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return CustomPopup(
-        title: title,
-        content: content,
-        actions: actions,
+      return PopScope(
+        canPop: pop,
+        child: CustomPopup(
+          title: title,
+          content: content,
+          actions: actions,
+        ),
       );
     },
   );

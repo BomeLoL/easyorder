@@ -6,6 +6,7 @@ import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
+import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -243,15 +244,16 @@ class _detallePedidoState extends State<detallePedido> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: Text(
-            'ERROR!!',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(),
+            'Error',
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.bold
+            ),
           ),
           content: Text(
             'Hubo un error inesperado procesando tu orden, por favor, inténtelo de nuevo',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(),
           ),
           actions: [
             TextButton(
@@ -260,7 +262,7 @@ class _detallePedidoState extends State<detallePedido> {
               },
               child: Center(
                 child: Text(
-                  'OK',
+                  'Ok',
                   style: GoogleFonts.poppins(
                     color: Color.fromRGBO(255, 96, 4, 1),
                     fontWeight: FontWeight.bold,
@@ -276,46 +278,35 @@ class _detallePedidoState extends State<detallePedido> {
 
   //Esta función muestra la ventanilla que indica que la orden fue completada exitosamente
 void _showSuccessDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return PopScope(
-        canPop: false,
-        child: AlertDialog(
-          title: Text(
-            'Pedido completado!',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(),
-          ),
-          content: Text(
-            'Ya tu pedido está en la cocina y estará listo dentro de poco',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(),
+        
+        showCustomPopup(
+          pop: false,
+          context: context,
+          title: 
+            '¡Pedido completado!',
+          content: const Text(
+            'Ya tu pedido está en la cocina y estará listo dentro de poco.',
+            textAlign: TextAlign.justify,
           ),
           actions: [
             Center(
               child: TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                    return MenuView(info: widget.restaurante.id, restaurante: widget.restaurante, menu: widget.menu, idMesa: widget.idMesa);
-                  }));
+                  Navigator.of(context).popUntil((route) {
+                     return route.settings.name == 'menu';
+                   });
                 },
                 child: Text(
                   'OK',
                   style: GoogleFonts.poppins(
-                    color: Color.fromRGBO(255, 96, 4, 1),
+                    color: const Color.fromRGBO(255, 96, 4, 1),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
           ],
-        ),
-      );
-    },
-  );
+        );
 }
 
 
@@ -329,31 +320,39 @@ Future<void> _showConfirmationDialog(BuildContext context) {
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            title: const Text(
-              'Confirmar Acción',
-              textAlign: TextAlign.center,
+            title:  Text(
+              '¿Desea enviar su orden?',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold
+              ),
             ),
             content: const Text(
-              'Está seguro de enviar su orden?',
-              textAlign: TextAlign.center,
+              'Si selecciona confirmar, su pedido se enviará a la cocina.',
+              textAlign: TextAlign.justify,
             ),
             actions: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context, false);
                       confirmation = false;
                     },
-                    child: const Text(
-                      'No',
-                      style: TextStyle(
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7)
+                      )
+                    ),
+                    child: Text(
+                      'Cancelar',
+                      style: GoogleFonts.poppins(
                           color: Color.fromRGBO(255, 96, 4, 1),
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  TextButton(
+                  ElevatedButton(
                     onPressed: isButtonPressed
                         ? null
                         : () async {
@@ -368,6 +367,8 @@ Future<void> _showConfirmationDialog(BuildContext context) {
                               if (r != null) {
                                 MongoDatabase.agregarPedidoARestaurante(r, widget.idMesa, cartController.pedido);
                                 await MongoDatabase.actualizarRestaurante(r);
+                              } else {
+                                verificador = false;
                               }
                             } catch (e) {
                               verificador = false;
@@ -390,12 +391,19 @@ Future<void> _showConfirmationDialog(BuildContext context) {
                               _showAlertDialog(context);
                             }
                           },
-                    child: const Text(
-                      'Si',
-                      style: TextStyle(
-                          color: Color.fromRGBO(255, 96, 4, 1),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromRGBO(255, 96, 4, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7)
+                      )
+                    ),
+                    child: Text(
+                      'Confirmar',
+                      style: GoogleFonts.poppins(
+                          color: Colors.white,
                           fontWeight: FontWeight.bold),
                     ),
+                    
                   ),
                 ],
               ),

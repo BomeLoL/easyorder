@@ -117,7 +117,7 @@ class _detalleProductoState extends State<detalleProducto> {
                               SizedBox(height: 25),
 
                                 Text(
-                                  'In a medium bowl, add ground chicken, breadcrumbs, mayonnaise, onions, parsley, garlic, paprika, salt and pepper. Use your hands to combine all the ingredients together until blended, but don\'t over mix.',
+                                  widget.producto.descripcion,
                                   textAlign: TextAlign.justify,
                                   style: GoogleFonts.poppins(
                                     fontSize: 14,

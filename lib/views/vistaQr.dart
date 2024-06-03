@@ -19,7 +19,7 @@ class _BarcodeScannerWithOverlayState extends State<BarcodeScannerWithOverlay> {
   );
 
   int tipo=0;
-
+  QrController qrController = QrController();
  @override
 Widget build(BuildContext context) {
   
@@ -61,7 +61,7 @@ Widget build(BuildContext context) {
             onDetect: (barcode)async{
               if(barcode.barcodes.isNotEmpty){
                 // bool continuar;
-                int continuarOerror = await revisarBd(barcode.barcodes, context);
+                int continuarOerror = await qrController.revisarBd(barcode.barcodes, context);
                 if (continuarOerror == 1) {
                   setState(() {
                     tipo=1;

@@ -1,13 +1,16 @@
 import 'package:easyorder/controllers/cart_controller.dart';
+import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
+import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/material.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/menu.dart';
 import 'package:provider/provider.dart';
 
 
+class QrController {
 
-Future<int> revisarBd(barcode, context) async {
+  Future<int> revisarBd(barcode, context) async {
   String infoQr = barcode.first.displayValue;
 
   try {
@@ -52,12 +55,7 @@ Future<int> revisarBd(barcode, context) async {
         Pedido pedidoVacio = Pedido(productos: {});
         cartController.pedido = pedidoVacio;
 //        }          
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-            return   
-            MenuView(info: restaurante.id, restaurante: restaurante,menu: menu, idMesa: int.parse(idMesa));
-            },
-            settings: const RouteSettings(name: 'menu'),
-            ));
+        navigateToMenu(context, restaurante, menu, idMesa);
        // }
 
       } else { // no posee la mesa escaneada
@@ -78,4 +76,13 @@ Future<int> revisarBd(barcode, context) async {
   // return [continuar=true,error=true];
   return 2;
 
+}
+  void navigateToMenu(BuildContext context, Restaurante restaurante, Menu menu, String idMesa ){
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+            return   
+            MenuView(info: restaurante.id, restaurante: restaurante,menu: menu, idMesa: int.parse(idMesa));
+            },
+            settings: const RouteSettings(name: 'menu'),
+            ));
+  }
 }
