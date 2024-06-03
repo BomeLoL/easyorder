@@ -1,8 +1,7 @@
-import 'package:easyorder/controllers/qr_controller.dart';
-import 'package:easyorder/views/detalleProducto.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:easyorder/views/menu.dart';
 import 'package:easyorder/views/vistaQr.dart';
 
 
@@ -25,14 +24,18 @@ class _EscanearState extends State<Escanear> {
           style: GoogleFonts.poppins(),
         ),
         elevation: 0,
-        //backgroundColor: Colors.white,
       ),
       body: Center(
         child:Container(
           child: ElevatedButton(
             onPressed: ()async{
+              final tester = await MongoDatabase.Test();
+              if (tester == false){
+                // ignore: use_build_context_synchronously
+                dbErrorDialog(context);
+              } else{ 
               Navigator.push(context, MaterialPageRoute(builder: (context){return BarcodeScannerWithOverlay();}));
-
+              }
               },
             style: ElevatedButton.styleFrom(
             backgroundColor: Color(0xFFFF5F04),

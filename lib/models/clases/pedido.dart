@@ -49,7 +49,7 @@ Map<String, dynamic> toMap() {
     }
   }
 
-  void deleteProduct(ItemMenu producto, String info, context, Restaurante restaurante, Menu menu) {
+  void deleteProduct(ItemMenu producto, String info, context, Restaurante restaurante, Menu menu, int idMesa) {
     if (productos.containsKey(producto) && productos[producto]! > 1) {
       productos[producto] = productos[producto]! - 1;
     } else {
@@ -57,7 +57,7 @@ Map<String, dynamic> toMap() {
       if (productos.isEmpty) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MenuView(info: info, menu: menu, restaurante: restaurante,)),
+          MaterialPageRoute(builder: (context) => MenuView(info: info, menu: menu, restaurante: restaurante,idMesa: idMesa)),
         );
       }
     }

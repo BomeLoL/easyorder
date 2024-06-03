@@ -147,6 +147,12 @@ class BotonEnvio extends StatelessWidget {
               child: TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+          //  return 
+            
+            
+            //MenuView(info: restaurante.id, restaurante: restaurante,menu: menu,);
+            //}));
                 },
                 child: const Text(
                   'OK',

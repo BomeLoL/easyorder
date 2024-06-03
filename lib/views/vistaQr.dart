@@ -1,12 +1,7 @@
-import 'package:easyorder/views/escaneoQR.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../views/Widgets/scanned_barcode_label.dart';
 import '../views/Widgets/scanner_error_widget.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:easyorder/views/menu.dart';
 import 'package:easyorder/controllers/qr_controller.dart';
 
 
@@ -36,6 +31,11 @@ Widget build(BuildContext context) {
 
   return Scaffold(
     backgroundColor: Colors.black,
+    extendBodyBehindAppBar: true,
+    appBar: AppBar(
+      iconTheme: IconThemeData(color:Colors.white),
+      backgroundColor: Colors.black,
+       ),
     body: Stack(
       fit: StackFit.expand,
       children: [
@@ -61,12 +61,15 @@ Widget build(BuildContext context) {
             onDetect: (barcode)async{
               if(barcode.barcodes.isNotEmpty){
                 // bool continuar;
-                bool continuar = await RevisarBd(barcode.barcodes, context);
-                if (!continuar) {
+                int continuarOerror = await revisarBd(barcode.barcodes, context);
+                if (continuarOerror == 1) {
                   setState(() {
                     tipo=1;
                   });
-                }
+                }else if (continuarOerror == 2) {
+                  setState(() {
+                    tipo=2;
+                  });                }
               }
             },
           ),
@@ -146,9 +149,6 @@ class ScannerOverlay extends CustomPainter {
       bottomRight: Radius.circular(borderRadius),
     );
 
-    // First, draw the background,
-    // with a cutout area that is a bit larger than the scan window.
-    // Finally, draw the scan window itself.
     canvas.drawPath(backgroundWithCutout, backgroundPaint);
     canvas.drawRRect(borderRect, borderPaint);
   }

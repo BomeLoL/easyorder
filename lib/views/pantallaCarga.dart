@@ -10,7 +10,7 @@ class pantallaCarga extends StatelessWidget {
   Widget build(BuildContext context) {
     //Se usa PopScope para evitar que el usuario pueda salir de la pantalla de carga
     return PopScope(
-      canPop: true,
+      canPop: false,
       child: Scaffold(
         body: Center(
           child: Container(

@@ -1,14 +1,11 @@
 import 'package:easyorder/controllers/cart_controller.dart';
-import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
-import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/detallePedido.dart';
 import 'package:easyorder/views/finalizarPedido.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
@@ -18,30 +15,31 @@ class MenuView extends StatefulWidget {
       {super.key,
       required this.info,
       required this.menu,
-      required this.restaurante});
+      required this.restaurante,
+      required this.idMesa});
   final String info;
   final Menu menu;
   final Restaurante restaurante;
+  final int idMesa;
 
   @override
   State<MenuView> createState() => _MenuState();
 }
 
 class _MenuState extends State<MenuView> {
-  String infoQr = "";
+  String nombreRes = "";
   Set<String> categorias = Set<String>();
   int selectedIndex = -1;
   String selectedCategoria = "Todo";
-  // List<int> botones = [0, 1, 2]; //se deberia tener un numero por cada categoria
   Color colorBoton1 = Color(0xFFFF5F04);
-  //Color colorBoton2=Colors.white;
+
   @override
   void initState() {
     super.initState();
-    infoQr = widget.restaurante.nombre;
+    nombreRes = widget.restaurante.nombre;
     categorias.add("Todo");
     for (var elemento in widget.menu.itemsMenu) {
-      categorias.add(elemento.categoria); // Agregar la categoría al conjunto
+      categorias.add(elemento.categoria);
     }
     selectedCategoria = "Todo";
   }
@@ -57,7 +55,7 @@ class _MenuState extends State<MenuView> {
         scrolledUnderElevation: 0,
         centerTitle: true,
         title: Text(
-          infoQr, //tecnicamente infoQr tendra info que debera separarse, en esta parte iria el nombre del restaurante
+          nombreRes,
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
         ),
       ),
@@ -134,11 +132,13 @@ class _MenuState extends State<MenuView> {
                           return Column(
                             children: [
                               ProductCard(
-                                  producto: widget.menu.itemsMenu[index],
-                                  isPedido: 1,
-                                  info: infoQr,
-                                  menu: widget.menu,
-                                  restaurante: widget.restaurante),
+                                producto: widget.menu.itemsMenu[index],
+                                isPedido: 1,
+                                info: nombreRes,
+                                menu: widget.menu,
+                                restaurante: widget.restaurante,
+                                idMesa: widget.idMesa,
+                              ),
                               SizedBox(
                                 height: 10,
                               )
@@ -198,10 +198,10 @@ class _MenuState extends State<MenuView> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => detallePedido(
-                                        info: infoQr,
-                                        menu: widget.menu,
-                                        restaurante: widget.restaurante,
-                                      )),
+                                      info: nombreRes,
+                                      menu: widget.menu,
+                                      restaurante: widget.restaurante,
+                                      idMesa: widget.idMesa)),
                             );
                           },
                           child: Text(

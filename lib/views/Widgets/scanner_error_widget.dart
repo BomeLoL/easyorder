@@ -87,7 +87,13 @@ class ScannerErrorWidget extends StatelessWidget {
         ),
       ),
     );
-    } else {
+    
+    }
+//    else if((error.errorDetails?.message ?? '') == "The scanner was already started. Call stop() before calling start() again."){
+//      Navigator.pop(context);
+//      return Container();
+//    } 
+    else {
       return ColoredBox(
       color: Colors.black,
       child: Center(
@@ -106,6 +112,22 @@ class ScannerErrorWidget extends StatelessWidget {
               error.errorDetails?.message ?? '',
               style: const TextStyle(color: Colors.white),
             ),
+            ElevatedButton(
+                onPressed:(){
+                  Navigator.pop(context);
+                  },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                  ),
+                minimumSize: Size(100, 40),
+                ), 
+                child: Text("Volver",
+                    style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
+                )
+                ),
           ],
         ),
       ),

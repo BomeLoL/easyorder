@@ -5,7 +5,6 @@ import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/detalleProducto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +14,7 @@ class ProductCard extends StatelessWidget {
   final Menu menu;
   final Restaurante restaurante;
   final int isPedido;
+  final int idMesa;
 
   ProductCard({
     required this.producto,
@@ -22,6 +22,7 @@ class ProductCard extends StatelessWidget {
     required this.isPedido,
     required this.menu,
     required this.restaurante,
+    required this.idMesa,
   });
 
   @override
