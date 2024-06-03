@@ -4,7 +4,7 @@ import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/detallePedido.dart';
-import 'package:easyorder/views/finalizarPedido.dart';
+import 'package:easyorder/views/vistaQr.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gap/gap.dart';
@@ -33,6 +33,7 @@ class _MenuState extends State<MenuView> {
   String selectedCategoria = "Todo";
   Color colorBoton1 = Color(0xFFFF5F04);
   bool confirmation = false;
+  int navBarIn = 0;
 
   @override
   void initState() {
@@ -263,6 +264,13 @@ class _MenuState extends State<MenuView> {
             await _showConfirmationDialog(context);
             if (confirmation == true) {
               Navigator.pop(context);
+            }
+          } else if (clickedIndex == 1) {
+            if (clickedIndex == 1) {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) {
+                return BarcodeScannerWithOverlay();
+              }));
             }
           }
         },
