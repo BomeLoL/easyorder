@@ -26,7 +26,7 @@ class ProductCard extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  detalleProducto(info: info, producto: producto)),
+                  detalleProducto(info: producto.descripcion, producto: producto)),
         );
       },
       child: Stack(

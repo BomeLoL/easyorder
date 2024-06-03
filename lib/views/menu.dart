@@ -4,6 +4,7 @@ import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/detallePedido.dart';
+import 'package:easyorder/views/vistaQr.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gap/gap.dart';
@@ -26,6 +27,7 @@ class _MenuState extends State<MenuView> {
   int selectedIndex = -1;
   String selectedCategoria = "Todo";
   Color colorBoton1 = Color(0xFFFF5F04);
+  int navBarIn=0;
   
   @override
   
@@ -208,7 +210,7 @@ class _MenuState extends State<MenuView> {
               ),
       bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Colors.white,
-          fixedColor: Color.fromRGBO(142, 142, 142, 1),
+          fixedColor: Colors.black87,
           selectedLabelStyle: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
           ),
@@ -222,7 +224,7 @@ class _MenuState extends State<MenuView> {
                 size: 45.0,
                 color: Color.fromRGBO(255, 95, 4, 1),
               ),
-              label: 'Home',
+              label: 'Inicio',
             ),
             BottomNavigationBarItem(
               icon: Icon(
@@ -230,9 +232,20 @@ class _MenuState extends State<MenuView> {
                 size: 45.0,
                 color: Color.fromRGBO(255, 95, 4, 1),
               ),
-              label: "Scan",
+              label: "Scanear",
             )
-          ]),
+          ],
+          currentIndex: navBarIn,
+          onTap: (int index){
+            setState(() {
+              navBarIn=index;
+            });
+            if (index==1) {
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return BarcodeScannerWithOverlay(); }));
+            }
+          
+          },
+          ),
     );
   }
 }

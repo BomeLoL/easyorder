@@ -49,7 +49,7 @@ class _EscanearState extends State<Escanear> {
               ),
             minimumSize: Size(200, 60),
             ),
-            child: Text("Escanear",style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),),
+            child: Text("Escanear Qr",style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),),
             ),
         ),
         ),
