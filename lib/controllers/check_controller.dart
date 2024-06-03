@@ -9,6 +9,11 @@ class CheckController extends ChangeNotifier {
 
   Pedido get pedido => _pedido;
 
+  set pedido(Pedido nuevoPedido) {
+    _pedido = nuevoPedido;
+    notifyListeners();
+  }
+
   void addProduct(ItemMenu producto) {
     _pedido.addProduct(producto);
     notifyListeners();
@@ -19,9 +24,30 @@ class CheckController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteProduct(ItemMenu producto, String info, context,
-      Restaurante restaurante, Menu menu, int idMesa) {
-    _pedido.deleteProduct(producto, info, context, restaurante, menu, idMesa);
+  void deleteProduct(ItemMenu producto, String info, context, int isPedido) {
+    _pedido.deleteProduct(producto, info, context, isPedido);
     notifyListeners();
+  }
+
+  void updateProductQuantity(ItemMenu producto, int cantidad) {
+    _pedido.updateProductQuantity(producto, cantidad);
+    notifyListeners();
+  }
+
+  int getOneProductQuantity(ItemMenu producto) {
+    return _pedido.getOneProductQuantity(producto);
+  }
+
+  int totalCantidad() {
+    return _pedido.totalCantidad();
+  }
+
+  void deleteProducts(ItemMenu producto, String info, context, int isPedido) {
+    _pedido.deleteProducts(producto, info, context, isPedido);
+    notifyListeners();
+  }
+
+  double getTotalAmount() {
+    return _pedido.getTotalAmount();
   }
 }

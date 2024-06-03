@@ -231,32 +231,54 @@ class _MenuState extends State<MenuView> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          fixedColor: Color.fromRGBO(142, 142, 142, 1),
-          selectedLabelStyle: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-          ),
-          unselectedLabelStyle: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-          ),
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                size: 45.0,
-                color: Color.fromRGBO(255, 95, 4, 1),
-              ),
-              label: 'Home',
+        backgroundColor: Colors.white,
+        fixedColor: Color.fromRGBO(142, 142, 142, 1),
+        selectedLabelStyle: GoogleFonts.poppins(
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedLabelStyle: GoogleFonts.poppins(
+          fontWeight: FontWeight.bold,
+        ),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+              size: 45.0,
+              color: Color.fromRGBO(255, 95, 4, 1),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.qr_code,
-                size: 45.0,
-                color: Color.fromRGBO(255, 95, 4, 1),
-              ),
-              label: "Scan",
-            )
-          ]),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.qr_code,
+              size: 45.0,
+              color: Color.fromRGBO(255, 95, 4, 1),
+            ),
+            label: "Scan",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.account_box,
+              size: 45.0,
+              color: Color.fromRGBO(255, 95, 4, 1),
+            ),
+            label: "Factura",
+          )
+        ],
+        onTap: (int clickedIndex) {
+          if (clickedIndex == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => finalizarPedido(
+                      info: nombreRes,
+                      menu: widget.menu,
+                      restaurante: widget.restaurante,
+                      idMesa: widget.idMesa)),
+            );
+          }
+        },
+      ),
     );
   }
 }

@@ -67,11 +67,8 @@ class _finalizarPedidoState extends State<finalizarPedido> {
                           children: [
                             ProductCard(
                               producto: producto,
-                              isPedido: 3,
+                              isPedido: 2,
                               info: widget.info,
-                              menu: widget.menu,
-                              restaurante: widget.restaurante,
-                              idMesa: widget.idMesa,
                             ),
                             const Gap(20),
                           ],
