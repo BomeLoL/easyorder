@@ -70,11 +70,11 @@ class QrController {
     }
   } catch (e) {
     // return [continuar=true,error=true];
-    return 2;
+    return 1;
   }
   
   // return [continuar=true,error=true];
-  return 2;
+  return 1;
 
 }
   void navigateToMenu(BuildContext context, Restaurante restaurante, Menu menu, String idMesa ){

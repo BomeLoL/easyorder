@@ -46,6 +46,7 @@ dependencies:
   permission_handler: ^11.3.1
   flutter_spinkit: ^5.2.1
   flutter_launcher_icons: ^0.13.1
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +77,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - images/
+    - .env.development
+    
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
