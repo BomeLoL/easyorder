@@ -5,15 +5,17 @@ import 'package:easyorder/models/clases/mesa.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class MongoDatabase {
   static var db, coleccion_restaurante, coleccion_menu, coleccion_test;
   // ignore: unused_field
   static Timer? _connectionCheckTimer;
-
+  static String? MONGO_URL = dotenv.env["MONGO_URL"];
   static connect() async{
-    db = await Db.create(MONGO_URL); 
+    
+    db = await Db.create(MONGO_URL!); 
     await db.open();
     coleccion_menu = db.collection(CMenu);
     coleccion_restaurante = db.collection(CRestaurante);
