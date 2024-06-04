@@ -232,17 +232,17 @@ class ProductCard extends StatelessWidget {
                                         child: Text(
                                           'Cancelar',
                                           style: GoogleFonts.poppins(
-                                            color: const Color.fromRGBO(255, 95, 4, 1),
-                                            fontWeight: FontWeight.bold),
-                                            textScaler: TextScaler.linear(0.9),
-                                            
-                                          )),
+                                              color: const Color.fromRGBO(
+                                                  255, 95, 4, 1),
+                                              fontWeight: FontWeight.bold),
+                                          textScaler: TextScaler.linear(0.9),
+                                        )),
                                   ),
                                   Expanded(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color.fromRGBO(255, 95, 4, 1),
+                                          backgroundColor: const Color.fromRGBO(
+                                              255, 95, 4, 1),
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(7))),
@@ -256,7 +256,7 @@ class ProductCard extends StatelessWidget {
                                         style: GoogleFonts.poppins(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
-                                            textScaler: TextScaler.linear(0.9),
+                                        textScaler: TextScaler.linear(0.9),
                                       ),
                                     ),
                                   ),
