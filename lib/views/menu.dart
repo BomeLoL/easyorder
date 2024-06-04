@@ -4,6 +4,7 @@ import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/detallePedido.dart';
+import 'package:easyorder/views/vistaQr.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gap/gap.dart';
@@ -26,6 +27,7 @@ class _MenuState extends State<MenuView> {
   int selectedIndex = -1;
   String selectedCategoria = "Todo";
   Color colorBoton1 = Color(0xFFFF5F04);
+  bool confirmation = false;
   
   @override
   
@@ -217,22 +219,104 @@ class _MenuState extends State<MenuView> {
           ),
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                size: 45.0,
-                color: Color.fromRGBO(255, 95, 4, 1),
-              ),
-              label: 'Home',
+            icon: Icon(
+              Icons.qr_code,
+              size: 45.0,
+              color: Color.fromRGBO(255, 95, 4, 1),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.qr_code,
-                size: 45.0,
-                color: Color.fromRGBO(255, 95, 4, 1),
+            label: "Scan",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.exit_to_app,
+              size: 45.0,
+              color: Color.fromRGBO(255, 95, 4, 1),
+            ),
+            label: "Terminar sesion",
+          )
+          ],
+          onTap: (int clickedIndex) async {
+          if (clickedIndex == 1) {
+            await _showConfirmationDialog(context);
+            if (confirmation == true) {
+              Navigator.pop(context);
+            }
+          } else if (clickedIndex == 0) {
+           Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+              return BarcodeScannerWithOverlay();
+            }));
+          }
+        },
+          ),
+    );
+  }
+  Future<void> _showConfirmationDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text(
+            '¿Terminar su estadía?',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold
               ),
-              label: "Scan",
-            )
-          ]),
+          ),
+          content: const Text(
+            'Al confirmar, un mesero vendrá a atenderle para procesar el pago y ya no podrá hacer más pedidos. ¿Desea continuar?',
+            textAlign: TextAlign.justify,
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      confirmation = false;
+                    });
+                    Navigator.pop(context);
+                  },
+                  style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7)
+                      )
+                    ),
+                  child: Text(
+                    'Cancelar',
+                    style: GoogleFonts.poppins(
+                          color: const Color.fromRGBO(255, 96, 4, 1),
+                          fontWeight: FontWeight.bold),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      confirmation = true;
+                    });
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromRGBO(255, 96, 4, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7)
+                      )
+                    ),
+                    child: Text(
+                      'Confirmar',
+                      style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }
