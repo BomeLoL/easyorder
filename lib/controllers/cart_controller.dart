@@ -7,7 +7,8 @@ import 'package:flutter/foundation.dart';
 
 class CartController extends ChangeNotifier{
   Pedido _pedido = Pedido(productos: {});
-  
+  bool haPedido = false; //cambiar esto a algo mejor para el siguiente sprint
+
   Pedido get pedido => _pedido;
 
   set pedido(Pedido nuevoPedido) {
@@ -47,6 +48,5 @@ void deleteProduct(ItemMenu producto, String info, context, int isPedido) {
    return _pedido.getTotalAmount();
    
  }
-
 }
 

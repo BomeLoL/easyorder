@@ -198,6 +198,7 @@ class _detallePedidoState extends State<detallePedido> {
                                     //Se hace una pequeña espera a la base de datos y después se continúa
                                     await Future.delayed(
                                         const Duration(seconds: 5));
+                                    cartController.haPedido = true;
                                     Navigator.pop(context);
                                     _showSuccessDialog(context);
                                   } else {
