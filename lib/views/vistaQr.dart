@@ -69,7 +69,8 @@ Widget build(BuildContext context) {
                 }else if (continuarOerror == 2) {
                   setState(() {
                     tipo=2;
-                  });                }
+                  }); }
+                barcode.barcodes.removeAt(0);
               }
             },
           ),

@@ -287,7 +287,7 @@ class _MenuState extends State<MenuView> {
                     context: context,
                     title: 'Finalice su estadía para escanear',
                     content: Text(
-                        'Para escanear otro código, primero debes completar tu pedido actual. Por favor, finaliza tu estadía para continuar.'),
+                        'Para escanear otro código, primero debes terminar tu sesión actual. Por favor, finaliza tu estadía para continuar.'),
                     actions: [
                       TextButton(
                     onPressed: () {
