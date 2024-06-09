@@ -94,7 +94,6 @@ class _detalleProductoState extends State<detalleProducto> {
                                 //Icon(icon);
                                 Text(
                                   widget.producto.nombreProducto,
-                                  textAlign: TextAlign.justify,
                                   style: GoogleFonts.poppins(
                                     fontSize: 25,
                                     fontWeight: FontWeight.bold,
