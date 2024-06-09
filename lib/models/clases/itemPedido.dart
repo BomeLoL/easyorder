@@ -1,24 +1,24 @@
-class itemPedido {
+class ItemPedido {
   int cantidad;
   String comentario;
-  List<String> extras;
+  List<Map<String, dynamic>> extras;
 
-  itemPedido({
+  ItemPedido({
     required this.cantidad,
     this.comentario = '',
-    this.extras = const [],
+    this.extras = const [], 
   });
 
   Map<String, dynamic> toMap() {
     return {
       'cantidad': cantidad,
       'comentario': comentario,
-      'extras': extras,
+      'extras': extras.map((extra) => Map<String, dynamic>.from(extra)).toList(),
     };
   }
 
-  itemPedido.fromMap(Map<String, dynamic> map)
+  ItemPedido.fromMap(Map<String, dynamic> map)
       : cantidad = map['cantidad'],
-        comentario = map['comentario'] ?? '',
-        extras = List<String>.from(map['extras'] ?? []);
+        comentario = map['comentario'] ?? '', 
+        extras = (map['extras'] as List).map((extra) => Map<String, dynamic>.from(extra)).toList();
 }

@@ -2,17 +2,17 @@ import 'package:easyorder/models/clases/itemPedido.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 
 class Pedido {
-  final Map<ItemMenu, itemPedido> productos;
+  final Map<ItemMenu, ItemPedido> productos;
 
   Pedido({required this.productos});
 
-  void addProduct(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
+  void addProduct(ItemMenu producto, {String comentario = '', List<Map<String, dynamic>> extras = const []}) {
     if (productos.containsKey(producto)) {
       productos[producto]!.cantidad += 1;
       productos[producto]!.comentario = comentario;
       productos[producto]!.extras = extras;
     } else {
-      productos[producto] = itemPedido(
+      productos[producto] = ItemPedido(
         cantidad: 1,
         comentario: comentario,
         extras: extras,
@@ -33,11 +33,16 @@ class Pedido {
   }
 
 Pedido.fromMap(Map<String, dynamic> map)
-      : productos = Map.fromEntries(
-          (map['productos'] as List<dynamic>?)?.map((item) => MapEntry(
-            ItemMenu.fromMap(item['producto']),
-            itemPedido.fromMap(item['pedido']),
-          )).toList() ?? {});
+    : productos = Map.fromEntries(
+      (map['productos'] as List<dynamic>?)?.map((item) {
+        final productoMap = item['producto'] as Map<String, dynamic>;
+        final pedidoMap = item['pedido'] as Map<String, dynamic>;
+        final producto = ItemMenu.fromMap(productoMap);
+        final pedido = ItemPedido.fromMap(pedidoMap);
+        return MapEntry(producto, pedido);
+      }).toList() ?? {}
+    );
+
 
 
 

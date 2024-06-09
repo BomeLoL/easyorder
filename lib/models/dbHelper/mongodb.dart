@@ -14,12 +14,16 @@ class MongoDatabase {
   static Timer? _connectionCheckTimer;
   static String? MONGO_URL = dotenv.env["MONGO_URL"];
   static connect() async{
-    
+    try{
     db = await Db.create(MONGO_URL!); 
-    await db.open();
+      await db.open();
     coleccion_menu = db.collection(CMenu);
     coleccion_restaurante = db.collection(CRestaurante);
     coleccion_test = db.collection(Ctest);
+    }
+    catch(e){
+      print(e);
+    }
   }
 
 static Future<Restaurante?> getRestaurante(String id) async {
