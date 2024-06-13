@@ -48,18 +48,19 @@ class _EscanearState extends State<Test> {
                           "amount": {
                             "total": '10.12',
                             "currency": "USD",
-                            "details": {
+                            /*"details": {
                               "subtotal": '10.12',
                               "shipping": '0',
                               "shipping_discount": 0
-                            }
+                            }*/
                           },
-                          "description": "The payment transaction description.",
+                          "description":
+                              "Añadir fondos a tu cuenta de EasyOrder.",
                           // "payment_options": {
                           //   "allowed_payment_method":
                           //       "INSTANT_FUNDING_SOURCE"
                           // },
-                          "item_list": {
+                          /*"item_list": {
                             "items": [
                               {
                                 "name": "A demo product",
@@ -68,12 +69,13 @@ class _EscanearState extends State<Test> {
                                 "currency": "USD"
                               }
                             ],
-                          }
+                          }*/
                         }
                       ],
                       note: "Contact us for any questions on your order.",
                       onSuccess: (Map params) async {
                         print("onSuccess: $params");
+                        print("exito");
                       },
                       onError: (error) {
                         print("onError: $error");
