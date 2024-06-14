@@ -47,6 +47,9 @@ dependencies:
   flutter_spinkit: ^5.2.1
   flutter_launcher_icons: ^0.13.1
   flutter_dotenv: ^5.1.0
+  get: ^4.6.6
+  firebase_core: ^3.0.0
+  firebase_auth: ^5.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
+import 'package:easyorder/views/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -100,8 +101,14 @@ class _EscanearState extends State<Escanear> {
                           child: SizedBox(
                             height: 55,
                             child: ElevatedButton(
-                              onPressed: () {
-                                // Acción al presionar el botón "Iniciar sesión"
+                              onPressed: () async {
+                                final tester = await MongoDatabase.Test();
+                                if (tester == false) {
+                                  // ignore: use_build_context_synchronously
+                                  dbErrorDialog(context);
+                                } else {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "722917557653",
+    "project_id": "easyorder-50ad2",
+    "storage_bucket": "easyorder-50ad2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722917557653:android:4c730964d097bb15eba29c",
+        "android_client_info": {
+          "package_name": "com.example.easyorder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYd4_Iv4NUzijaYH_JlWPzH2e1hj5ya2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
