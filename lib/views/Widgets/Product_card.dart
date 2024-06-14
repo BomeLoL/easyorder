@@ -10,11 +10,13 @@ class ProductCard extends StatelessWidget {
   final ItemMenu producto;
   final String info;
   final int isPedido;
+  final String? comment;
 
   ProductCard({
     required this.producto,
     required this.info,
     required this.isPedido,
+    this.comment,
   });
 
   @override
@@ -24,8 +26,12 @@ class ProductCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  detalleProducto(info: info, producto: producto)),
+              builder: (context) => detalleProducto(
+                    info: info,
+                    producto: producto,
+                    isPedido: isPedido,
+                    comment: comment,
+                  )),
         );
       },
       child: Stack(
@@ -112,7 +118,7 @@ class ProductCard extends StatelessWidget {
                 Consumer<CartController>(
                     builder: (context, cartController, child) {
                   final productoPedido =
-                      cartController.pedido.getProductIfExists(producto);
+                      cartController.pedido.getProductIfExists(producto, comentario: comment);
                   if (productoPedido != null) {
                     return Expanded(
                       flex: 8,
@@ -124,7 +130,7 @@ class ProductCard extends StatelessWidget {
                               child: IconButton(
                                 onPressed: () {
                                   cartController.deleteProduct(
-                                  producto, info, context, isPedido);
+                                      producto, info, context, isPedido, comentario: comment);
                                 },
                                 icon: Icon(Icons.remove),
                                 style: IconButton.styleFrom(
@@ -157,7 +163,7 @@ class ProductCard extends StatelessWidget {
                             child: Container(
                               child: IconButton(
                                 onPressed: () {
-                                  cartController.addProduct(producto);
+                                  cartController.addProduct(producto, comentario: comment);
                                 },
                                 icon: Icon(Icons.add),
                                 style: IconButton.styleFrom(
@@ -231,23 +237,24 @@ class ProductCard extends StatelessWidget {
                                         child: Text(
                                           'Cancelar',
                                           style: GoogleFonts.poppins(
-                                            color: const Color.fromRGBO(255, 95, 4, 1),
-                                            fontWeight: FontWeight.bold),
-                                            textScaler: TextScaler.linear(0.9),
-                                            
-                                          )),
+                                              color: const Color.fromRGBO(
+                                                  255, 95, 4, 1),
+                                              fontWeight: FontWeight.bold),
+                                          textScaler: TextScaler.linear(0.9),
+                                        )),
                                   ),
                                   Expanded(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color.fromRGBO(255, 95, 4, 1),
+                                          backgroundColor: const Color.fromRGBO(
+                                              255, 95, 4, 1),
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(7))),
                                       onPressed: () {
                                         Navigator.of(context).pop();
-                                        var productoP= cartController.pedido.getProductIfExists(producto);
+                                        var productoP = cartController.pedido
+                                            .getProductIfExists(producto, comentario: comment);
                                         cartController.deleteProducts(
                                             productoP, info, context, isPedido);
                                       },
@@ -256,7 +263,7 @@ class ProductCard extends StatelessWidget {
                                         style: GoogleFonts.poppins(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
-                                            textScaler: TextScaler.linear(0.9),
+                                        textScaler: TextScaler.linear(0.9),
                                       ),
                                     ),
                                   ),

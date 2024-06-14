@@ -15,12 +15,12 @@ class CartController extends ChangeNotifier{
     notifyListeners();
   }
 
-  void addProduct(ItemMenu producto) {
-    _pedido.addProduct(producto);
+  void addProduct(ItemMenu producto, {String? comentario, List<String> extras = const []}) {
+    _pedido.addProduct(producto, comentario: comentario);
     notifyListeners();
   }
-  void addProducts(ItemMenu producto, int cantidad) {
- _pedido.addProducts(producto, cantidad);
+  void addProducts(ItemMenu producto, int cantidad, {String? comentario, List<String> extras = const []}) {
+ _pedido.addProducts(producto, cantidad, comentario: comentario, extras: extras);
     notifyListeners();
 }
 
@@ -34,12 +34,16 @@ void deleteProduct(ItemMenu producto, String info, context, int isPedido, {Strin
     notifyListeners();
   }
   void updateProductQuantity(ItemMenu producto, int cantidad, {String? comentario, List<String> extras = const []}) {
-    _pedido.updateProductQuantity(producto, cantidad);
+    _pedido.updateProductQuantity(producto, cantidad, comentario: comentario);
     notifyListeners();
   }
 
-  int getOneProductQuantity(ItemMenu producto) {
-    return _pedido.getOneProductQuantity(producto);
+  void updateComment(ItemMenu producto, String? comentarioOriginal, String comentarioNuevo){
+    _pedido.updateComment(producto, comentarioOriginal, comentarioNuevo);
+  }
+
+  int getOneProductQuantity(ItemMenu producto, {String? comentario, List<String> extras = const []}) {
+    return _pedido.getOneProductQuantity(producto, comentario: comentario);
   }
 int totalCantidad() {
    return _pedido.totalCantidad();

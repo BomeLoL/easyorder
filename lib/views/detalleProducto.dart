@@ -1,4 +1,6 @@
+import 'package:easyorder/controllers/text_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher_icons/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:provider/provider.dart';
@@ -7,9 +9,11 @@ import 'package:easyorder/views/Widgets/quantity_button.dart';
 
 class detalleProducto extends StatefulWidget {
   const detalleProducto(
-      {super.key, required this.info, required this.producto});
+      {super.key, required this.info, required this.producto, required this.isPedido, this.comment});
   final String info;
   final ItemMenu producto;
+  final int isPedido;
+  final String? comment;
 
   @override
   State<detalleProducto> createState() => _detalleProductoState();
@@ -18,17 +22,27 @@ class detalleProducto extends StatefulWidget {
 class _detalleProductoState extends State<detalleProducto> {
   bool isCarrito = true;
   late int cantidad;
+  late TextController textController;
   
 
   @override
   void initState() {
     super.initState();
-    cantidad = context.read<CartController>().getOneProductQuantity(widget.producto);
-    if(cantidad == 0){
+    textController = Provider.of<TextController>(context, listen: false);
+    if (widget.isPedido == 0){
+      cantidad = context.read<CartController>().getOneProductQuantity(widget.producto, comentario: widget.comment);
+      if(widget.comment != null){
+      textController.getController('field1').text = widget.comment!;
+    } 
+    }else{
       cantidad = 1;
-      isCarrito = false;
-    }
-    
+    }    
+  }
+
+  @override
+  void dispose() {
+    textController.clearText('field1'); // Limpiar el texto del TextField asociado
+    super.dispose();
   }
 
   void agregar() {
@@ -47,7 +61,7 @@ class _detalleProductoState extends State<detalleProducto> {
 
   @override
   Widget build(BuildContext context) {
-    //final textControler = Provider.of<TextController>(context);
+    final textController = Provider.of<TextController>(context);
    
 
 
@@ -148,7 +162,7 @@ class _detalleProductoState extends State<detalleProducto> {
                                 SizedBox(height: 25),
 
                                 TextField(
-                                  
+                                  controller: textController.getController('field1'),
                                   style: GoogleFonts.poppins(
                                           fontSize: 14.0,
                                           color: Colors.black),
@@ -204,7 +218,14 @@ class _detalleProductoState extends State<detalleProducto> {
                   flex: 10,
                   child: ElevatedButton(
                     onPressed: () {
-                      cartController.updateProductQuantity(widget.producto, cantidad );
+                      String field1Text = textController.getText('field1');
+                      if(widget.isPedido == 1){
+                        cartController.addProducts(widget.producto, cantidad, comentario: field1Text);
+                      }
+                      cartController.updateProductQuantity(widget.producto, cantidad, comentario: widget.comment);
+                      if (widget.comment != field1Text){
+                        cartController.updateComment(widget.producto, widget.comment, field1Text);
+                      }
                       Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(
@@ -216,7 +237,7 @@ class _detalleProductoState extends State<detalleProducto> {
                     child: Builder(
                       builder: (context) {
                         String textOfbutton = 'Agregar';
-                        if(isCarrito == true){
+                        if(widget.isPedido == 0){
                           textOfbutton = 'Modificar';
                         }
                         return Text(

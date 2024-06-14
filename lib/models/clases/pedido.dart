@@ -84,7 +84,7 @@ itemPedido? getProductIfExists(ItemMenu producto, {String? comentario, List<Stri
 
   void updateProductQuantity(ItemMenu producto, int cantidad,
       {String? comentario, List<String> extras = const []}) {
-      var existingProduct = getProductIfExists(producto);
+      var existingProduct = getProductIfExists(producto, comentario: comentario);
     if (existingProduct != null) {
       if (cantidad == 0) {
         productos.remove(existingProduct);
@@ -96,6 +96,11 @@ itemPedido? getProductIfExists(ItemMenu producto, {String? comentario, List<Stri
     }
   }
 
+  void updateComment(ItemMenu producto, String? comentarioOriginal, String comentarioNuevo){
+    var existingProduct = getProductIfExists(producto, comentario: comentarioOriginal);
+    existingProduct!.comentario = comentarioNuevo;
+  }
+
   void deleteProducts(itemPedido? producto, String info, context, int isPedido) {
     productos.remove(producto);
   }
@@ -105,8 +110,8 @@ itemPedido? getProductIfExists(ItemMenu producto, {String? comentario, List<Stri
     return total;
   }
 
-  int getOneProductQuantity(ItemMenu producto) {
-    return getProductIfExists(producto)?.cantidad ?? 0;
+  int getOneProductQuantity(ItemMenu producto, {String? comentario, List<String> extras = const []}) {
+    return getProductIfExists(producto, comentario: comentario)?.cantidad ?? 0;
   }
 
   double getTotalAmount() {
