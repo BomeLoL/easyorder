@@ -1,3 +1,4 @@
+import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +25,7 @@ class detalleProducto extends StatefulWidget {
 class _detalleProductoState extends State<detalleProducto> {
   bool isCarrito = true;
   late int cantidad;
+  
 
   @override
   void initState() {
@@ -52,6 +54,10 @@ class _detalleProductoState extends State<detalleProducto> {
 
   @override
   Widget build(BuildContext context) {
+    //final textControler = Provider.of<TextController>(context);
+   
+
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -125,34 +131,49 @@ class _detalleProductoState extends State<detalleProducto> {
                                     color: Colors.black,
                                   ),
                                 ),
+                              SizedBox(height: 25),
 
-                                // Text(
-                                //   'Comentarios adicionales',
-                                //   style: GoogleFonts.poppins(
-                                //     fontSize: 18,
-                                //     fontWeight: FontWeight.bold,
-                                //     color: Colors.black,
-                                //   ),
-                                // ),
+                                Text(
+                                  'Comentarios adicionales',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              
+                              SizedBox(height: 15),
 
-                                // Text(
-                                //   text:
-                                //       'Hazle saber al restaurante los detalles a tener en cuenta al preparar tu pedido.',
-                                //   style: GoogleFonts.poppins(
-                                //     fontSize: 14,
-                                //     fontWeight: FontWeight.normal,
-                                //     color: Colors.black38,
-                                //   ),
-                                // ),
+                                Text(
+                                  'Hazle saber al restaurante los detalles a tener en cuenta al preparar tu pedido.',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black38,
+                                  ),
+                                ),
+                                SizedBox(height: 25),
 
-                                // TextField(
-                                //   decoration: InputDecoration(
-                                //       border: OutlineInputBorder(),
-                                //       hintText: '(Opcional)',
-                                //       hintStyle: const TextStyle(
-                                //           fontSize: 14.0,
-                                //           color: Colors.black38)),
-                                // ),
+                                TextField(
+                                  
+                                  style: GoogleFonts.poppins(
+                                          fontSize: 14.0,
+                                          color: Colors.black),
+                                  cursorColor: Color.fromRGBO(255, 95, 4, 1),
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color:Color.fromRGBO(255, 95, 4, 1),
+                                        width: 2
+                                        ), // Border color when focused
+                                    ),
+                                      hintText: '(Opcional)',
+                                      hintStyle: GoogleFonts.poppins(
+                                          fontSize: 14.0,
+                                          color: Colors.black38)),
+                                ),
                               ]),
                         ),
                       ),
@@ -190,7 +211,7 @@ class _detalleProductoState extends State<detalleProducto> {
                   flex: 10,
                   child: ElevatedButton(
                     onPressed: () {
-                      cartController.updateProductQuantity(widget.producto, cantidad);
+                      cartController.updateProductQuantity(widget.producto, cantidad );
                       Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(

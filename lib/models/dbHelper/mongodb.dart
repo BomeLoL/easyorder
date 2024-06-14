@@ -107,7 +107,7 @@ static actualizarMenu(Menu menu) async {
 
   static void agregarPedidoARestaurante(Restaurante restaurante, int idMesa, Pedido nuevoPedido) {
     Mesa? mesaEncontrada = restaurante.mesas.firstWhere((mesa) => mesa.id == idMesa);
-    mesaEncontrada.pedidos.add(nuevoPedido);  
+    //mesaEncontrada.pedidos.add(nuevoPedido);  
   }
 
 }

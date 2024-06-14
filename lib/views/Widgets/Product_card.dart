@@ -113,7 +113,7 @@ class ProductCard extends StatelessWidget {
                 Consumer<CartController>(
                     builder: (context, cartController, child) {
                   final productoPedido =
-                      cartController.pedido.productos[producto];
+                      cartController.pedido.getProductIfExists(producto);
                   if (productoPedido != null) {
                     return Expanded(
                       flex: 8,
@@ -125,7 +125,7 @@ class ProductCard extends StatelessWidget {
                               child: IconButton(
                                 onPressed: () {
                                   cartController.deleteProduct(
-                                      producto, info, context, isPedido);
+                                  producto, info, context, isPedido);
                                 },
                                 icon: Icon(Icons.remove),
                                 style: IconButton.styleFrom(
@@ -248,8 +248,9 @@ class ProductCard extends StatelessWidget {
                                                   BorderRadius.circular(7))),
                                       onPressed: () {
                                         Navigator.of(context).pop();
+                                        var productoP= cartController.pedido.getProductIfExists(producto);
                                         cartController.deleteProducts(
-                                            producto, info, context, isPedido);
+                                            productoP, info, context, isPedido);
                                       },
                                       child: Text(
                                         'Confirmar',

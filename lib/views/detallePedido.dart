@@ -77,12 +77,11 @@ class _detallePedidoState extends State<detallePedido> {
                       padding: EdgeInsets.zero,
                       itemCount: cartController.pedido.productos.length,
                       itemBuilder: (context, index) {
-                        final producto = cartController.pedido.productos.keys
-                            .elementAt(index);
+                        final producto = cartController.pedido.productos[index];        
                         return Column(
                           children: [
                             ProductCard(
-                              producto: producto,
+                              producto: producto.producto,
                               isPedido: 0,
                               info: widget.info,
                             ),
@@ -377,8 +376,8 @@ Future<void> _showConfirmationDialog(BuildContext context) {
                             if (verificador == true) {
                               shouldPop = false;
                               CartController cartController = Provider.of<CartController>(context, listen: false);
-                              Pedido pedidoVacio = Pedido(productos: {});
-                              cartController.pedido = pedidoVacio;
+                              //Pedido pedidoVacio = Pedido(productos: {});
+                              //cartController.pedido = pedidoVacio;
                               Navigator.pop(context, true);
                               Navigator.of(context).push(
                                 MaterialPageRoute(builder: (BuildContext context) {

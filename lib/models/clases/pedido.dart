@@ -1,94 +1,121 @@
 import 'package:easyorder/models/clases/itemPedido.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:flutter/foundation.dart';
+import 'package:collection/collection.dart';
 
 class Pedido {
-  final Map<ItemMenu, itemPedido> productos;
+  final List<itemPedido> productos;
 
   Pedido({required this.productos});
 
-  void addProduct(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
-    if (productos.containsKey(producto)) {
-      productos[producto]!.cantidad += 1;
-      productos[producto]!.comentario = comentario;
-      productos[producto]!.extras = extras;
+itemPedido? getProductIfExists(ItemMenu producto, {String? comentario, List<String> extras = const []}) {
+    return productos.firstWhereOrNull(
+      (item) =>
+          item.producto == producto &&
+          item.comentario == comentario &&
+          listEquals(item.extras, extras),
+    );
+  }
+  void addProduct(ItemMenu producto,
+      {String? comentario, List<String> extras = const []}) {
+    var existingProduct = getProductIfExists(producto, comentario: comentario, extras: extras);
+    if (existingProduct != null) {
+      existingProduct.cantidad += 1;
+      //productos[producto]!.comentario = comentario;
+      //productos[producto]!.extras = extras;
     } else {
-      productos[producto] = itemPedido(
-        cantidad: 1,
-        comentario: comentario,
-        extras: extras,
+      productos.add(
+        itemPedido(
+          producto: producto,
+          cantidad: 1,
+          comentario: comentario,
+          extras: extras,
+        ),
       );
     }
   }
 
-  Map<String, dynamic> toMap() {
-    List<Map<String, dynamic>> productosMap = productos.entries.map((entry) {
-      return {
-        'producto': entry.key.toMap(),
-        'pedido': entry.value.toMap(),
-      };
-    }).toList();
-    return {
-      'productos': productosMap,
-    };
+  bool existingProduct(ItemMenu producto, {String? comentario, List<String> extras = const []}){
+    return productos.any(
+      (item) =>
+          item.producto == producto &&
+          item.comentario == comentario &&
+          listEquals(item.extras, extras),
+    );
   }
 
-Pedido.fromMap(Map<String, dynamic> map)
-      : productos = Map.fromEntries(
-          (map['productos'] as List<dynamic>?)?.map((item) => MapEntry(
-            ItemMenu.fromMap(item['producto']),
-            itemPedido.fromMap(item['pedido']),
-          )).toList() ?? {});
+  
 
-
-
-  void addProducts(ItemMenu producto, int cantidad) {
+  //Map<String, dynamic> toMap() {
+  //  List<Map<String, dynamic>> productosMap = productos.entries.map((entry) {
+  //    return {
+  //      'producto': entry.key.toMap(),
+  //      'pedido': entry.value.toMap(),
+  //    };
+  //  }).toList();
+  //  return {
+  //    'productos': productosMap,
+  //  };
+  //}
+//
+  //Pedido.fromMap(Map<String, dynamic> map)
+  //    : productos = Map.fromEntries((map['productos'] as List<dynamic>?)
+  //              ?.map((item) => MapEntry(
+  //                    ItemMenu.fromMap(item['producto']),
+  //                    itemPedido.fromMap(item['pedido']),
+  //                  ))
+  //              .toList() ??
+  //          {});
+//
+  void addProducts(ItemMenu producto, int cantidad, {String? comentario, List<String> extras = const []}) {
     for (int i = 0; i < cantidad; i++) {
-      addProduct(producto);
+      addProduct(producto, comentario: comentario, extras: extras);
     }
   }
 
-  void deleteProduct(ItemMenu producto, String info, context, int isPedido) {
-    if (productos.containsKey(producto) && productos[producto]!.cantidad > 1) {
-      productos[producto]!.cantidad -= 1;
+  void deleteProduct(ItemMenu producto, String info, context, int isPedido, {String? comentario, List<String> extras = const []}) {
+    var existingProduct = getProductIfExists(producto, comentario: comentario, extras: extras);
+    if (existingProduct != null && existingProduct.cantidad > 1) {
+      existingProduct.cantidad -= 1;
     } else {
-      deleteProducts(producto, info, context, isPedido);
+      deleteProducts(existingProduct, info, context, isPedido);
     }
   }
 
-  void updateProductQuantity(ItemMenu producto, int cantidad) {
-    if (productos.containsKey(producto)) {
+  void updateProductQuantity(ItemMenu producto, int cantidad,
+      {String? comentario, List<String> extras = const []}) {
+      var existingProduct = getProductIfExists(producto);
+    if (existingProduct != null) {
       if (cantidad == 0) {
-        productos.remove(producto);
+        productos.remove(existingProduct);
       } else {
-        productos[producto]!.cantidad = cantidad;
+        existingProduct.cantidad = cantidad;
       }
     } else if (cantidad >= 1) {
-      addProducts(producto, cantidad);
+      addProducts(producto, cantidad, comentario: comentario, extras: extras);
     }
   }
 
-  void deleteProducts(ItemMenu producto, String info, context, int isPedido) {
+  void deleteProducts(itemPedido? producto, String info, context, int isPedido) {
     productos.remove(producto);
   }
 
   int totalCantidad() {
-    int total = 0;
-    productos.forEach((key, productoPedido) {
-      total += productoPedido.cantidad;
-    });
+    int total = productos.length;
     return total;
   }
 
   int getOneProductQuantity(ItemMenu producto) {
-    return productos[producto]?.cantidad ?? 0;
+    return getProductIfExists(producto)?.cantidad ?? 0;
   }
 
   double getTotalAmount() {
     double total = 0;
-    productos.forEach((productoMenu, productoPedido) {
-      total += productoPedido.cantidad * productoMenu.precio;
+    productos.forEach((productoMenu) {
+      total += productoMenu.cantidad * productoMenu.producto.precio;
     });
-    String totalFormateado = total.toStringAsFixed(2); // Limita a 2 posiciones decimales
+    String totalFormateado =
+        total.toStringAsFixed(2); // Limita a 2 posiciones decimales
     return double.parse(totalFormateado);
   }
 }

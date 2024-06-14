@@ -1,24 +1,47 @@
+import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:flutter/foundation.dart';
+
 class itemPedido {
+  final ItemMenu producto;
   int cantidad;
-  String comentario;
+  String? comentario;
   List<String> extras;
 
   itemPedido({
+    required this.producto,
     required this.cantidad,
-    this.comentario = '',
+    this.comentario,
     this.extras = const [],
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'cantidad': cantidad,
-      'comentario': comentario,
-      'extras': extras,
-    };
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is itemPedido &&
+        other.producto == producto &&
+        other.cantidad == cantidad &&
+        other.comentario == comentario &&
+        listEquals(other.extras, extras); // Comparar listas usando listEquals de flutter
   }
 
-  itemPedido.fromMap(Map<String, dynamic> map)
-      : cantidad = map['cantidad'],
-        comentario = map['comentario'] ?? '',
-        extras = List<String>.from(map['extras'] ?? []);
-}
+  @override
+  int get hashCode =>
+      producto.hashCode ^
+      cantidad.hashCode ^
+      (comentario?.hashCode ?? 0) ^
+      extras.hashCode; // Agregar extras al cálculo del hashCode
+
+  //Map<String, dynamic> toMap() {
+  //  return {
+  //    'cantidad': cantidad,
+  //    'comentario': comentario,
+  //    'extras': extras,
+  //  };
+  //}
+//
+  //itemPedido.fromMap(Map<String, dynamic> map)
+  //    : cantidad = map['cantidad'],
+  //      comentario = map['comentario'] ?? '',
+  //      extras = List<String>.from(map['extras'] ?? []);
+}//
