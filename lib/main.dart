@@ -5,6 +5,7 @@ import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/escaneoQR.dart';
 import 'package:easyorder/views/payTest.dart';
 import 'package:easyorder/views/vistaQr.dart';
+import 'package:easyorder/views/walletView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         }),
       ],
       child: const MaterialApp(
-        home: Test(),
+        home: walletView(),
         debugShowCheckedModeBanner: false,
       ),
     );
