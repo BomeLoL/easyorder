@@ -1,11 +1,4 @@
-import 'package:easyorder/controllers/text_controller.dart';
-import 'package:easyorder/models/clases/menu.dart';
-import 'package:easyorder/models/clases/restaurante.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:provider/provider.dart';

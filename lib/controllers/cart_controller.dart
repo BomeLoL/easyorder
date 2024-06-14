@@ -1,9 +1,7 @@
 
 import 'package:easyorder/models/clases/itemPedido.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
-import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
-import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/foundation.dart';
 
 class CartController extends ChangeNotifier{

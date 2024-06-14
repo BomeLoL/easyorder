@@ -1,4 +1,3 @@
-import 'package:easyorder/models/clases/pedido.dart';
 
 class Mesa{
   final int id;
