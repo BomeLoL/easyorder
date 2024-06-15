@@ -232,10 +232,10 @@ class _MenuState extends State<MenuView> {
                   );
                 }
               }),
-              BarNavigation(),
             ],
           ),
         ),
+        bottomNavigationBar: BarNavigation(),
         // bottomNavigationBar: Consumer<CartController>(
         //   builder: (context, cartController, child) {
         //     return BottomNavigationBar(
