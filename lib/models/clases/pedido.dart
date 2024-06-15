@@ -8,7 +8,7 @@ class Pedido {
 
   Pedido({required this.productos});
 
-itemPedido? getProductIfExists(ItemMenu producto, {String? comentario, List<String> extras = const []}) {
+itemPedido? getProductIfExists(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
     return productos.firstWhereOrNull(
       (item) =>
           item.producto == producto &&
@@ -17,12 +17,10 @@ itemPedido? getProductIfExists(ItemMenu producto, {String? comentario, List<Stri
     );
   }
   void addProduct(ItemMenu producto,
-      {String? comentario, List<String> extras = const []}) {
+      {String comentario = '', List<String> extras = const []}) {
     var existingProduct = getProductIfExists(producto, comentario: comentario, extras: extras);
     if (existingProduct != null) {
       existingProduct.cantidad += 1;
-      //productos[producto]!.comentario = comentario;
-      //productos[producto]!.extras = extras;
     } else {
       productos.add(
         itemPedido(
@@ -43,8 +41,6 @@ itemPedido? getProductIfExists(ItemMenu producto, {String? comentario, List<Stri
           listEquals(item.extras, extras),
     );
   }
-
-  
 
   //Map<String, dynamic> toMap() {
   //  List<Map<String, dynamic>> productosMap = productos.entries.map((entry) {
@@ -67,13 +63,13 @@ itemPedido? getProductIfExists(ItemMenu producto, {String? comentario, List<Stri
   //              .toList() ??
   //          {});
 //
-  void addProducts(ItemMenu producto, int cantidad, {String? comentario, List<String> extras = const []}) {
+  void addProducts(ItemMenu producto, int cantidad, {String comentario = '', List<String> extras = const []}) {
     for (int i = 0; i < cantidad; i++) {
       addProduct(producto, comentario: comentario, extras: extras);
     }
   }
 
-  void deleteProduct(ItemMenu producto, String info, context, int isPedido, {String? comentario, List<String> extras = const []}) {
+  void deleteProduct(ItemMenu producto, String info, context, int isPedido, {String comentario = '', List<String> extras = const []}) {
     var existingProduct = getProductIfExists(producto, comentario: comentario, extras: extras);
     if (existingProduct != null && existingProduct.cantidad > 1) {
       existingProduct.cantidad -= 1;
@@ -83,7 +79,7 @@ itemPedido? getProductIfExists(ItemMenu producto, {String? comentario, List<Stri
   }
 
   void updateProductQuantity(ItemMenu producto, int cantidad,
-      {String? comentario, List<String> extras = const []}) {
+      {String comentario = '', List<String> extras = const []}) {
       var existingProduct = getProductIfExists(producto, comentario: comentario);
     if (existingProduct != null) {
       if (cantidad == 0) {
@@ -96,7 +92,7 @@ itemPedido? getProductIfExists(ItemMenu producto, {String? comentario, List<Stri
     }
   }
 
-  void updateComment(ItemMenu producto, String? comentarioOriginal, String comentarioNuevo){
+  void updateComment(ItemMenu producto, String comentarioOriginal, String comentarioNuevo){
     var existingProduct = getProductIfExists(producto, comentario: comentarioOriginal);
     existingProduct!.comentario = comentarioNuevo;
   }
@@ -110,7 +106,7 @@ itemPedido? getProductIfExists(ItemMenu producto, {String? comentario, List<Stri
     return total;
   }
 
-  int getOneProductQuantity(ItemMenu producto, {String? comentario, List<String> extras = const []}) {
+  int getOneProductQuantity(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
     return getProductIfExists(producto, comentario: comentario)?.cantidad ?? 0;
   }
 

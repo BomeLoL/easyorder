@@ -82,7 +82,7 @@ class _detallePedidoState extends State<detallePedido> {
                               producto: producto.producto,
                               isPedido: 0,
                               info: widget.info,
-                              comment: producto.comentario,
+                              comment: producto.comentario!,
                             ),
                             const Gap(20),
                           ],

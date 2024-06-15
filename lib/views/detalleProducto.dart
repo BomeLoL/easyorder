@@ -9,11 +9,11 @@ import 'package:easyorder/views/Widgets/quantity_button.dart';
 
 class detalleProducto extends StatefulWidget {
   const detalleProducto(
-      {super.key, required this.info, required this.producto, required this.isPedido, this.comment});
+      {super.key, required this.info, required this.producto, required this.isPedido, this.comment = ''});
   final String info;
   final ItemMenu producto;
   final int isPedido;
-  final String? comment;
+  final String comment;
 
   @override
   State<detalleProducto> createState() => _detalleProductoState();
@@ -221,11 +221,12 @@ class _detalleProductoState extends State<detalleProducto> {
                       String field1Text = textController.getText('field1');
                       if(widget.isPedido == 1){
                         cartController.addProducts(widget.producto, cantidad, comentario: field1Text);
-                      }
-                      cartController.updateProductQuantity(widget.producto, cantidad, comentario: widget.comment);
-                      if (widget.comment != field1Text){
-                        cartController.updateComment(widget.producto, widget.comment, field1Text);
-                      }
+                      } else {
+                        cartController.updateProductQuantity(widget.producto, cantidad, comentario: widget.comment);
+                        if (widget.comment != field1Text){
+                          cartController.updateComment(widget.producto, widget.comment, field1Text);
+                        }
+                      }                      
                       Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(

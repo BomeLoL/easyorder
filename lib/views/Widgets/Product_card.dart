@@ -10,13 +10,13 @@ class ProductCard extends StatelessWidget {
   final ItemMenu producto;
   final String info;
   final int isPedido;
-  final String? comment;
+  final String comment;
 
   ProductCard({
     required this.producto,
     required this.info,
     required this.isPedido,
-    this.comment,
+    this.comment = '',
   });
 
   @override
@@ -37,7 +37,7 @@ class ProductCard extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            height: 130,
+            height: 140,
             padding: EdgeInsets.all(13),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(7),
@@ -85,13 +85,39 @@ class ProductCard extends StatelessWidget {
                           fontSize: 15,
                         ),
                       ),
-                      Text(
-                        producto.descripcion,
+                      RichText(
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Colors.grey,
+                        maxLines: 2,
+                        text: TextSpan(
+                          style: GoogleFonts.poppins(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14
+                          ),
+                          children: isPedido == 0
+                            ? <TextSpan>[
+                              comment ==''
+                              ? TextSpan(
+                                text: 'Sin comentarios'
+                              )
+                              : TextSpan(
+                                  text: 'Nota:',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                TextSpan(  
+                                  text: ' ${comment}'                                 
+                                ),
+                              ]
+                            : <TextSpan>[
+                                TextSpan(
+                                  text: producto.descripcion,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
                         ),
                       ),
                       ShaderMask(
@@ -109,6 +135,7 @@ class ProductCard extends StatelessWidget {
                           ),
                         ),
                       ),
+                      
                     ],
                   ),
                 ),
@@ -117,8 +144,8 @@ class ProductCard extends StatelessWidget {
                 ),
                 Consumer<CartController>(
                     builder: (context, cartController, child) {
-                  final productoPedido =
-                      cartController.pedido.getProductIfExists(producto, comentario: comment);
+                  final productoPedido = cartController.pedido
+                      .getProductIfExists(producto, comentario: comment);
                   if (productoPedido != null) {
                     return Expanded(
                       flex: 8,
@@ -130,7 +157,8 @@ class ProductCard extends StatelessWidget {
                               child: IconButton(
                                 onPressed: () {
                                   cartController.deleteProduct(
-                                      producto, info, context, isPedido, comentario: comment);
+                                      producto, info, context, isPedido,
+                                      comentario: comment);
                                 },
                                 icon: Icon(Icons.remove),
                                 style: IconButton.styleFrom(
@@ -163,7 +191,8 @@ class ProductCard extends StatelessWidget {
                             child: Container(
                               child: IconButton(
                                 onPressed: () {
-                                  cartController.addProduct(producto, comentario: comment);
+                                  cartController.addProduct(producto,
+                                      comentario: comment);
                                 },
                                 icon: Icon(Icons.add),
                                 style: IconButton.styleFrom(
@@ -254,7 +283,8 @@ class ProductCard extends StatelessWidget {
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                         var productoP = cartController.pedido
-                                            .getProductIfExists(producto, comentario: comment);
+                                            .getProductIfExists(producto,
+                                                comentario: comment);
                                         cartController.deleteProducts(
                                             productoP, info, context, isPedido);
                                       },

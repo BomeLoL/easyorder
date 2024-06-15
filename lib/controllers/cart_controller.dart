@@ -15,34 +15,34 @@ class CartController extends ChangeNotifier{
     notifyListeners();
   }
 
-  void addProduct(ItemMenu producto, {String? comentario, List<String> extras = const []}) {
+  void addProduct(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
     _pedido.addProduct(producto, comentario: comentario);
     notifyListeners();
   }
-  void addProducts(ItemMenu producto, int cantidad, {String? comentario, List<String> extras = const []}) {
+  void addProducts(ItemMenu producto, int cantidad, {String comentario = '', List<String> extras = const []}) {
  _pedido.addProducts(producto, cantidad, comentario: comentario, extras: extras);
     notifyListeners();
 }
 
-itemPedido? getProductIfExists(ItemMenu producto, {String? comentario, List<String> extras = const []}) {
+itemPedido? getProductIfExists(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
     return _pedido.getProductIfExists(producto, comentario: comentario, extras: extras);
   }
 
 
-void deleteProduct(ItemMenu producto, String info, context, int isPedido, {String? comentario, List<String> extras = const []}) {
+void deleteProduct(ItemMenu producto, String info, context, int isPedido, {String comentario = '', List<String> extras = const []}) {
     _pedido.deleteProduct(producto, info, context, isPedido, comentario: comentario, extras: extras);
     notifyListeners();
   }
-  void updateProductQuantity(ItemMenu producto, int cantidad, {String? comentario, List<String> extras = const []}) {
+  void updateProductQuantity(ItemMenu producto, int cantidad, {String comentario = '', List<String> extras = const []}) {
     _pedido.updateProductQuantity(producto, cantidad, comentario: comentario);
     notifyListeners();
   }
 
-  void updateComment(ItemMenu producto, String? comentarioOriginal, String comentarioNuevo){
+  void updateComment(ItemMenu producto, String comentarioOriginal, String comentarioNuevo){
     _pedido.updateComment(producto, comentarioOriginal, comentarioNuevo);
   }
 
-  int getOneProductQuantity(ItemMenu producto, {String? comentario, List<String> extras = const []}) {
+  int getOneProductQuantity(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
     return _pedido.getOneProductQuantity(producto, comentario: comentario);
   }
 int totalCantidad() {
