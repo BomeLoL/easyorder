@@ -16,55 +16,6 @@ class BarNavigation extends StatefulWidget {
   State<BarNavigation> createState() => _NavigationbarState();
 }
 
-// class _NavigationbarState extends State<BarNavigation> {
-//   bool confirmation = false;
-//   int selectedIndex = 0;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     selectedIndex = widget.index;
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return BottomNavigationBar(
-//       items: [
-//         BottomNavigationBarItem(
-//           icon: Icon(
-//             Icons.home
-//           ),
-//           label: "Inicio"
-//           ),
-//         BottomNavigationBarItem(
-//           icon: Icon(
-//             Icons.wallet
-//           ),
-//           label: "Billetera"
-//           ),
-//       ],
-//       currentIndex: selectedIndex,
-//       onTap: (int click){
-//         setState(() {
-//           selectedIndex=click;
-//         });
-
-//         if (selectedIndex==1) {
-//           Navigator.pushReplacement(
-//                     context,
-//                     MaterialPageRoute(
-//                       builder: (context) {
-//                         return walletView(index: selectedIndex);
-//                       },
-//                     ),
-//                   );
-//         }
-//       },
-//       );
-//   }
-// }
-
-
 class _NavigationbarState extends State<BarNavigation> {
    bool confirmation = false;
    int selectedIndex = 0;
@@ -84,7 +35,8 @@ class _NavigationbarState extends State<BarNavigation> {
                 fontWeight: FontWeight.bold,
                 color: Color.fromRGBO(142, 142, 142, 1),
               ),
-              selectedItemColor: Colors.black,
+              fixedColor: Color.fromRGBO(142, 142, 142, 1),
+              //selectedItemColor: Colors.black, //por ahora que no cambie de color el icono seleccionado
               items: [
                 BottomNavigationBarItem(
                   icon: Icon(
@@ -134,15 +86,6 @@ class _NavigationbarState extends State<BarNavigation> {
                       setState(() {
                   navController.selectedIndex = clickedIndex;
                 });
-                  // Navigator.popUntil(context, (route) {return route.settings.name == 'menu' ;});
-                  // Navigator.pushReplacement(//replacement necesario, capaz podria hacer pop de las vistas anteriores hasta la de menu y luego el replacement
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) {
-                  //       return BarcodeScannerWithOverlay();
-                  //     },
-                  //   ),
-                  // );
 
                   Navigator.popUntil(context, (route) => route.isFirst);
                   Navigator.push(context, MaterialPageRoute(builder: (context){return BarcodeScannerWithOverlay();}));
