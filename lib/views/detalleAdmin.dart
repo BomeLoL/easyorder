@@ -13,7 +13,6 @@ import 'package:easyorder/views/Widgets/quantity_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-
 class detalleAdmin extends StatefulWidget {
   const detalleAdmin({super.key, required this.info, required this.producto});
   final String info;
@@ -54,9 +53,9 @@ class _detalleAdminState extends State<detalleAdmin> {
   }
 
   File? _image;
-  Future _getImage() async {
+  Future<XFile?> _getImage() async {
     final picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
@@ -88,14 +87,53 @@ class _detalleAdminState extends State<detalleAdmin> {
                   height: 350,
                   width: double.infinity,
                   child: GestureDetector(
-                    onTap: (){_getImage;},
+                    onTap: () {
+                      _getImage();
+                    },
                     child: Container(
-                      
-                      child: Image.network(
-                        widget.producto.imgUrl,
-                        fit: BoxFit.cover,
-                        filterQuality: FilterQuality.high,
-                      ),
+                      child: Builder(builder: (context) {
+                        if (_image != null) {
+                          return Image.file(
+                            _image!,
+                            fit: BoxFit.cover,
+                            filterQuality: FilterQuality.high,
+                          );
+                        } else {
+                          return Container(
+                              color: Colors.black12,
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(25),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.upload,
+                                        color: Colors.black54,
+                                  // Icono de cámara
+                                  
+                                        size: 50,
+                                  // Tamaño del icono
+                                      ),
+                                      SizedBox(height: 10),
+                                  // Espacio entre el icono y el texto
+                                  
+                                      Text(
+                                        'Selecciona la imagen del producto',
+                                  // Texto
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ));
+                        }
+                      }),
                     ),
                   ),
                 ),
@@ -305,9 +343,7 @@ class _detalleAdminState extends State<detalleAdmin> {
               Expanded(
                 flex: 10,
                 child: ElevatedButton(
-                  onPressed: () {
-                    _getImage;
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors
                         .white, // Establece el color de fondo del botón a blanco
