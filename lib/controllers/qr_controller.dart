@@ -10,8 +10,11 @@ import 'package:provider/provider.dart';
 
 class QrController {
 
+  BuildContext? context; //nuevo para intentar arreglar un error que salia en el debug, el error solo aparece como excepcion en el debud
+
   Future<int> revisarBd(barcode, context) async {
   String infoQr = barcode.first.displayValue;
+  this.context = context; //nuevo para intentar arreglar un error que salia en el debug
 
   try {
     bool? tester = await MongoDatabase.Test();
@@ -42,7 +45,7 @@ class QrController {
       if (existeMesa) { // el restaurante si posee la mesa escaneada
        // if (restaurante.mesa[idMesa].pedidos.length==0) {//la mesa no esta ocupada, se va al menu normal      
        // Obtener la instancia de CartController
-      CartController cartController = Provider.of<CartController>(context, listen: false);
+      CartController cartController = Provider.of<CartController>(context, listen: false); //aqui salia la excepcion
 //        bool exist = true;
 // Llamar al setter pedido para establecer el nuevo pedido
 //        try{
@@ -55,7 +58,7 @@ class QrController {
         Pedido pedidoVacio = Pedido(productos: {});
         cartController.pedido = pedidoVacio;
 //        }          
-        navigateToMenu(context, restaurante, menu, idMesa);
+        navigateToMenu(restaurante, menu, idMesa); //quito el context para intentar arreglar error
        // }
 
       } else { // no posee la mesa escaneada
@@ -77,12 +80,31 @@ class QrController {
   return 1;
 
 }
-  void navigateToMenu(BuildContext context, Restaurante restaurante, Menu menu, String idMesa ){
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-            return   
-            MenuView(info: restaurante.id, restaurante: restaurante,menu: menu, idMesa: int.parse(idMesa));
-            },
-            settings: const RouteSettings(name: 'menu'),
-            ));
+  // void navigateToMenu(BuildContext context, Restaurante restaurante, Menu menu, String idMesa ){
+  //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) { //maybe push 
+  //           return   
+  //           MenuView(info: restaurante.id, restaurante: restaurante,menu: menu, idMesa: int.parse(idMesa));
+  //           },
+  //           settings: const RouteSettings(name: 'menu'),
+  //           ));
+  // } //se comento para ver si funcionaba la solucion de abajo 
+
+  void navigateToMenu(Restaurante restaurante, Menu menu, String idMesa) {
+  if (context != null) {
+    Navigator.pushReplacement(
+      context!,
+      MaterialPageRoute(
+        builder: (context) {
+          return MenuView(
+            info: restaurante.id,
+            restaurante: restaurante,
+            menu: menu,
+            idMesa: int.parse(idMesa),
+          );
+        },
+        settings: const RouteSettings(name: 'menu'),
+      ),
+    );
   }
+}
 }

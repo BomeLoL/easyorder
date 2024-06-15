@@ -1,4 +1,5 @@
 import 'package:easyorder/controllers/cart_controller.dart';
+import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/dbHelper/Enviroment.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:easyorder/views/menu.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: Enviroment.fileName);
@@ -33,9 +35,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) {
           return CartController();
         }),
+
+        ChangeNotifierProvider(create: (context){
+          return NavController();
+        })
       ],
       child: const MaterialApp(
-        home: walletView(),
+        home: Escanear(),
         debugShowCheckedModeBanner: false,
       ),
     );
