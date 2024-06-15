@@ -2,6 +2,7 @@ import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/detalleProducto.dart';
+import 'package:easyorder/views/detalleAdmin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,7 +27,7 @@ class ProductCard extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  detalleProducto(info: info, producto: producto)),
+                  detalleAdmin(info: info, producto: producto)),
         );
       },
       child: Stack(
