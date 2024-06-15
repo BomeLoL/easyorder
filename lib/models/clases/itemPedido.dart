@@ -32,16 +32,18 @@ class itemPedido {
       (comentario?.hashCode ?? 0) ^
       extras.hashCode; // Agregar extras al cálculo del hashCode
 
-  //Map<String, dynamic> toMap() {
-  //  return {
-  //    'cantidad': cantidad,
-  //    'comentario': comentario,
-  //    'extras': extras,
-  //  };
-  //}
-//
-  //itemPedido.fromMap(Map<String, dynamic> map)
-  //    : cantidad = map['cantidad'],
-  //      comentario = map['comentario'] ?? '',
-  //      extras = List<String>.from(map['extras'] ?? []);
-}//
+  Map<String, dynamic> toMap() {
+    return {
+      'producto': producto.toMap(),
+      'cantidad': cantidad,
+      'comentario': comentario,
+      'extras': extras,
+    };
+  }
+
+  itemPedido.fromMap(Map<String, dynamic> map)
+      : producto = ItemMenu.fromMap(map['producto']),
+        cantidad = map['cantidad'],
+        comentario = map['comentario'] ?? '',
+        extras = List<String>.from(map['extras'] ?? []);
+}

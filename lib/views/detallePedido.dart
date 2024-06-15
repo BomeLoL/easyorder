@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
+import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
@@ -375,8 +376,8 @@ Future<void> _showConfirmationDialog(BuildContext context) {
                             if (verificador == true) {
                               shouldPop = false;
                               CartController cartController = Provider.of<CartController>(context, listen: false);
-                              //Pedido pedidoVacio = Pedido(productos: {});
-                              //cartController.pedido = pedidoVacio;
+                              Pedido pedidoVacio = Pedido(productos: []);
+                              cartController.pedido = pedidoVacio;
                               Navigator.pop(context, true);
                               Navigator.of(context).push(
                                 MaterialPageRoute(builder: (BuildContext context) {

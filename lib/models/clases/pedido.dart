@@ -8,7 +8,7 @@ class Pedido {
 
   Pedido({required this.productos});
 
-itemPedido? getProductIfExists(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
+  itemPedido? getProductIfExists(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
     return productos.firstWhereOrNull(
       (item) =>
           item.producto == producto &&
@@ -16,8 +16,8 @@ itemPedido? getProductIfExists(ItemMenu producto, {String comentario = '', List<
           listEquals(item.extras, extras),
     );
   }
-  void addProduct(ItemMenu producto,
-      {String comentario = '', List<String> extras = const []}) {
+
+  void addProduct(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
     var existingProduct = getProductIfExists(producto, comentario: comentario, extras: extras);
     if (existingProduct != null) {
       existingProduct.cantidad += 1;
@@ -33,7 +33,7 @@ itemPedido? getProductIfExists(ItemMenu producto, {String comentario = '', List<
     }
   }
 
-  bool existingProduct(ItemMenu producto, {String? comentario, List<String> extras = const []}){
+  bool existingProduct(ItemMenu producto, {String? comentario, List<String> extras = const []}) {
     return productos.any(
       (item) =>
           item.producto == producto &&
@@ -42,27 +42,18 @@ itemPedido? getProductIfExists(ItemMenu producto, {String comentario = '', List<
     );
   }
 
-  //Map<String, dynamic> toMap() {
-  //  List<Map<String, dynamic>> productosMap = productos.entries.map((entry) {
-  //    return {
-  //      'producto': entry.key.toMap(),
-  //      'pedido': entry.value.toMap(),
-  //    };
-  //  }).toList();
-  //  return {
-  //    'productos': productosMap,
-  //  };
-  //}
-//
-  //Pedido.fromMap(Map<String, dynamic> map)
-  //    : productos = Map.fromEntries((map['productos'] as List<dynamic>?)
-  //              ?.map((item) => MapEntry(
-  //                    ItemMenu.fromMap(item['producto']),
-  //                    itemPedido.fromMap(item['pedido']),
-  //                  ))
-  //              .toList() ??
-  //          {});
-//
+  Map<String, dynamic> toMap() {
+    List<Map<String, dynamic>> productosMap = productos.map((producto) {
+      return producto.toMap();
+    }).toList();
+    return {
+      'productos': productosMap,
+    };
+  }
+
+  Pedido.fromMap(Map<String, dynamic> map)
+      : productos = (map['productos'] as List<dynamic>).map((item) => itemPedido.fromMap(item)).toList();
+
   void addProducts(ItemMenu producto, int cantidad, {String comentario = '', List<String> extras = const []}) {
     for (int i = 0; i < cantidad; i++) {
       addProduct(producto, comentario: comentario, extras: extras);
@@ -78,9 +69,8 @@ itemPedido? getProductIfExists(ItemMenu producto, {String comentario = '', List<
     }
   }
 
-  void updateProductQuantity(ItemMenu producto, int cantidad,
-      {String comentario = '', List<String> extras = const []}) {
-      var existingProduct = getProductIfExists(producto, comentario: comentario);
+  void updateProductQuantity(ItemMenu producto, int cantidad, {String comentario = '', List<String> extras = const []}) {
+    var existingProduct = getProductIfExists(producto, comentario: comentario);
     if (existingProduct != null) {
       if (cantidad == 0) {
         productos.remove(existingProduct);
@@ -92,7 +82,7 @@ itemPedido? getProductIfExists(ItemMenu producto, {String comentario = '', List<
     }
   }
 
-  void updateComment(ItemMenu producto, String comentarioOriginal, String comentarioNuevo){
+  void updateComment(ItemMenu producto, String comentarioOriginal, String comentarioNuevo) {
     var existingProduct = getProductIfExists(producto, comentario: comentarioOriginal);
     existingProduct!.comentario = comentarioNuevo;
   }
@@ -115,8 +105,7 @@ itemPedido? getProductIfExists(ItemMenu producto, {String comentario = '', List<
     productos.forEach((productoMenu) {
       total += productoMenu.cantidad * productoMenu.producto.precio;
     });
-    String totalFormateado =
-        total.toStringAsFixed(2); // Limita a 2 posiciones decimales
+    String totalFormateado = total.toStringAsFixed(2); // Limita a 2 posiciones decimales
     return double.parse(totalFormateado);
   }
 }
