@@ -1,4 +1,5 @@
 import 'package:easyorder/controllers/text_controller.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher_icons/main.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -166,13 +167,13 @@ class _detalleProductoState extends State<detalleProducto> {
                                   style: GoogleFonts.poppins(
                                           fontSize: 14.0,
                                           color: Colors.black),
-                                  cursorColor: Color.fromRGBO(255, 95, 4, 1),
+                                  cursorColor: primaryColor,
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                        color:Color.fromRGBO(255, 95, 4, 1),
+                                        color:primaryColor,
                                         width: 2
                                         ), // Border color when focused
                                     ),
@@ -230,7 +231,7 @@ class _detalleProductoState extends State<detalleProducto> {
                       Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+                      backgroundColor: primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(7),
                       ),

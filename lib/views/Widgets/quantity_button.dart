@@ -1,3 +1,4 @@
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -31,7 +32,7 @@ class QuantityButton extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(7),
                     )),
-                color: Color.fromRGBO(255, 95, 4, 1),
+                color: primaryColor,
                 iconSize: 20,
               ),
             ),
@@ -56,7 +57,7 @@ class QuantityButton extends StatelessWidget {
                 },
                 icon: Icon(Icons.add),
                 style: IconButton.styleFrom(
-                    backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+                    backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(7),
                     )),

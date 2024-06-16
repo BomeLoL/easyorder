@@ -1,3 +1,4 @@
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +16,7 @@ class pantallaCarga extends StatelessWidget {
           child: Container(
             width: double.infinity,
             height: double.infinity,
-            color: Color.fromRGBO(255, 96, 4, 1),
+            color: primaryColor,
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

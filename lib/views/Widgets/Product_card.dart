@@ -1,6 +1,7 @@
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/itemPedido.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/Widgets/Card_customization.dart';
 import 'package:easyorder/views/detalleProducto.dart';
@@ -245,7 +246,7 @@ class ProductCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(7),
             ),
           ),
-          color: Color.fromRGBO(255, 95, 4, 1),
+          color: primaryColor,
           iconSize: 20,
         ),
       ),
@@ -272,7 +273,7 @@ class ProductCard extends StatelessWidget {
           onPressed: () => cartController.addProduct(producto, comentario: comment),
           icon: Icon(Icons.add),
           style: IconButton.styleFrom(
-            backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+            backgroundColor: primaryColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(7),
             ),
@@ -294,7 +295,7 @@ class ProductCard extends StatelessWidget {
           onPressed: () => _showCustomizationModal(context, cartController),
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.zero,
-            backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+            backgroundColor: primaryColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(7),
             ),
@@ -412,7 +413,7 @@ class ProductCard extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () => _navigateToDetalleProducto(context),
                 style: TextButton.styleFrom(
-                  backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+                  backgroundColor: primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(7),
                   ),
@@ -486,7 +487,7 @@ class ProductCard extends StatelessWidget {
                 child: Text(
                   'Cancelar',
                   style: GoogleFonts.poppins(
-                    color: Color.fromRGBO(255, 95, 4, 1),
+                    color: primaryColor,
                     fontWeight: FontWeight.bold,
                   ),
                   textScaler: TextScaler.linear(0.9),
@@ -496,7 +497,7 @@ class ProductCard extends StatelessWidget {
             Expanded(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+                  backgroundColor: primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(7),
                   ),

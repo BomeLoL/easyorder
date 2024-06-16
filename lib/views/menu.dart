@@ -1,6 +1,7 @@
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
@@ -197,7 +198,7 @@ class _MenuState extends State<MenuView> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   backgroundColor:
-                                      const Color.fromRGBO(255, 95, 4, 1),
+                                      primaryColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(7),
                                   )),
@@ -250,7 +251,7 @@ class _MenuState extends State<MenuView> {
                   icon: Icon(
                     Icons.qr_code,
                     size: 45.0,
-                    color: Color.fromRGBO(255, 95, 4, 1),
+                    color: primaryColor,
                   ),
                   label: "Escanear",
                 ),
@@ -258,7 +259,7 @@ class _MenuState extends State<MenuView> {
                   icon: Icon(
                     Icons.exit_to_app,
                     size: 45.0,
-                    color: Color.fromRGBO(255, 95, 4, 1),
+                    color: primaryColor,
                   ),
                   label: "Terminar sesión",
                 )
@@ -299,7 +300,7 @@ class _MenuState extends State<MenuView> {
                     child: Text(
                       'Ok',
                       style: GoogleFonts.poppins(
-                          color: const Color.fromRGBO(255, 96, 4, 1),
+                          color: primaryColor,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -348,7 +349,7 @@ class _MenuState extends State<MenuView> {
                   child: Text(
                     'Cancelar',
                     style: GoogleFonts.poppins(
-                        color: const Color.fromRGBO(255, 96, 4, 1),
+                        color: primaryColor,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -360,7 +361,7 @@ class _MenuState extends State<MenuView> {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(255, 96, 4, 1),
+                      backgroundColor: primaryColor,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(7))),
                   child: Text(
