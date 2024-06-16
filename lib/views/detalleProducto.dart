@@ -52,7 +52,7 @@ class _detalleProductoState extends State<detalleProducto> {
   }
 
   void eliminar() {
-    if ((isCarrito == true && cantidad > 0) || (isCarrito == false && cantidad > 1)) {
+    if ((widget.isPedido == 0 && cantidad > 0) || (widget.isPedido == 1 && cantidad > 1)) {
       setState(() {
         cantidad--;
       });

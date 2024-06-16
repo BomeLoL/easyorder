@@ -48,7 +48,7 @@ void deleteProduct(ItemMenu producto, String info, context, int isPedido, {Strin
 int totalCantidad() {
    return _pedido.totalCantidad();
  } 
-//  
+  
   void deleteProducts(itemPedido? producto, String info, context, int isPedido) {
   _pedido.deleteProducts(producto, info, context, isPedido);
   notifyListeners();
