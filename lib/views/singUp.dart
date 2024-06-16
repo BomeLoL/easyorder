@@ -1,17 +1,101 @@
+import 'package:easyorder/views/singUp2.dart';
+import 'package:flutter/material.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/models/dbHelper/authService.dart';
-import 'package:easyorder/views/Widgets/custom_popup.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:easyorder/views/Widgets/connectWith.dart';
-import 'package:easyorder/views/Widgets/customTextField.dart'; // Importa CustomTextField
+import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/views/Widgets/customTextField.dart';
+import 'package:easyorder/views/Widgets/customDropdown.dart';
 import 'package:easyorder/views/Widgets/iconDisplay.dart';
-import 'package:easyorder/views/Widgets/customDropdown.dart'; // Importa CustomDropdown
+import 'package:easyorder/views/Widgets/connectWith.dart';
+import 'package:easyorder/views/Widgets/custom_popup.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:mvc_pattern/mvc_pattern.dart';
 
-class SinguP extends StatelessWidget {
+class SignuP extends StatefulWidget {
+  @override
+  _SignuPState createState() => _SignuPState();
+}
+
+class _SignuPState extends State<SignuP> {
   final TextController textController = TextController();
   String userType = "";
   final _auth = Authservice();
+  var email;
+  bool _submitted = false;
+  bool showErrorUserType  = true;
+
+String? _validateEmail(String? value) {
+  if (_submitted && (value == null || value.isEmpty)) {
+    return 'Por favor ingresa tu correo electrónico';
+  }
+  if (_submitted && !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value ?? '')) {
+    return 'Por favor ingresa un correo electrónico válido';
+  }
+
+  return null;
+}
+
+String? _validateFullName(String? value) {
+  if (_submitted && (value == null || value.isEmpty)) {
+    return 'Por favor ingresa tu nombre completo';
+  }
+  if (_submitted && value!.trim().isEmpty) {
+    return 'El nombre completo no puede consistir únicamente de espacios en blanco';
+  }
+  if (_submitted && (value!.startsWith(' ') || value.endsWith(' '))) {
+    return 'El nombre completo no puede empezar ni terminar con espacios en blanco';
+  }
+  return null;
+}
+String? _validatePassword(String? value) {
+  if (_submitted && (value == null || value.isEmpty)) {
+    return 'Por favor ingresa tu contraseña';
+  }
+  if (_submitted && value!.trim().length < 8) {
+    return 'La contraseña debe tener al menos 8 caracteres';
+  }
+  if (_submitted && value!.contains(' ')) {
+    return 'La contraseña no puede contener espacios en blanco';
+  }
+  return null;
+}
+
+  String? _validateUserType(String? value) {
+    // Método para validar el tipo de usuario
+    if (_submitted && (value == null || value.isEmpty || value == "")) {
+      return 'Por favor indique el tipo de usuario';
+    }
+    return null;
+  }
+
+  // Función para mostrar el popup de error
+  void showErrorPopup(BuildContext context, String message) {
+    showCustomPopup(
+      pop: false,
+      context: context,
+      title: 'Error',
+      content: Text(
+        message,
+        textAlign: TextAlign.justify,
+      ),
+      actions: [
+        Center(
+          child: TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'OK',
+              style: TextStyle(
+                color: const Color.fromRGBO(255, 96, 4, 1),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,18 +145,25 @@ class SinguP extends StatelessWidget {
                       CustomTextField(
                         hintText: "Nombre completo",
                         controller: textController.getController('fullName'),
+                        errorText: _validateFullName(textController.getController('fullName').text),
                       ),
                       SizedBox(height: size.height * 0.025),
                       CustomTextField(
                         hintText: "Ingresa tu correo electrónico",
                         controller: textController.getController('email'),
+                        errorText: _validateEmail(textController.getController('email').text),
                       ),
                       SizedBox(height: size.height * 0.025),
                       CustomDropdown(
                         hintText: "¿Eres un Comensal o un Restaurante?",
                         options: ["Comensal", "Restaurante"],
+                        showError: showErrorUserType,  // Estado para mostrar el error del tipo de usuario
+                        errorText: _validateUserType(userType),  // Mensaje de error para el tipo de usuario
                         onChanged: (value) {
-                          userType=value!;
+                          setState(() {
+                            userType = value!;  // Actualizar el tipo de usuario seleccionado
+                            showErrorUserType = false;  // Ocultar el mensaje de error del tipo de usuario
+                          });
                           print("Selected option: $value");
                         },
                       ),
@@ -80,52 +171,100 @@ class SinguP extends StatelessWidget {
                       CustomTextField(
                         hintText: "Ingresa tu contraseña",
                         controller: textController.getController('password'),
+                        errorText: _validatePassword(textController.getController('password').text),
                       ),
                       SizedBox(height: size.height * 0.05),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: SizedBox(
-                              height: size.height * 0.08,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  try{
-                                      await _auth.createUserWithEmailAndPassword(
-                                      textController.getController('email').text,
-                                      textController.getController('password').text);}
-                                  catch(e){
-                                    errorSignup;
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFFFF5F04),
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: Text(
-                                  "Crear cuenta",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: MediaQuery.of(context).size.height * 0.020,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+Expanded(
+  child: SizedBox(
+    height: size.height * 0.08,
+    child: ElevatedButton(
+  onPressed: () async {
+    setState(() {
+      _submitted = true;
+    });
+        String? emailError = _validateEmail(textController.getController('email').text);
+        String? fullNameError = _validateFullName(textController.getController('fullName').text);
+        String? passwordError = _validatePassword(textController.getController('password').text);
+        String? userTypeError = _validateUserType(userType);
+
+
+        if (emailError != null || fullNameError != null || passwordError != null || userTypeError !=null)  {
+          // Mostrar errores si hay campos inválidos
+        } else {
+          try {
+            var v4 = Uuid().generateV4();
+            var x = await _auth.createUserWithEmailAndPassword(
+              textController.getController('email').text,
+              textController.getController('password').text,
+            );
+            if (x != null) {
+              _auth.createUserDoc(
+                cuenta: "correo",
+                nombre: textController.getController('fullName').text,
+                correo: textController.getController('email').text,
+                usertype: userType,
+              );
+              if (userType == "Restaurante") {
+                MongoDatabase.insertarRestaurante(v4, textController.getController('fullName').text);
+              }
+            } else {
+              showErrorPopup(context, 'Hubo un error al crear la cuenta');
+            }
+          } catch (e) {
+            showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus credenciales');
+          }
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color(0xFFFF5F04),
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      child: Text(
+        "Crear cuenta",
+        style: GoogleFonts.poppins(
+          fontSize: MediaQuery.of(context).size.height * 0.020,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  ),
+),
+
                         ],
                       ),
                       SizedBox(height: size.height * 0.06),
                       ConnectWith(),
                       SizedBox(height: size.height * 0.04),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                        IconDisplay(iconPath: "images/googleIcon.png",text: "Registrarse con Google"),
+                          IconDisplayButton(
+                            iconPath: "images/googleIcon.png",
+                            text: "Registrarse con Google",
+                            onPressed: () async {
+                              email = await _auth.signinwithGoogle();
+                              if (email != null) {
+                                _auth.getUserByEmailAndAccount(email, 'google');
+                                var y = await _auth.getUserByEmailAndAccount(email, 'google');
+                                if (y == null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => SignuP2(email: email,)),
+                                  );
+                                } else {
+                                  // otra pagina
+                                }
+                              }
+                            },
+                          ),
                         ],
                       ),
+
                       SizedBox(height: size.height * 0.075),
                       Center(
                         child: Text.rich(
@@ -165,32 +304,29 @@ class SinguP extends StatelessWidget {
 }
 
 void errorSignup(BuildContext context) {
-       
-        showCustomPopup(
-          pop: false,
-          context: context,
-          title: 
-            'Error',
-          content: const Text(
-            'A ocurrido un error inesperado, por favor revisa tus credenciales',
-            textAlign: TextAlign.justify,
-          ),
-          actions: [
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop
-                   ;
-                },
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.poppins(
-                    color: const Color.fromRGBO(255, 96, 4, 1),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+  showCustomPopup(
+    pop: false,
+    context: context,
+    title: 'Error',
+    content: const Text(
+      'Ha ocurrido un error inesperado, por favor revisa tus credenciales',
+      textAlign: TextAlign.justify,
+    ),
+    actions: [
+      Center(
+        child: TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();  // Aquí es donde se debe cerrar el diálogo correctamente
+          },
+          child: Text(
+            'OK',
+            style: GoogleFonts.poppins(
+              color: const Color.fromRGBO(255, 96, 4, 1),
+              fontWeight: FontWeight.bold,
             ),
-          ],
-        );
+          ),
+        ),
+      ),
+    ],
+  );
 }

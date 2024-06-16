@@ -141,7 +141,7 @@ class _EscanearState extends State<Escanear> {
                                 //   // ignore: use_build_context_synchronously
                                 //   dbErrorDialog(context);
                                 // } else {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => SinguP()));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignuP()));
                                 // }
                               },
                               style: ElevatedButton.styleFrom(

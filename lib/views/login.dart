@@ -121,12 +121,18 @@ class Login extends StatelessWidget {
                   ),
                   SizedBox(height: size.height * 0.04),
                   HorizontalPadding(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconDisplay(iconPath: "images/googleIcon.png",text: "Iniciar sesión con Google"),
-                      ],
-                    ),
+                    child: 
+                      Row(
+                        children: [
+                          IconDisplayButton(
+                            iconPath: "images/googleIcon.png",
+                            text: "Registrarse con Google",
+                            onPressed: () async {
+                              await _auth.signinwithGoogle();
+                            },
+                          ),
+                        ],
+                      ),
                   ),
                   SizedBox(height: size.height * 0.075),
                   Center(
