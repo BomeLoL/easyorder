@@ -1,9 +1,10 @@
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
+import 'package:easyorder/views/Widgets/Card_customization.dart';
 import 'package:easyorder/views/detalleProducto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -11,11 +12,13 @@ class ProductCard extends StatelessWidget {
   final ItemMenu producto;
   final String info;
   final int isPedido;
+  final String comment;
 
   ProductCard({
     required this.producto,
     required this.info,
     required this.isPedido,
+    this.comment = '',
   });
 
   @override
@@ -25,14 +28,18 @@ class ProductCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  detalleProducto(info: info, producto: producto)),
+              builder: (context) => detalleProducto(
+                    info: info,
+                    producto: producto,
+                    isPedido: isPedido,
+                    comment: comment,
+                  )),
         );
       },
       child: Stack(
         children: [
           Container(
-            height: 130,
+            height: 140,
             padding: EdgeInsets.all(13),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(7),
@@ -80,13 +87,34 @@ class ProductCard extends StatelessWidget {
                           fontSize: 15,
                         ),
                       ),
-                      Text(
-                        producto.descripcion,
+                      RichText(
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Colors.grey,
+                        maxLines: 2,
+                        text: TextSpan(
+                          style: GoogleFonts.poppins(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14),
+                          children: isPedido == 0
+                              ? <TextSpan>[
+                                  comment == ''
+                                      ? TextSpan(text: 'Sin comentarios')
+                                      : TextSpan(
+                                          text: 'Nota:',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                  TextSpan(text: ' ${comment}'),
+                                ]
+                              : <TextSpan>[
+                                  TextSpan(
+                                    text: producto.descripcion,
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                         ),
                       ),
                       ShaderMask(
@@ -112,9 +140,12 @@ class ProductCard extends StatelessWidget {
                 ),
                 Consumer<CartController>(
                     builder: (context, cartController, child) {
-                  final productoPedido =
-                      cartController.pedido.productos[producto];
-                  if (productoPedido != null) {
+                  final productoPedido = cartController.pedido
+                      .getProductIfExists(producto, comentario: comment);
+                  if (productoPedido != null &&
+                          !cartController
+                              .isCommented(productoPedido.producto.id) ||
+                      productoPedido != null && cartController.getQuantityByProduct(productoPedido.producto.id) > 0 && isPedido == 0) {
                     return Expanded(
                       flex: 8,
                       child: Row(
@@ -125,7 +156,8 @@ class ProductCard extends StatelessWidget {
                               child: IconButton(
                                 onPressed: () {
                                   cartController.deleteProduct(
-                                      producto, info, context, isPedido);
+                                      producto, info, context, isPedido,
+                                      comentario: comment);
                                 },
                                 icon: Icon(Icons.remove),
                                 style: IconButton.styleFrom(
@@ -158,7 +190,8 @@ class ProductCard extends StatelessWidget {
                             child: Container(
                               child: IconButton(
                                 onPressed: () {
-                                  cartController.addProduct(producto);
+                                  cartController.addProduct(producto,
+                                      comentario: comment);
                                 },
                                 icon: Icon(Icons.add),
                                 style: IconButton.styleFrom(
@@ -173,6 +206,168 @@ class ProductCard extends StatelessWidget {
                             ),
                           ),
                         ],
+                      ),
+                    );
+                  } else if (cartController.getQuantityByProduct(this.producto.id) > 0 &&
+                      cartController.isCommented(this.producto.id)) {
+                    return Flexible(
+                      flex: 2,
+                      child: Container(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Consumer<CartController>(
+                                    builder: (context, cartController, child) {
+                                      if (cartController.getQuantityByProduct(this.producto.id)==0) {
+                                          Navigator.pop(context);
+                                        }
+                                      return SizedBox(
+                                        
+                                        height: 600,
+                                        width: double.infinity,
+                                        child: Container(
+                                          color: Colors.white,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(12.5),
+                                            child: Column(
+                                              children: [
+                                                Gap(10),
+                                                Text(
+                                                  'Tus personalizaciones',
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 18,
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                Spacer(),
+                                                Expanded(
+                                                  flex: 25,
+                                                  child: ListView.builder(
+                                                    padding: EdgeInsets.zero,
+                                                    itemCount: cartController
+                                                        .pedido.productos
+                                                        .where((producto) =>
+                                                            producto.producto.id ==
+                                                            this.producto.id)
+                                                        .length,
+                                                    itemBuilder: (context, index) {
+                                                      final producto =
+                                                          cartController
+                                                              .pedido.productos
+                                                              .where((producto) =>
+                                                                  producto.producto
+                                                                      .id ==
+                                                                  this.producto.id)
+                                                              .toList()[index];
+                                      
+                                                      return Column(
+                                                        children: [
+                                                          CardCustomization(
+                                                            producto:
+                                                                producto.producto,
+                                                            isPedido: 0,
+                                                            info: info,
+                                                            comment: producto
+                                                                .comentario!,
+                                                            id: producto
+                                                                .producto.id,
+                                                          ),
+                                                          const Gap(5),
+                                                        ],
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                                Container(
+                                                  color: Colors.white,
+                                                  child: Expanded(
+                                                    flex: 3,
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: [
+                                                        Expanded(
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            detalleProducto(
+                                                                              info:
+                                                                                  info,
+                                                                              producto:
+                                                                                  producto,
+                                                                              isPedido:
+                                                                                  isPedido,
+                                                                              comment:
+                                                                                  comment,
+                                                                            )),
+                                                              );
+                                                            },
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              backgroundColor:
+                                                                  Color.fromRGBO(
+                                                                      255,
+                                                                      95,
+                                                                      4,
+                                                                      1),
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            7),
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              "Agregar nueva",
+                                                              style: GoogleFonts
+                                                                  .poppins(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight.bold,
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  );
+                                });
+                          },
+                          style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                              )),
+                          child: Text(
+                            cartController
+                                .getQuantityByProduct(
+                                    this.producto.id)
+                                .toString(),
+                            textAlign: TextAlign.center,
+                            softWrap: true,
+                            style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
                     );
                   } else {
@@ -232,31 +427,34 @@ class ProductCard extends StatelessWidget {
                                         child: Text(
                                           'Cancelar',
                                           style: GoogleFonts.poppins(
-                                            color: const Color.fromRGBO(255, 95, 4, 1),
-                                            fontWeight: FontWeight.bold),
-                                            textScaler: TextScaler.linear(0.9),
-                                            
-                                          )),
+                                              color: const Color.fromRGBO(
+                                                  255, 95, 4, 1),
+                                              fontWeight: FontWeight.bold),
+                                          textScaler: TextScaler.linear(0.9),
+                                        )),
                                   ),
                                   Expanded(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color.fromRGBO(255, 95, 4, 1),
+                                          backgroundColor: const Color.fromRGBO(
+                                              255, 95, 4, 1),
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(7))),
                                       onPressed: () {
                                         Navigator.of(context).pop();
+                                        var productoP = cartController.pedido
+                                            .getProductIfExists(producto,
+                                                comentario: comment);
                                         cartController.deleteProducts(
-                                            producto, info, context, isPedido);
+                                            productoP, info, context, isPedido);
                                       },
                                       child: Text(
                                         'Confirmar',
                                         style: GoogleFonts.poppins(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
-                                            textScaler: TextScaler.linear(0.9),
+                                        textScaler: TextScaler.linear(0.9),
                                       ),
                                     ),
                                   ),

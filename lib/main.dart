@@ -7,6 +7,10 @@ import 'package:easyorder/views/escaneoQR.dart';
 import 'package:easyorder/views/splashView.dart';
 import 'package:easyorder/views/vistaQr.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:easyorder/controllers/text_controller.dart';
+import 'package:easyorder/models/dbHelper/Enviroment.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/views/escaneoQR.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -34,10 +38,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) {
+          return CartController();
+        }),
         ChangeNotifierProvider(
-          create: (context) {
-            return CartController();
-          },
+          create: (context) => TextController(),
+          child: MyApp(),
         ),
       ],
       child: GetMaterialApp(

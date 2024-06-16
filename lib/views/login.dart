@@ -3,7 +3,11 @@ import 'package:easyorder/views/Widgets/connectWith.dart';
 import 'package:easyorder/views/Widgets/customTextField.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/Widgets/iconDisplay.dart';
+import 'package:easyorder/views/escaneoQR.dart';
+import 'package:easyorder/views/singUp.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 
@@ -63,20 +67,20 @@ class Login extends StatelessWidget {
                   SizedBox(height: size.height * 0.025),
                   CustomTextField(hintText: "Ingresa tu contraseña", controller: textController.getController('password')),
                   SizedBox(height: 15)],)),
-                  HorizontalPadding(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "¿Olvidaste tu contraseña?",
-                        style: GoogleFonts.poppins(
-                          fontSize: MediaQuery.of(context).size.height * 0.015,
-                          fontWeight: FontWeight.w600,
-                          height: 1.2,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // HorizontalPadding(
+                  //   child: Align(
+                  //     alignment: Alignment.centerRight,
+                  //     child: Text(
+                  //       "¿Olvidaste tu contraseña?",
+                  //       style: GoogleFonts.poppins(
+                  //         fontSize: MediaQuery.of(context).size.height * 0.015,
+                  //         fontWeight: FontWeight.w600,
+                  //         height: 1.2,
+                  //         decoration: TextDecoration.underline,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   SizedBox(height: size.height * 0.05),
                   HorizontalPadding(
                     child: Row(
@@ -86,20 +90,23 @@ class Login extends StatelessWidget {
                           child: SizedBox(
                             height: size.height * 0.075,
                             child: ElevatedButton(
-                              onPressed: () async {
-                                       await _auth.loginUserWithEmailAndPassword(
-                                      textController.getController('email').text,
-                                      textController.getController('password').text);
-                                    if ( await _auth.loginUserWithEmailAndPassword(
-                                      textController.getController('email').text,
-                                      textController.getController('password').text) == null){
-                                    errorLogin(context);}
-                                                               },
+                            onPressed: () async {
+                              var result = await _auth.loginUserWithEmailAndPassword(
+                                textController.getController('email').text,
+                                textController.getController('password').text
+                              );
+                              if (result != null) {
+                                Navigator.pop(context);
+                              } else {
+                                errorLogin(context);
+                              }
+                            },
+
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xFFFF5F04),
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius:   BorderRadius.circular(10),
                                 ),
                               ),
                               child: Text(
@@ -128,7 +135,12 @@ class Login extends StatelessWidget {
                             iconPath: "images/googleIcon.png",
                             text: "Registrarse con Google",
                             onPressed: () async {
-                              await _auth.signinwithGoogle();
+                              
+                              var x = await _auth.signinwithGoogle();
+                              if (x!= null){
+                                Navigator.pop(context);
+
+                              }
                             },
                           ),
                         ],
@@ -153,6 +165,12 @@ class Login extends StatelessWidget {
                               color: Color(0xFFFF5F04),
                               decorationColor: Color(0xFFFF5F04),
                             ),
+                              recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => SignuP()),
+                                );},
                           ),
                         ],
                       ),

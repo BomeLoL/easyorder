@@ -11,7 +11,8 @@ class TextController with ChangeNotifier {
   }
 
   String getText(String key) {
-    return _controllers[key]?.text ?? '';
+    String text = _controllers[key]?.text ?? '';
+    return capitalizeFirstLetter(text);
   }
 
   void dispose() {
@@ -20,11 +21,16 @@ class TextController with ChangeNotifier {
     });
     super.dispose();
   }
-
+  
   void clearText(String key) {
     if (_controllers.containsKey(key)) {
       _controllers[key]?.text = '';
     }
+  }
+
+  String capitalizeFirstLetter(String input) {
+    if (input.isEmpty) return input;
+    return input[0].toUpperCase() + input.substring(1).toLowerCase();
   }
 
 }

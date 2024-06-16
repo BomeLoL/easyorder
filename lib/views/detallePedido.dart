@@ -7,7 +7,6 @@ import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
-import 'package:easyorder/views/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,14 +76,14 @@ class _detallePedidoState extends State<detallePedido> {
                       padding: EdgeInsets.zero,
                       itemCount: cartController.pedido.productos.length,
                       itemBuilder: (context, index) {
-                        final producto = cartController.pedido.productos.keys
-                            .elementAt(index);
+                        final producto = cartController.pedido.productos[index];        
                         return Column(
                           children: [
                             ProductCard(
-                              producto: producto,
+                              producto: producto.producto,
                               isPedido: 0,
                               info: widget.info,
+                              comment: producto.comentario!,
                             ),
                             const Gap(20),
                           ],
@@ -377,7 +376,7 @@ Future<void> _showConfirmationDialog(BuildContext context) {
                             if (verificador == true) {
                               shouldPop = false;
                               CartController cartController = Provider.of<CartController>(context, listen: false);
-                              Pedido pedidoVacio = Pedido(productos: {});
+                              Pedido pedidoVacio = Pedido(productos: []);
                               cartController.pedido = pedidoVacio;
                               Navigator.pop(context, true);
                               Navigator.of(context).push(

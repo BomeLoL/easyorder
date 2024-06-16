@@ -168,6 +168,8 @@ String? _validateFullName(String? value) {
                                       } else {
                                         // uwu
                                       }
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
                                     } catch (e) {
                                       errorSignup(context);
                                     }
@@ -177,7 +179,7 @@ String? _validateFullName(String? value) {
                                   backgroundColor: Color(0xFFFF5F04),
                                   foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                                 child: Text(

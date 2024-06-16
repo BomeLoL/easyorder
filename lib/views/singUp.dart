@@ -1,4 +1,6 @@
+import 'package:easyorder/views/login.dart';
 import 'package:easyorder/views/singUp2.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/models/dbHelper/authService.dart';
@@ -210,11 +212,15 @@ Expanded(
               if (userType == "Restaurante") {
                 MongoDatabase.insertarRestaurante(v4, textController.getController('fullName').text);
               }
-            } else {
-              showErrorPopup(context, 'Hubo un error al crear la cuenta');
+            Navigator.pop(context);
+            }
+            
+             else {
+              showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus datos');
+
             }
           } catch (e) {
-            showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus credenciales');
+            showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus datos');
           }
         }
       },
@@ -284,6 +290,12 @@ Expanded(
                                    color: Color(0xFFFF5F04),
                                   decorationColor: Color(0xFFFF5F04),
                                 ),
+                              recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => Login()),
+                                );},
                               ),
                             ],
                           ),

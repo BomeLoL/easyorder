@@ -54,6 +54,7 @@ dependencies:
   uuid: ^4.4.0
   google_sign_in: ^6.2.1
 
+  collection: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
