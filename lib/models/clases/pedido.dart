@@ -8,7 +8,8 @@ class Pedido {
 
   Pedido({required this.productos});
 
-  itemPedido? getProductIfExists(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
+  itemPedido? getProductIfExists(ItemMenu producto,
+      {String comentario = '', List<String> extras = const []}) {
     return productos.firstWhereOrNull(
       (item) =>
           item.producto == producto &&
@@ -17,8 +18,10 @@ class Pedido {
     );
   }
 
-  void addProduct(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
-    var existingProduct = getProductIfExists(producto, comentario: comentario, extras: extras);
+  void addProduct(ItemMenu producto,
+      {String comentario = '', List<String> extras = const []}) {
+    var existingProduct =
+        getProductIfExists(producto, comentario: comentario, extras: extras);
     if (existingProduct != null) {
       existingProduct.cantidad += 1;
     } else {
@@ -33,7 +36,8 @@ class Pedido {
     }
   }
 
-  bool existingProduct(ItemMenu producto, {String? comentario, List<String> extras = const []}) {
+  bool existingProduct(ItemMenu producto,
+      {String? comentario, List<String> extras = const []}) {
     return productos.any(
       (item) =>
           item.producto == producto &&
@@ -52,16 +56,21 @@ class Pedido {
   }
 
   Pedido.fromMap(Map<String, dynamic> map)
-      : productos = (map['productos'] as List<dynamic>).map((item) => itemPedido.fromMap(item)).toList();
+      : productos = (map['productos'] as List<dynamic>)
+            .map((item) => itemPedido.fromMap(item))
+            .toList();
 
-  void addProducts(ItemMenu producto, int cantidad, {String comentario = '', List<String> extras = const []}) {
+  void addProducts(ItemMenu producto, int cantidad,
+      {String comentario = '', List<String> extras = const []}) {
     for (int i = 0; i < cantidad; i++) {
       addProduct(producto, comentario: comentario, extras: extras);
     }
   }
 
-  void deleteProduct(ItemMenu producto, String info, context, int isPedido, {String comentario = '', List<String> extras = const []}) {
-    var existingProduct = getProductIfExists(producto, comentario: comentario, extras: extras);
+  void deleteProduct(ItemMenu producto, String info, context, int isPedido,
+      {String comentario = '', List<String> extras = const []}) {
+    var existingProduct =
+        getProductIfExists(producto, comentario: comentario, extras: extras);
     if (existingProduct != null && existingProduct.cantidad > 1) {
       existingProduct.cantidad -= 1;
     } else {
@@ -69,7 +78,8 @@ class Pedido {
     }
   }
 
-  void updateProductQuantity(ItemMenu producto, int cantidad, {String comentario = '', List<String> extras = const []}) {
+  void updateProductQuantity(ItemMenu producto, int cantidad,
+      {String comentario = '', List<String> extras = const []}) {
     var existingProduct = getProductIfExists(producto, comentario: comentario);
     if (existingProduct != null) {
       if (cantidad == 0) {
@@ -82,21 +92,30 @@ class Pedido {
     }
   }
 
-  void updateComment(ItemMenu producto, String comentarioOriginal, String comentarioNuevo) {
-    var existingProduct = getProductIfExists(producto, comentario: comentarioOriginal);
+  void updateComment(
+      ItemMenu producto, String comentarioOriginal, String comentarioNuevo) {
+    var existingProduct =
+        getProductIfExists(producto, comentario: comentarioOriginal);
     existingProduct!.comentario = comentarioNuevo;
   }
 
-  void deleteProducts(itemPedido? producto, String info, context, int isPedido) {
+  void deleteProducts(
+      itemPedido? producto, String info, context, int isPedido) {
     productos.remove(producto);
   }
 
   int totalCantidad() {
-    int total = productos.length;
+    int total = 0;
+    productos.forEach(
+      (producto) {
+        total += producto.cantidad;
+      },
+    );
     return total;
   }
 
-  int getOneProductQuantity(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
+  int getOneProductQuantity(ItemMenu producto,
+      {String comentario = '', List<String> extras = const []}) {
     return getProductIfExists(producto, comentario: comentario)?.cantidad ?? 0;
   }
 
@@ -105,7 +124,8 @@ class Pedido {
     productos.forEach((productoMenu) {
       total += productoMenu.cantidad * productoMenu.producto.precio;
     });
-    String totalFormateado = total.toStringAsFixed(2); // Limita a 2 posiciones decimales
+    String totalFormateado =
+        total.toStringAsFixed(2); // Limita a 2 posiciones decimales
     return double.parse(totalFormateado);
   }
 
@@ -114,9 +134,9 @@ class Pedido {
     productos.forEach((productoMenu) {
       if (productoMenu.producto.id == id && productoMenu.comentario != '') {
         _isCommented = true;
-      };
+      }
+      ;
     });
     return _isCommented;
   }
-
 }
