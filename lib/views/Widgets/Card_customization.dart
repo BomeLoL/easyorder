@@ -155,7 +155,7 @@ class CardCustomization extends StatelessWidget {
                               child: IconButton(
                                 onPressed: () {
                                   cartController.deleteProduct(
-                                      producto, info, context, isPedido,
+                                      producto, info, isPedido,
                                       comentario: comment);
                                 },
                                 icon: Icon(Icons.remove),

@@ -14,8 +14,8 @@ import 'package:easyorder/controllers/text_controller.dart';
 
 class Login extends StatelessWidget {
   
-  final _auth = Authservice();
   final TextController textController = TextController();
+  bool isLoading = false;
 
 
   @override
@@ -96,6 +96,7 @@ class Login extends StatelessWidget {
                                 textController.getController('password').text
                               );
                               if (result != null) {
+                                cerrarTeclado(context);
                                 Navigator.pop(context);
                               } else {
                                 errorLogin(context);
@@ -135,11 +136,9 @@ class Login extends StatelessWidget {
                             iconPath: "images/googleIcon.png",
                             text: "Registrarse con Google",
                             onPressed: () async {
-                              
                               var x = await _auth.signinwithGoogle();
                               if (x!= null){
                                 Navigator.pop(context);
-
                               }
                             },
                           ),
@@ -200,6 +199,9 @@ class HorizontalPadding extends StatelessWidget {
   }
 }
 
+void cerrarTeclado(BuildContext context) {
+  FocusScope.of(context).requestFocus(new FocusNode());
+}
 
 void errorLogin(BuildContext context) {
   showCustomPopup(

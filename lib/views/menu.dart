@@ -5,6 +5,7 @@ import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/detallePedido.dart';
+import 'package:easyorder/views/factura.dart';
 import 'package:easyorder/views/vistaQr.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -256,23 +257,33 @@ class _MenuState extends State<MenuView> {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.exit_to_app,
+                    Icons.assignment_outlined,
                     size: 45.0,
                     color: Color.fromRGBO(255, 95, 4, 1),
                   ),
-                  label: "Terminar sesión",
+                  label: "Mis Pedidos",
                 )
               ],
               onTap: (int clickedIndex) async {
                 if (clickedIndex == 1) {
-                  await _showConfirmationDialog(context);
-                  if (confirmation == true) {
-                    setState(() {
-                      cartController.haPedido = false;
-                    });
-                    Navigator.pop(context);
-                  }
-                } else if (clickedIndex == 0 &&
+                  // await _showConfirmationDialog(context);
+                  // if (confirmation == true) {
+                  //   setState(() {
+                  //     cartController.haPedido = false;
+                  //   });
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Factura(
+                                          info: nombreRes,
+                                          menu: widget.menu,
+                                          restaurante: widget.restaurante,
+                                          idMesa: widget.idMesa)),
+                                );
+                                    }
+                // 
+                  else 
+                 if (clickedIndex == 0 &&
                     cartController.haPedido == false) {
                   Navigator.pushReplacement(
                     context,

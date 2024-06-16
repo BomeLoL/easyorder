@@ -26,6 +26,8 @@ class _SignuPState extends State<SignuP> {
   bool _submitted = false;
   bool showErrorUserType  = true;
 
+
+
 String? _validateEmail(String? value) {
   if (_submitted && (value == null || value.isEmpty)) {
     return 'Por favor ingresa tu correo electrónico';

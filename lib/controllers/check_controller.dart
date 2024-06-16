@@ -4,7 +4,7 @@ import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:flutter/foundation.dart';
 
-class CartController extends ChangeNotifier{
+class CheckController extends ChangeNotifier{
   Pedido _pedido = Pedido(productos: []);
   bool haPedido = false; //cambiar esto a algo mejor para el siguiente sprint
 

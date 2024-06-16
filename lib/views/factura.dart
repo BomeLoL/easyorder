@@ -1,4 +1,3 @@
-import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/controllers/check_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
@@ -14,8 +13,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:easyorder/views/pantallaCarga.dart';
 
-class detallePedido extends StatefulWidget {
-  const detallePedido(
+class Factura extends StatefulWidget {
+  const Factura(
       {super.key,
       required this.info,
       required this.menu,
@@ -27,10 +26,10 @@ class detallePedido extends StatefulWidget {
   final int idMesa;
 
   @override
-  State<detallePedido> createState() => _detallePedidoState();
+  State<Factura> createState() => _detalleFacturaState();
 }
 
-class _detallePedidoState extends State<detallePedido> {
+class _detalleFacturaState extends State<Factura> {
   
   bool funciona = false;
   bool confirmation = false;
@@ -44,9 +43,9 @@ class _detallePedidoState extends State<detallePedido> {
         backgroundColor: Color.fromARGB(0, 255, 255, 255),
         scrolledUnderElevation: 0,
       ),
-      body: Consumer<CartController>(
-        builder: (context, cartController, child) {
-          if (cartController.totalCantidad() == 0 && shouldPop == true){
+      body: Consumer<CheckController>(
+        builder: (context, checkcontroller, child) {
+          if (checkcontroller.totalCantidad() == 0 && shouldPop == true){
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).popUntil((route) {
                 return route.settings.name == 'menu';
@@ -64,7 +63,7 @@ class _detallePedidoState extends State<detallePedido> {
                       height: kToolbarHeight +
                           MediaQuery.of(context).size.height * 0.03),
                   Text(
-                    'Detalles del pedido',
+                    'Factura',
                     style: GoogleFonts.poppins(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -75,9 +74,9 @@ class _detallePedidoState extends State<detallePedido> {
                     flex: 25,
                     child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      itemCount: cartController.pedido.productos.length,
+                      itemCount: checkcontroller.pedido.productos.length,
                       itemBuilder: (context, index) {
-                        final producto = cartController.pedido.productos[index];        
+                        final producto = checkcontroller.pedido.productos[index];        
                         return Column(
                           children: [
                             ProductCard(
@@ -106,55 +105,6 @@ class _detallePedidoState extends State<detallePedido> {
                         )),
                     child: Column(
                       children: [
-                        // Expanded(
-                        //   flex: 2,
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     children: [
-                        //       // Text(
-                        //       //   'Sub-Total:',
-                        //       //   style: GoogleFonts.poppins(
-                        //       //     fontSize: 16,
-                        //       //     color: Colors.white,
-                        //       //     fontWeight: FontWeight.bold,
-                        //       //   ),
-                        //       // ),
-                        //       // Text(
-                        //       //   cartController.getTotalAmount().toString(),
-                        //       //   style: GoogleFonts.poppins(
-                        //       //     fontSize: 16,
-                        //       //     color: Colors.white,
-                        //       //     fontWeight: FontWeight.bold,
-                        //       //   ),
-                        //       // )
-                        //     ],
-                        //   ),
-                        // ),
-                        // Expanded(
-                        //   flex: 2,
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     children: [
-                        //       // Text(
-                        //       //   'Descuento:',
-                        //       //   style: GoogleFonts.poppins(
-                        //       //     fontSize: 16,
-                        //       //     color: Colors.white,
-                        //       //     fontWeight: FontWeight.bold,
-                        //       //   ),
-                        //       // ),
-                        //       // Text(
-                        //       //   '0',
-                        //       //   style: GoogleFonts.poppins(
-                        //       //     fontSize: 16,
-                        //       //     color: Colors.white,
-                        //       //     fontWeight: FontWeight.bold,
-                        //       //   ),
-                        //       // )
-                        //     ],
-                        //   ),
-                        // ),
-                    
                         Expanded(
                           flex: 2,
                           child: Row(
@@ -169,7 +119,7 @@ class _detallePedidoState extends State<detallePedido> {
                                 ),
                               ),
                               Text(
-                                '\$${cartController.getTotalAmount()}',
+                                '\$${checkcontroller.getTotalAmount()}',
                                 style: GoogleFonts.roboto(
                                   fontSize: 18,
                                   color: Colors.white,
@@ -198,7 +148,7 @@ class _detallePedidoState extends State<detallePedido> {
                                     //Se hace una pequeña espera a la base de datos y después se continúa
                                     await Future.delayed(
                                         const Duration(seconds: 5));
-                                    cartController.haPedido = true;
+                                    checkcontroller.haPedido = true;
                                     Navigator.pop(context);
                                     _showSuccessDialog(context);
                                   } else {
@@ -363,10 +313,10 @@ Future<void> _showConfirmationDialog(BuildContext context) {
 
                             var verificador = true;
                             try {
-                              CartController cartController = Provider.of<CartController>(context, listen: false);
+                              CheckController checkcontroller = Provider.of<CheckController>(context, listen: false);
                               var r = await MongoDatabase.getRestaurante(widget.restaurante.id);
                               if (r != null) {
-                                MongoDatabase.agregarPedidoARestaurante(r, widget.idMesa, cartController.pedido);
+                                MongoDatabase.agregarPedidoARestaurante(r, widget.idMesa, checkcontroller.pedido);
                                 await MongoDatabase.actualizarRestaurante(r);
                               } else {
                                 verificador = false;
@@ -376,11 +326,9 @@ Future<void> _showConfirmationDialog(BuildContext context) {
                             }
                             if (verificador == true) {
                               shouldPop = false;
-                              CartController cartController = Provider.of<CartController>(context, listen: false);
-                              CheckController checkController = Provider.of<CheckController>(context, listen: false);
+                              CheckController checkcontroller = Provider.of<CheckController>(context, listen: false);
                               Pedido pedidoVacio = Pedido(productos: []);
-                              checkController.pedido = cartController.pedido;
-                              cartController.pedido = pedidoVacio;
+                              checkcontroller.pedido = pedidoVacio;
                               Navigator.pop(context, true);
                               Navigator.of(context).push(
                                 MaterialPageRoute(builder: (BuildContext context) {
