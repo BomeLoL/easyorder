@@ -14,11 +14,13 @@ class walletView extends StatefulWidget {
 class _walletViewState extends State<walletView> {
   final myController = TextEditingController();
   double saldo = 0;
+  bool vacio=false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(0, 255, 255, 255),
@@ -35,13 +37,15 @@ class _walletViewState extends State<walletView> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
-                      top: 70,
+                      top: 16,
                       right: 5,
                       left: 5,
                     ),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(
+                      height:MediaQuery.of(context).size.height * 0.07),
                           Container(
                             alignment: Alignment.center,
                             child: Text(
@@ -99,7 +103,7 @@ class _walletViewState extends State<walletView> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 20.0, vertical: 30.0),
                   child: Container(
-                    height: 200,
+                    height: 220,
                     width: double.infinity,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -122,9 +126,24 @@ class _walletViewState extends State<walletView> {
                               color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                         Padding(
+                           padding: const EdgeInsets.all(9.0),
+                           child: Visibility(
+                            maintainSize: true,
+                            maintainAnimation: true,
+                            maintainState: true,
+                            visible: vacio,
+                            child: Container(
+                            padding: EdgeInsets.symmetric( horizontal: 8),
+                            child: Text(
+                              "No puede dejar el campo vacío",
+                              style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: Colors.white),
+                              ),
+                              ),
+                              ),
+                         ),
                         SizedBox(
                           width: 300,
                           child: Column(
@@ -152,7 +171,9 @@ class _walletViewState extends State<walletView> {
                                       ),
                                       hintText: "Monto",
                                       hintStyle:
-                                          GoogleFonts.poppins(fontSize: 14)),
+                                          GoogleFonts.poppins(fontSize: 14),
+                                      contentPadding: EdgeInsets.all(12),         
+                                  ),
                                   style: GoogleFonts.poppins(fontSize: 14),
                                   cursorColor: Color.fromRGBO(255, 95, 4, 1),
                                 ),
@@ -164,10 +185,16 @@ class _walletViewState extends State<walletView> {
                                   //Aqui empieza la funcion de Paypalx
                                   onPressed: () async {
                                     if (myController.text.isEmpty) {
+                                      setState(() {
+                                        vacio=true;
+                                      });
                                     } else if (double.parse(
                                             myController.text) <=
                                         0) {
                                     } else {
+                                      setState(() {
+                                        vacio=false;
+                                      });
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (BuildContext context) =>
