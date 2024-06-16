@@ -108,4 +108,15 @@ class Pedido {
     String totalFormateado = total.toStringAsFixed(2); // Limita a 2 posiciones decimales
     return double.parse(totalFormateado);
   }
+
+  bool isCommented(int id) {
+    bool _isCommented = false;
+    productos.forEach((productoMenu) {
+      if (productoMenu.producto.id == id && productoMenu.comentario != '') {
+        _isCommented = true;
+      };
+    });
+    return _isCommented;
+  }
+
 }

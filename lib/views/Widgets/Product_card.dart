@@ -3,6 +3,7 @@ import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/detalleProducto.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -90,34 +91,29 @@ class ProductCard extends StatelessWidget {
                         maxLines: 2,
                         text: TextSpan(
                           style: GoogleFonts.poppins(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14
-                          ),
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14),
                           children: isPedido == 0
-                            ? <TextSpan>[
-                              comment ==''
-                              ? TextSpan(
-                                text: 'Sin comentarios'
-                              )
-                              : TextSpan(
-                                  text: 'Nota:',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                              ? <TextSpan>[
+                                  comment == ''
+                                      ? TextSpan(text: 'Sin comentarios')
+                                      : TextSpan(
+                                          text: 'Nota:',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                  TextSpan(text: ' ${comment}'),
+                                ]
+                              : <TextSpan>[
+                                  TextSpan(
+                                    text: producto.descripcion,
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                                TextSpan(  
-                                  text: ' ${comment}'                                 
-                                ),
-                              ]
-                            : <TextSpan>[
-                                TextSpan(
-                                  text: producto.descripcion,
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
+                                ],
                         ),
                       ),
                       ShaderMask(
@@ -135,7 +131,6 @@ class ProductCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      
                     ],
                   ),
                 ),
@@ -146,7 +141,8 @@ class ProductCard extends StatelessWidget {
                     builder: (context, cartController, child) {
                   final productoPedido = cartController.pedido
                       .getProductIfExists(producto, comentario: comment);
-                  if (productoPedido != null) {
+                  if (productoPedido != null &&
+                      !cartController.isCommented(productoPedido.producto.id)) {
                     return Expanded(
                       flex: 8,
                       child: Row(
@@ -207,6 +203,60 @@ class ProductCard extends StatelessWidget {
                             ),
                           ),
                         ],
+                      ),
+                    );
+                  } else if (productoPedido != null &&
+                      cartController.isCommented(productoPedido.producto.id)) {
+                    return Flexible(
+                      flex: 2,
+                      child: Container(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return SizedBox(
+                                    height: 600,
+                                    width: double.infinity,
+                                    child: Container(
+                                      color: Colors.white,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.5),
+                                        child: Column(
+                                          children: [
+                                            Gap(10),
+                                            Text(
+                                              'Agregar personalización',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 18,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                        
+                                            ),
+
+                                            
+                                            
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                });
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Color.fromRGBO(255, 95, 4, 1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                              )),
+                          child: Text(
+                            productoPedido.cantidad.toString(),
+                            textAlign: TextAlign.left,
+                            style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
                     );
                   } else {

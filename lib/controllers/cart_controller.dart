@@ -57,5 +57,10 @@ int totalCantidad() {
    return _pedido.getTotalAmount();
    
  }
+
+  bool isCommented(int id) {
+    return _pedido.isCommented(id);
+  }
+
 }
 
