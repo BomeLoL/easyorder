@@ -1,6 +1,7 @@
 import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
+import 'package:easyorder/views/Widgets/Card_customization.dart';
 import 'package:easyorder/views/detalleProducto.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -142,7 +143,9 @@ class ProductCard extends StatelessWidget {
                   final productoPedido = cartController.pedido
                       .getProductIfExists(producto, comentario: comment);
                   if (productoPedido != null &&
-                      !cartController.isCommented(productoPedido.producto.id)) {
+                          !cartController
+                              .isCommented(productoPedido.producto.id) ||
+                      productoPedido != null && cartController.getQuantityByProduct(productoPedido.producto.id) > 0 && isPedido == 0) {
                     return Expanded(
                       flex: 8,
                       child: Row(
@@ -205,8 +208,8 @@ class ProductCard extends StatelessWidget {
                         ],
                       ),
                     );
-                  } else if (productoPedido != null &&
-                      cartController.isCommented(productoPedido.producto.id)) {
+                  } else if (cartController.getQuantityByProduct(this.producto.id) > 0 &&
+                      cartController.isCommented(this.producto.id)) {
                     return Flexible(
                       flex: 2,
                       child: Container(
@@ -215,43 +218,151 @@ class ProductCard extends StatelessWidget {
                             showModalBottomSheet(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return SizedBox(
-                                    height: 600,
-                                    width: double.infinity,
-                                    child: Container(
-                                      color: Colors.white,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.5),
-                                        child: Column(
-                                          children: [
-                                            Gap(10),
-                                            Text(
-                                              'Agregar personalización',
-                                              style: GoogleFonts.poppins(
-                                                  fontSize: 18,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold),
-                                                  textAlign: TextAlign.center,
+                                  return Consumer<CartController>(
+                                    builder: (context, cartController, child) {
+                                      if (cartController.getQuantityByProduct(this.producto.id)==0) {
+                                          Navigator.pop(context);
+                                        }
+                                      return SizedBox(
                                         
+                                        height: 600,
+                                        width: double.infinity,
+                                        child: Container(
+                                          color: Colors.white,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(12.5),
+                                            child: Column(
+                                              children: [
+                                                Gap(10),
+                                                Text(
+                                                  'Tus personalizaciones',
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 18,
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                Spacer(),
+                                                Expanded(
+                                                  flex: 25,
+                                                  child: ListView.builder(
+                                                    padding: EdgeInsets.zero,
+                                                    itemCount: cartController
+                                                        .pedido.productos
+                                                        .where((producto) =>
+                                                            producto.producto.id ==
+                                                            this.producto.id)
+                                                        .length,
+                                                    itemBuilder: (context, index) {
+                                                      final producto =
+                                                          cartController
+                                                              .pedido.productos
+                                                              .where((producto) =>
+                                                                  producto.producto
+                                                                      .id ==
+                                                                  this.producto.id)
+                                                              .toList()[index];
+                                      
+                                                      return Column(
+                                                        children: [
+                                                          CardCustomization(
+                                                            producto:
+                                                                producto.producto,
+                                                            isPedido: 0,
+                                                            info: info,
+                                                            comment: producto
+                                                                .comentario!,
+                                                            id: producto
+                                                                .producto.id,
+                                                          ),
+                                                          const Gap(5),
+                                                        ],
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                                Container(
+                                                  color: Colors.white,
+                                                  child: Expanded(
+                                                    flex: 3,
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: [
+                                                        Expanded(
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            detalleProducto(
+                                                                              info:
+                                                                                  info,
+                                                                              producto:
+                                                                                  producto,
+                                                                              isPedido:
+                                                                                  isPedido,
+                                                                              comment:
+                                                                                  comment,
+                                                                            )),
+                                                              );
+                                                            },
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              backgroundColor:
+                                                                  Color.fromRGBO(
+                                                                      255,
+                                                                      95,
+                                                                      4,
+                                                                      1),
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            7),
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              "Agregar nueva",
+                                                              style: GoogleFonts
+                                                                  .poppins(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight.bold,
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-
-                                            
-                                            
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    ),
+                                      );
+                                    }
                                   );
                                 });
                           },
                           style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
                               backgroundColor: Color.fromRGBO(255, 95, 4, 1),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(7),
                               )),
                           child: Text(
-                            productoPedido.cantidad.toString(),
-                            textAlign: TextAlign.left,
+                            cartController
+                                .getQuantityByProduct(
+                                    this.producto.id)
+                                .toString(),
+                            textAlign: TextAlign.center,
+                            softWrap: true,
                             style: GoogleFonts.poppins(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),

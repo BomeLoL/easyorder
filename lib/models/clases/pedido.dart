@@ -119,4 +119,14 @@ class Pedido {
     return _isCommented;
   }
 
+  int getQuantityByProduct(int id) {
+    int cantidad = 0;
+    productos.forEach((productoMenu) {
+      if (productoMenu.producto.id == id) {
+        cantidad += productoMenu.cantidad;
+      };
+    });
+    return cantidad;
+  }
+
 }

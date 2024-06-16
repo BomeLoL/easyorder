@@ -62,5 +62,9 @@ int totalCantidad() {
     return _pedido.isCommented(id);
   }
 
+  int getQuantityByProduct(int id) {
+    return _pedido.getQuantityByProduct(id);
+  }
+
 }
 
