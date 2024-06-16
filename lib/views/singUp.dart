@@ -179,68 +179,68 @@ String? _validatePassword(String? value) {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-Expanded(
-  child: SizedBox(
-    height: size.height * 0.08,
-    child: ElevatedButton(
-  onPressed: () async {
-    setState(() {
-      _submitted = true;
-    });
-        String? emailError = _validateEmail(textController.getController('email').text);
-        String? fullNameError = _validateFullName(textController.getController('fullName').text);
-        String? passwordError = _validatePassword(textController.getController('password').text);
-        String? userTypeError = _validateUserType(userType);
+                      Expanded(
+                        child: SizedBox(
+                          height: size.height * 0.08,
+                          child: ElevatedButton(
+                        onPressed: () async {
+                          setState(() {
+                            _submitted = true;
+                          });
+                              String? emailError = _validateEmail(textController.getController('email').text);
+                              String? fullNameError = _validateFullName(textController.getController('fullName').text);
+                              String? passwordError = _validatePassword(textController.getController('password').text);
+                              String? userTypeError = _validateUserType(userType);
 
 
-        if (emailError != null || fullNameError != null || passwordError != null || userTypeError !=null)  {
-          // Mostrar errores si hay campos inválidos
-        } else {
-          try {
-            var v4 = Uuid().generateV4();
-            var x = await _auth.createUserWithEmailAndPassword(
-              textController.getController('email').text,
-              textController.getController('password').text,
-            );
-            if (x != null) {
-              _auth.createUserDoc(
-                cuenta: "correo",
-                nombre: textController.getController('fullName').text,
-                correo: textController.getController('email').text,
-                usertype: userType,
-              );
-              if (userType == "Restaurante") {
-                MongoDatabase.insertarRestaurante(v4, textController.getController('fullName').text);
-              }
-            Navigator.pop(context);
-            }
-            
-             else {
-              showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus datos');
+                              if (emailError != null || fullNameError != null || passwordError != null || userTypeError !=null)  {
+                                // Mostrar errores si hay campos inválidos
+                              } else {
+                                try {
+                                  var v4 = Uuid().generateV4();
+                                  var x = await _auth.createUserWithEmailAndPassword(
+                                    textController.getController('email').text,
+                                    textController.getController('password').text,
+                                  );
+                                  if (x != null) {
+                                    _auth.createUserDoc(
+                                      cuenta: "correo",
+                                      nombre: textController.getController('fullName').text,
+                                      correo: textController.getController('email').text,
+                                      usertype: userType,
+                                    );
+                                    if (userType == "Restaurante") {
+                                      MongoDatabase.insertarRestaurante(v4, textController.getController('fullName').text);
+                                    }
+                                  Navigator.pop(context);
+                                  }
+                                  
+                                  else {
+                                    showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus datos');
 
-            }
-          } catch (e) {
-            showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus datos');
-          }
-        }
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFFFF5F04),
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      child: Text(
-        "Crear cuenta",
-        style: GoogleFonts.poppins(
-          fontSize: MediaQuery.of(context).size.height * 0.020,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  ),
-),
+                                  }
+                                } catch (e) {
+                                  showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus datos');
+                                }
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFFFF5F04),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              "Crear cuenta",
+                              style: GoogleFonts.poppins(
+                                fontSize: MediaQuery.of(context).size.height * 0.020,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
 
                         ],
                       ),
