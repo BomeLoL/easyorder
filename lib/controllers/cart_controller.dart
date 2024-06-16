@@ -29,8 +29,8 @@ itemPedido? getProductIfExists(ItemMenu producto, {String comentario = '', List<
   }
 
 
-void deleteProduct(ItemMenu producto, String info, context, int isPedido, {String comentario = '', List<String> extras = const []}) {
-    _pedido.deleteProduct(producto, info, context, isPedido, comentario: comentario, extras: extras);
+void deleteProduct(ItemMenu producto, String info, int isPedido, {String comentario = '', List<String> extras = const []}) {
+    _pedido.deleteProduct(producto, info, isPedido, comentario: comentario, extras: extras);
     notifyListeners();
   }
   void updateProductQuantity(ItemMenu producto, int cantidad, {String comentario = '', List<String> extras = const []}) {
@@ -50,7 +50,7 @@ int totalCantidad() {
  } 
   
   void deleteProducts(itemPedido? producto, String info, context, int isPedido) {
-  _pedido.deleteProducts(producto, info, context, isPedido);
+  _pedido.deleteProducts(producto, info, isPedido);
   notifyListeners();
 }
   double getTotalAmount() {
