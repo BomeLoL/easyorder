@@ -1,8 +1,16 @@
+import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/firebase_options.dart';
+import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/dbHelper/Enviroment.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/views/escaneoQR.dart';
+import 'package:easyorder/views/qrMesa.dart';
+import 'package:easyorder/views/registro_mesa.dart';
 import 'package:easyorder/views/splashView.dart';
+import 'package:easyorder/views/vistaMesas.dart';
+import 'package:easyorder/views/vistaQr.dart';
+import 'package:easyorder/views/walletView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:easyorder/controllers/text_controller.dart';
+import 'package:easyorder/views/menu.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,6 +52,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CartController()),
         ChangeNotifierProvider(create: (context) => TextController()),
         ChangeNotifierProvider(create: (context) => CheckController()),
+        ChangeNotifierProvider(create: (context) {
+          return NavController();
+        })
       ],
       child: GetMaterialApp(
         defaultTransition: Transition.fade,

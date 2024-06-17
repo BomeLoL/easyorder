@@ -1,31 +1,29 @@
-  import 'package:easyorder/controllers/pedido_controller.dart';
-  import 'package:easyorder/models/clases/menu.dart';
-import 'package:easyorder/models/clases/pedido.dart';
-  import 'package:easyorder/models/clases/restaurante.dart';
-  import 'package:easyorder/models/dbHelper/constant.dart';
-import 'package:easyorder/models/dbHelper/mongodb.dart';
-  import 'package:easyorder/views/Widgets/Product_card.dart';
-  import 'package:easyorder/views/Widgets/background_image.dart';
-  import 'package:easyorder/views/Widgets/custom_popup.dart';
-  import 'package:easyorder/views/detallePedido.dart';
-  import 'package:easyorder/views/factura.dart';
-  import 'package:easyorder/views/vistaQr.dart';
-  import 'package:flutter/material.dart';
-  import 'package:google_fonts/google_fonts.dart';
-  import 'package:gap/gap.dart';
-  import 'package:provider/provider.dart';
+import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/models/clases/menu.dart';
+import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:easyorder/views/Widgets/Product_card.dart';
+import 'package:easyorder/views/Widgets/background_image.dart';
+import 'package:easyorder/views/Widgets/custom_popup.dart';
+import 'package:easyorder/views/Widgets/navigationBarClient.dart';
+import 'package:easyorder/views/detallePedido.dart';
+import 'package:easyorder/views/vistaQr.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 
-  class MenuView extends StatefulWidget {
-    const MenuView(
-        {super.key,
-        required this.info,
-        required this.menu,
-        required this.restaurante,
-        required this.idMesa});
-    final String info;
-    final Menu menu;
-    final Restaurante restaurante;
-    final int idMesa;
+class MenuView extends StatefulWidget {
+  const MenuView(
+      {super.key,
+      required this.info,
+      required this.menu,
+      required this.restaurante,
+      required this.idMesa,});
+  final String info;
+  final Menu menu;
+  final Restaurante restaurante;
+  final int idMesa;
 
     @override
     State<MenuView> createState() => _MenuState();
@@ -228,214 +226,19 @@ import 'package:easyorder/models/dbHelper/mongodb.dart';
                         ),
                       ),
                     );
-                  } else {
-                    return Container(
-                      width: 0,
-                      height: 0,
-                    );
-                  }
-                })
-              ],
-            ),
-          ),
-bottomNavigationBar: Consumer<CartController>(
-  builder: (context, cartController, child) {
-    return BottomNavigationBar(
-      backgroundColor: Colors.white,
-      fixedColor: Color.fromRGBO(142, 142, 142, 1),
-      selectedLabelStyle: GoogleFonts.poppins(
-        fontWeight: FontWeight.bold,
-      ),
-      unselectedLabelStyle: GoogleFonts.poppins(
-        fontWeight: FontWeight.bold,
-      ),
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.qr_code,
-            size: 45.0,
-            color: primaryColor,
-          ),
-          label: "Escanear",
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.assignment_outlined,
-            size: 45.0,
-            color: primaryColor,
-          ),
-          label: "Mis Pedidos",
-        )
-      ],
-      onTap: (int clickedIndex) async {
-        if (clickedIndex == 1) {
-        CheckController checkController = Provider.of<CheckController>(context, listen: false);
-        Pedido? pedido = await MongoDatabase.consolidarPedidos(widget.restaurante.id, widget.idMesa);
-        CartController cartController = Provider.of<CartController>(context, listen: false);
-
-           if (pedido!= null){
-              if (pedido.productos.isEmpty){
-                  cartController.haPedido = false;
-              }else{
-                  cartController.haPedido = true;
-                    }
-                  checkController.pedido = pedido;
-                              }
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Factura(
-                info: nombreRes,
-                menu: widget.menu,
-                restaurante: widget.restaurante,
-                idMesa: widget.idMesa,
-              ),
-            ),
-          );
-        } else if (clickedIndex == 0 && cartController.haPedido == false) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return BarcodeScannerWithOverlay();
-              },
-            ),
-          );
-        } else if (clickedIndex == 0 && cartController.haPedido == true) {
-          showCustomPopup(
-            context: context,
-            title: 'Finalice su estadía para escanear',
-            content: Text(
-              'Para escanear otro código, primero debes terminar tu sesión actual. Por favor, finaliza tu estadía para continuar.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                ),
-                child: Text(
-                  'Ok',
-                  style: GoogleFonts.poppins(
-                    color: primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          );
-        }
-      },
-    );
-  },
-),
-
-
-          // bottomNavigationBar: Consumer<CartController>(
-          //   builder: (context, cartController, child) {
-          //     return BottomNavigationBar(
-          //       backgroundColor: Colors.white,
-          //       fixedColor: Color.fromRGBO(142, 142, 142, 1),
-          //       selectedLabelStyle: GoogleFonts.poppins(
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //       unselectedLabelStyle: GoogleFonts.poppins(
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //       items: [
-          //         BottomNavigationBarItem(
-          //           icon: Icon(
-          //             Icons.qr_code,
-          //             size: 45.0,
-          //             color: primaryColor,
-          //           ),
-          //           label: "Escanear",
-          //         ),
-          //         BottomNavigationBarItem(
-          //           icon: Icon(
-          //             Icons.assignment_outlined,
-          //             size: 45.0,
-          //             color: primaryColor,
-          //           ),
-          //           label: "Mis Pedidos",
-          //         )
-          //       ],
-          //       onTap: (int clickedIndex) async {
-          //         if (clickedIndex == 1) {
-          //           // await _showConfirmationDialog(context);
-          //           // if (confirmation == true) {
-          //           //   setState(() {
-          //           //     cartController.haPedido = false;
-          //           //   });
-          //                     CheckController checkController = Provider.of<CheckController>(context, listen: false);
-          //                     Pedido? pedido = await MongoDatabase.consolidarPedidos(widget.restaurante.id, widget.idMesa);
-          //                     CartController cartController = Provider.of<CartController>(context, listen: false);
-
-          //                     if (pedido!= null){
-          //                       if (pedido.productos.isEmpty){
-          //                         cartController.haPedido = false;
-          //                       }else{
-          //                         cartController.haPedido = true;
-          //                       }
-          //                       checkController.pedido = pedido;
-          //                     }
-
-          //                         Navigator.push(
-          //                           context,
-          //                           MaterialPageRoute(
-          //                               builder: (context) => Factura(
-          //                                   info: nombreRes,
-          //                                   menu: widget.menu,
-          //                                   restaurante: widget.restaurante,
-          //                                   idMesa: widget.idMesa)),
-          //                         );
-          //                             }
                   
-          //         else if (clickedIndex == 0 &&
-          //             cartController.haPedido == false) {
-          //           Navigator.pushReplacement(
-          //             context,
-          //             MaterialPageRoute(
-          //               builder: (context) {
-          //                 return BarcodeScannerWithOverlay();
-          //               },
-          //             ),
-          //           );
-          //         } else if (clickedIndex == 0 && cartController.haPedido == true) {
-          //           showCustomPopup(
-          //             context: context,
-          //             title: 'Finalice su estadía para escanear',
-          //             content: Text(
-          //                 'Para escanear otro código, primero debes terminar tu sesión actual. Por favor, finaliza tu estadía para continuar.'),
-          //             actions: [
-          //               TextButton(
-          //             onPressed: () {
-          //               Navigator.pop(context);
-          //             },
-          //             style: TextButton.styleFrom(
-          //                 shape: RoundedRectangleBorder(
-          //                     borderRadius: BorderRadius.circular(7))),
-          //             child: Text(
-          //               'Ok',
-          //               style: GoogleFonts.poppins(
-          //                   color: primaryColor,
-          //                   fontWeight: FontWeight.bold),
-          //             ),
-          //           ),
-        
-          //             ]
-          //           );
-          //         }
-          //       },
-          //     );
-          //   },
-          // ),
+                } else {
+                  return Container(
+                    width: 0,
+                    height: 0,
+                  );
+                }
+              }),
+            ],
+          ),
         ),
-      );
-    }
-
+        bottomNavigationBar: BarNavigationClient(idMesa: widget.idMesa,info: widget.info,menu: widget.menu,restaurante: widget.restaurante),
+      ),
+    );
   }
+}

@@ -19,7 +19,8 @@ class Factura extends StatefulWidget {
       {super.key,
       required this.info,
       required this.menu,
-      required this.restaurante, required this.idMesa});
+      required this.restaurante,
+      required this.idMesa});
       
   final String info;
   final Restaurante restaurante;
