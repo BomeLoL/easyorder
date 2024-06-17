@@ -1,4 +1,4 @@
-import 'package:easyorder/controllers/cart_controller.dart';
+import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/models/clases/itemPedido.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
@@ -152,7 +152,7 @@ class ProductCard extends StatelessWidget {
 
   /// Si la tarjeta está en el menú muestra la descripción y si está en detalles del pedido muestra comentarios
   List<TextSpan> _buildDescriptionTextSpans() {
-    if (isPedido == 0) {
+    if (isPedido == 0 || isPedido == 3) {
       return comment.isEmpty
           ? [TextSpan(text: 'Sin comentarios')]
           : [
@@ -191,43 +191,59 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  /// Gestiona los condicionales según la vista en que esté
-  Widget _buildQuantityController(BuildContext context) {
-    return Consumer<CartController>(
-      builder: (context, cartController, child) {
-        final productoPedido = cartController.pedido
-            .getProductIfExists(producto, comentario: comment);
+Widget _buildQuantityController(BuildContext context) {
+  return Consumer2<CartController, CheckController>(
+    builder: (context, cartController, checkController, child) {
+      final productoPedido = cartController.pedido.getProductIfExists(producto, comentario: comment);
+      final productoFinal = checkController.getProductIfExists(producto, comentario: comment);
 
+      if (isPedido != 3) {
         if (productoPedido != null &&
             (!cartController.isCommented(productoPedido.producto.id) ||
                 (cartController.getQuantityByProduct(productoPedido.producto.id) > 0 &&
                     isPedido == 0))) {
-          return _buildQuantityAdjuster(cartController, productoPedido);
+          return _buildQuantityAdjuster(cartController, productoPedido, checkController);
         } else if (cartController.getQuantityByProduct(producto.id) > 0 &&
             cartController.isCommented(producto.id)) {
           return _buildViewCustomizationButton(context, cartController);
         } else {
           return _buildAddButton(cartController);
         }
-      },
-    );
-  }
+      } else if (isPedido == 3 && productoFinal != null) {
+        if (!checkController.isCommented(productoFinal.producto.id) ||
+            (checkController.getQuantityByProduct(productoFinal.producto.id) > 0 &&
+                isPedido == 3)) {
+          return _buildQuantityAdjuster(cartController, productoFinal, checkController);
+        }
+      }
+      
+      return Container(); // Retornar un widget por defecto si no se cumple ninguna condición
+    },
+  );
+}
 
-  /// Muestra el - cantidad + en cada tarjeta
-  Widget _buildQuantityAdjuster(CartController cartController, itemPedido productoPedido) {
-    return Expanded(
-      flex: 8,
+
+/// Muestra el - cantidad + en cada tarjeta
+Widget _buildQuantityAdjuster(CartController cartController, itemPedido productoPedido, CheckController checkController) {
+  return Expanded(
+      flex: isPedido == 3 ? 4 : 8,
       child: Row(
-        children: [
+      children: [
+        if (isPedido != 3) ...[
           _buildRemoveButton(cartController),
           Spacer(flex: 1),
           _buildProductQuantityText(productoPedido),
           Spacer(flex: 1),
           _buildAddButton(cartController),
         ],
-      ),
-    );
-  }
+        if (isPedido == 3) ...[
+         _buildProductQuantityText(productoPedido),
+        ],
+      ],
+    ),
+  );
+}
+
   /// Construye el boton de reducir producto en una unidad
   Widget _buildRemoveButton(CartController cartController) {
     return Expanded(
@@ -235,9 +251,7 @@ class ProductCard extends StatelessWidget {
       child: Container(
         child: IconButton(
           onPressed: () => cartController.deleteProduct(
-            producto, info, isPedido,
-             comentario: comment,
-             
+            producto, info, isPedido, comentario: comment,
           ),
           icon: Icon(Icons.remove),
           style: IconButton.styleFrom(
@@ -437,6 +451,7 @@ class ProductCard extends StatelessWidget {
   ///
   ///Muestra una popUp para confirmar la decisión del usuario
   Widget _buildDeleteButton(BuildContext context) {
+  if (isPedido != 3) {
     return Consumer<CartController>(
       builder: (context, cartController, child) {
         return Positioned(
@@ -459,7 +474,11 @@ class ProductCard extends StatelessWidget {
         );
       },
     );
+  } else {
+    return Container(); // Otra opción si isPedido es 3
   }
+}
+
 
   /// Construye la popUp de confirmación para eliminar todos los productos
   /// 

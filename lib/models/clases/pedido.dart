@@ -149,4 +149,8 @@ class Pedido {
     return cantidad;
   }
 
+  void agregarProductos(List<itemPedido> nuevosProductos) {
+    productos.addAll(nuevosProductos);
+  }
+
 }

@@ -1,8 +1,8 @@
-import 'package:easyorder/controllers/cart_controller.dart';
-import 'package:easyorder/controllers/check_controller.dart';
+import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
@@ -100,7 +100,7 @@ class _detallePedidoState extends State<detallePedido> {
                         borderRadius: BorderRadius.circular(7),
                         gradient: const LinearGradient(
                           colors: [
-                            Color.fromRGBO(255, 95, 4, 1),
+                            primaryColor,
                             Colors.red,
                           ],
                         )),
@@ -218,7 +218,7 @@ class _detallePedidoState extends State<detallePedido> {
                                 style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Color.fromRGBO(255, 95, 4, 1),
+                                  color: primaryColor,
                                 ),
                               ),
                             ),
@@ -265,7 +265,7 @@ class _detallePedidoState extends State<detallePedido> {
                 child: Text(
                   'Ok',
                   style: GoogleFonts.poppins(
-                    color: Color.fromRGBO(255, 96, 4, 1),
+                    color: primaryColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -300,7 +300,7 @@ void _showSuccessDialog(BuildContext context) {
                 child: Text(
                   'OK',
                   style: GoogleFonts.poppins(
-                    color: const Color.fromRGBO(255, 96, 4, 1),
+                    color: primaryColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -349,7 +349,7 @@ Future<void> _showConfirmationDialog(BuildContext context) {
                     child: Text(
                       'Cancelar',
                       style: GoogleFonts.poppins(
-                          color: Color.fromRGBO(255, 96, 4, 1),
+                          color: primaryColor,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -395,7 +395,7 @@ Future<void> _showConfirmationDialog(BuildContext context) {
                             }
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(255, 96, 4, 1),
+                      backgroundColor: primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(7)
                       )

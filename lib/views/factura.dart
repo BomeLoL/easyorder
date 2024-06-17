@@ -1,7 +1,8 @@
-import 'package:easyorder/controllers/check_controller.dart';
+import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
@@ -63,7 +64,7 @@ class _detalleFacturaState extends State<Factura> {
                       height: kToolbarHeight +
                           MediaQuery.of(context).size.height * 0.03),
                   Text(
-                    'Factura',
+                    'Mis Pedidos',
                     style: GoogleFonts.poppins(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -81,7 +82,7 @@ class _detalleFacturaState extends State<Factura> {
                           children: [
                             ProductCard(
                               producto: producto.producto,
-                              isPedido: 0,
+                              isPedido: 3,
                               info: widget.info,
                               comment: producto.comentario!,
                             ),
@@ -136,6 +137,7 @@ class _detalleFacturaState extends State<Factura> {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () async {
+                              CartController cartController = Provider.of<CartController>(context, listen: false);
                               final tester = await MongoDatabase.Test();
                               if (tester == false){
                               // ignore: use_build_context_synchronously
@@ -143,20 +145,15 @@ class _detalleFacturaState extends State<Factura> {
                               }
                               else{
                                 await _showConfirmationDialog(context);
-                                if (confirmation) {
-                                  if (funciona) {
-                                    //Se hace una pequeña espera a la base de datos y después se continúa
-                                    await Future.delayed(
-                                        const Duration(seconds: 5));
-                                    checkcontroller.haPedido = true;
-                                    Navigator.pop(context);
-                                    _showSuccessDialog(context);
-                                  } else {
-                                    Navigator.pop(context);
-                                    _showAlertDialog(context);
-                                  }
-                                }
-                              }},
+                                if (confirmation == true) {
+                                    await MongoDatabase.vaciarPedidosDeMesa(widget.restaurante.id, widget.idMesa);
+                                    cartController.haPedido = false;
+                                    Navigator.of(context).popUntil((route) {
+                                      return route.settings.name == 'menu';
+                                    });
+                                  }                                   
+                              }
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
@@ -164,7 +161,7 @@ class _detalleFacturaState extends State<Factura> {
                                 ),
                               ),
                               child: Text(
-                                'Ordenar',
+                                'Pedir Cuenta',
                                 style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -227,143 +224,66 @@ class _detalleFacturaState extends State<Factura> {
     );
   }
 
-  //Esta función muestra la ventanilla que indica que la orden fue completada exitosamente
-void _showSuccessDialog(BuildContext context) {
-        
-        showCustomPopup(
-          pop: false,
-          context: context,
-          title: 
-            '¡Pedido completado!',
-          content: const Text(
-            'Ya tu pedido está en la cocina y estará listo dentro de poco.',
-            textAlign: TextAlign.justify,
-          ),
-          actions: [
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.of(context).popUntil((route) {
-                     return route.settings.name == 'menu';
-                   });
-                },
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.poppins(
-                    color: const Color.fromRGBO(255, 96, 4, 1),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-}
-
 
 Future<void> _showConfirmationDialog(BuildContext context) {
-  bool isButtonPressed = false;
-
   return showDialog<void>(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (context, setState) {
-          return AlertDialog(
-            title:  Text(
-              '¿Desea enviar su orden?',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.bold
+      return AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text(
+          '¿Terminar su estadía?',
+          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        content: const Text(
+          'Al confirmar, un mesero vendrá a atenderle para procesar el pago. ¿Desea continuar?',
+          textAlign: TextAlign.justify,
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    confirmation = false;
+                  });
+                  Navigator.pop(context);
+                },
+                style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7))),
+                child: Text(
+                  'Cancelar',
+                  style: GoogleFonts.poppins(
+                      color: primaryColor, fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-            content: const Text(
-              'Si selecciona confirmar, su pedido se enviará a la cocina.',
-              textAlign: TextAlign.justify,
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context, false);
-                      confirmation = false;
-                    },
-                    style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7)
-                      )
-                    ),
-                    child: Text(
-                      'Cancelar',
-                      style: GoogleFonts.poppins(
-                          color: Color.fromRGBO(255, 96, 4, 1),
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: isButtonPressed
-                        ? null
-                        : () async {
-                            setState(() {
-                              isButtonPressed = true;
-                            });
-
-                            var verificador = true;
-                            try {
-                              CheckController checkcontroller = Provider.of<CheckController>(context, listen: false);
-                              var r = await MongoDatabase.getRestaurante(widget.restaurante.id);
-                              if (r != null) {
-                                MongoDatabase.agregarPedidoARestaurante(r, widget.idMesa, checkcontroller.pedido);
-                                await MongoDatabase.actualizarRestaurante(r);
-                              } else {
-                                verificador = false;
-                              }
-                            } catch (e) {
-                              verificador = false;
-                            }
-                            if (verificador == true) {
-                              shouldPop = false;
-                              CheckController checkcontroller = Provider.of<CheckController>(context, listen: false);
-                              Pedido pedidoVacio = Pedido(productos: []);
-                              checkcontroller.pedido = pedidoVacio;
-                              Navigator.pop(context, true);
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (BuildContext context) {
-                                  return const pantallaCarga();
-                                }),
-                              );
-                              funciona = true;
-                              confirmation = true;
-                            } else {
-                              Navigator.pop(context);
-                              _showAlertDialog(context);
-                            }
-                          },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(255, 96, 4, 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7)
-                      )
-                    ),
-                    child: Text(
-                      'Confirmar',
-                      style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    
-                  ),
-                ],
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    confirmation = true;
+                  });
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7))),
+                child: Text(
+                  'Confirmar',
+                  style: GoogleFonts.poppins(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
               ),
             ],
-          );
-        },
+          ),
+        ],
       );
     },
   );
 }
+
 
 }

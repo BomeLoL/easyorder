@@ -1,6 +1,7 @@
   import 'dart:async';
 
-  import 'package:easyorder/models/clases/menu.dart';
+  import 'package:easyorder/models/clases/itemPedido.dart';
+import 'package:easyorder/models/clases/menu.dart';
   import 'package:easyorder/models/clases/mesa.dart';
   import 'package:easyorder/models/clases/pedido.dart';
   import 'package:easyorder/models/clases/restaurante.dart';
@@ -118,4 +119,94 @@
       mesaEncontrada.pedidos.add(nuevoPedido);  
     }
 
+static Future<Pedido?> consolidarPedidos(String restauranteId, int numeroMesa) async {
+  if (db == null || !db.isConnected) {
+    await connect();
   }
+
+  try {
+    Restaurante? restaurante = await getRestaurante(restauranteId);
+
+    if (restaurante == null) {
+      print('Restaurante no encontrado');
+      return null;
+    }
+
+    Mesa? mesa = restaurante.mesas.firstWhere((mesa) => mesa.id == numeroMesa);
+
+    if (mesa == null) {
+      print('Mesa no encontrada');
+      return null;
+    }
+
+    Pedido pedidoConsolidado = Pedido(productos: []);
+
+    if (mesa.pedidos.isEmpty) {
+      return pedidoConsolidado;
+    }
+
+    // Crear un nuevo pedido consolidado
+
+    // Map para almacenar productos y sumarlos
+    Map<String, itemPedido> mapaProductos = {};
+
+    // Iterar sobre los pedidos de la mesa
+    for (Pedido pedido in mesa.pedidos) {
+      for (itemPedido item in pedido.productos) {
+        String clave = '${item.producto.id}-${item.comentario ?? ''}';
+
+        if (mapaProductos.containsKey(clave)) {
+          mapaProductos[clave]!.cantidad += item.cantidad;
+        } else {
+          mapaProductos[clave] = itemPedido(
+            producto: item.producto,
+            cantidad: item.cantidad,
+            comentario: item.comentario,
+            extras: item.extras,
+          );
+        }
+      }
+    }
+
+    // Agregar productos al pedido consolidado
+    pedidoConsolidado.agregarProductos(mapaProductos.values.toList());
+
+    return pedidoConsolidado;
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+  static Future<void> vaciarPedidosDeMesa(String idRestaurante, int idMesa) async {
+    try {
+      // Obtener el restaurante
+      Restaurante? restaurante = await getRestaurante(idRestaurante);
+      if (restaurante == null) {
+        throw Exception('Restaurante no encontrado');
+      }
+
+      // Encontrar la mesa específica dentro del restaurante
+      Mesa? mesa = restaurante.mesas.firstWhere((mesa) => mesa.id == idMesa);
+      if (mesa == null) {
+        throw Exception('Mesa no encontrada en el restaurante');
+      }
+
+      // Vaciar la lista de pedidos de la mesa
+      mesa.pedidos.clear();
+
+      // Actualizar el restaurante en la base de datos
+      await actualizarRestaurante(restaurante);
+    } catch (e) {
+      print('Error al vaciar pedidos de mesa: $e');
+      rethrow; // Reenviar la excepción para manejo externo si es necesario
+    }
+  }
+
+  // ... otros métodos de la clase
+}
+
+
+
+
+  

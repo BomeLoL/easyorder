@@ -1,5 +1,4 @@
-import 'package:easyorder/controllers/cart_controller.dart';
-import 'package:easyorder/controllers/check_controller.dart';
+import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/firebase_options.dart';
 import 'package:easyorder/models/dbHelper/Enviroment.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
@@ -40,6 +39,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => PedidoController()),
         ChangeNotifierProvider(create: (context) => CartController()),
         ChangeNotifierProvider(create: (context) => TextController()),
         ChangeNotifierProvider(create: (context) => CheckController()),

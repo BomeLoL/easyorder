@@ -1,3 +1,4 @@
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,7 +31,7 @@ class _DbErrorDialogState extends State<DbErrorDialog> {
         Center(
           child: isLoading 
           ? const CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(255, 96, 4, 1)),
+            valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
           )
           :
           TextButton(
@@ -52,7 +53,7 @@ class _DbErrorDialogState extends State<DbErrorDialog> {
             child: Text(
               'Volver a intentarlo',
               style: GoogleFonts.poppins(
-                color: Color.fromRGBO(255, 96, 4, 1),
+                color: primaryColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
