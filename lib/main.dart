@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         })
       ],
       child: const MaterialApp(
-        home: Vistamesas(),
+        home: Escanear(),
         debugShowCheckedModeBanner: false,
       ),
     );

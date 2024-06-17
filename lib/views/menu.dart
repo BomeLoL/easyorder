@@ -98,7 +98,7 @@ class _MenuState extends State<MenuView> {
                               scrollDirection: Axis.horizontal,
                               children: [
                                 Row(
-                                    children: categorias
+                                    children: categorias. where((elemento) => elemento.trim().isNotEmpty)
                                         .map((elemento) {
                                           Color color =
                                               elemento == selectedCategoria
