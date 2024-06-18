@@ -1,4 +1,3 @@
-
 class ItemMenu {
   final int id;
   final String nombreProducto;
@@ -6,7 +5,6 @@ class ItemMenu {
   final double precio;
   final String categoria;
   final String imgUrl;
-  List<Map<String, dynamic>> extras;
 
   ItemMenu({
     required this.id,
@@ -15,7 +13,6 @@ class ItemMenu {
     required this.precio,
     required this.categoria,
     required this.imgUrl,
-    required this.extras,
   });
 
   @override
@@ -27,8 +24,7 @@ class ItemMenu {
         other.nombreProducto == nombreProducto &&
         other.precio == precio &&
         other.categoria == categoria &&
-        other.imgUrl == imgUrl &&
-        other.extras == extras;
+        other.imgUrl == imgUrl;
   }
 
   @override
@@ -38,29 +34,27 @@ class ItemMenu {
         descripcion.hashCode ^
         precio.hashCode ^
         categoria.hashCode ^
-        imgUrl.hashCode ^
-        extras.hashCode
-        ;
+        imgUrl.hashCode;
   }
 
-Map<String, dynamic> toMap() {
-  return {
-    'id': id,
-    'nombreProducto': nombreProducto,
-    'descripcion': descripcion,
-    'precio': precio,
-    'categoria': categoria,
-    'imgUrl': imgUrl,
-    'extras': extras.map((extra) => Map<String, dynamic>.from(extra)).toList(),
-  };
-}
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nombreProducto': nombreProducto,
+      'descripcion': descripcion,
+      'precio': precio,
+      'categoria': categoria,
+      'imgUrl': imgUrl,
+    };
+  }
 
-ItemMenu.fromMap(Map<String, dynamic> map)
-    : id = map['id'],
-      nombreProducto = map['nombreProducto'],
-      descripcion = map['descripcion'],
-      precio = map['precio'],
-      categoria = map['categoria'],
-      imgUrl = map['imgUrl'],
-      extras = (map['extras'] as List).map((extra) => Map<String, dynamic>.from(extra)).toList();
+  ItemMenu.fromMap(Map<String, dynamic> map)
+    : id = map['id'] is int
+        ? map['id']
+        : int.parse(map['id'].toString()),
+        nombreProducto = map['nombreProducto'],
+        descripcion = map['descripcion'],
+        precio = map['precio'],
+        categoria = map['categoria'],
+        imgUrl = map['imgUrl'];
 }
