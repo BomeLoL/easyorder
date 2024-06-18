@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/mesa.dart';
 import 'package:easyorder/models/clases/pedido.dart';
@@ -109,5 +110,26 @@ static actualizarMenu(Menu menu) async {
     Mesa? mesaEncontrada = restaurante.mesas.firstWhere((mesa) => mesa.id == idMesa);
     mesaEncontrada.pedidos.add(nuevoPedido);  
   }
+
+  ///Agrega un producto nuevo al menú del restaurante
+  static Future<void> agregarProducto(String idRestaurante, ItemMenu itemMenu) async {
+  try {
+    final menu = await getMenu(idRestaurante);
+    if (menu != null) {
+      // Verificar si el producto ya existe en el menú
+      bool productoExistente = menu.itemsMenu.any((item) => item.id == itemMenu.id);
+      if (productoExistente) {
+        throw Exception('El producto ya existe en el menú');
+      }
+
+      // Si el producto no existe, agregarlo al menú
+      menu.itemsMenu.add(itemMenu);
+      print("AAAAAAAAAAAA");
+      await actualizarMenu(menu);
+    } 
+  } catch (e) {
+    throw Exception('Error al agregar el producto: $e');
+  }
+}
 
 }

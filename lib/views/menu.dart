@@ -289,7 +289,7 @@ class _MenuState extends State<MenuView> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return detalleAdmin(info: widget.info);
+                        return detalleAdmin(idRestaurante: widget.restaurante.id);
                       },
                     ),
                   );

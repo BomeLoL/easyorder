@@ -1,3 +1,4 @@
+import 'package:easyorder/controllers/products_controller.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/views/Widgets/custom_text_form_field.dart';
@@ -9,9 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class detalleAdmin extends StatefulWidget {
-  const detalleAdmin({super.key, required this.info, this.producto = null});
-  final String info;
+  const detalleAdmin({super.key, this.producto = null, required this.idRestaurante});
   final ItemMenu? producto;
+  final String idRestaurante;
 
   @override
   State<detalleAdmin> createState() => _detalleAdminState();
@@ -20,6 +21,7 @@ class detalleAdmin extends StatefulWidget {
 class _detalleAdminState extends State<detalleAdmin> {
   late TextController textController;
   final _formKey = GlobalKey<FormState>();
+  final productsController = ProductsController();
 
   String? _selectedCategory;
   bool _categoryValid = true;
@@ -33,9 +35,9 @@ class _detalleAdminState extends State<detalleAdmin> {
 
   @override
   void dispose() {
-    textController.clearText('field1');
-    textController.clearText('field2');
-    textController.clearText('field3');
+    textController.clearText('nombre');
+    textController.clearText('precio');
+    textController.clearText('descripcion');
     super.dispose();
   }
 
@@ -165,7 +167,7 @@ class _detalleAdminState extends State<detalleAdmin> {
 
                                 CustomTextFormField(
                                   controller:
-                                      textController.getController('field1'),
+                                      textController.getController('nombre'),
                                   hintText: 'Ej. Hamburguesa Clásica',
                                   validator:
                                       'Por favor, ingresa el nombre del producto',
@@ -183,7 +185,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                                 ),
                                 CustomTextFormField(
                                   controller:
-                                      textController.getController('field2'),
+                                      textController.getController('precio'),
                                   hintText: 'Ej. 12',
                                   keyboardType: TextInputType.number,
                                   validator: 'Por favor, ingresa el precio',
@@ -202,7 +204,7 @@ class _detalleAdminState extends State<detalleAdmin> {
 
                                 CustomTextFormField(
                                   controller:
-                                      textController.getController('field3'),
+                                      textController.getController('descripcion'),
                                   hintText:
                                       'Ej. Pan brioche, 200g de carne, lechuga, tomate, queso amarillo...',
                                   validator:
@@ -308,8 +310,27 @@ class _detalleAdminState extends State<detalleAdmin> {
                 if (_formKey.currentState!.validate() &&
                     _categoryValid &&
                     _imageSelected) {
-                  
-                  return;
+                      // Obtener el texto del campo
+                      String precioTexto = textController.getText('precio');
+
+                      // Reemplazar comas por puntos
+                      precioTexto = precioTexto.replaceAll(',', '.');
+                      final itemMenu = ItemMenu(
+                      id: DateTime.now().millisecondsSinceEpoch, 
+                      nombreProducto: textController.getText('nombre'),
+                      descripcion: textController.getText('descripcion'),
+                      precio: double.parse(precioTexto),
+                      categoria: _selectedCategory!,
+                      imgUrl: 'https://upload.wikimedia.org/wikipedia/en/f/fd/Logo_of_Stardew_Valley.png',
+                    );
+                    try {
+                      await productsController.addProduct(widget.idRestaurante, itemMenu);
+                      
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+                    }
+                    Navigator.pop(context);
+
                 }
               },
               style: ElevatedButton.styleFrom(
