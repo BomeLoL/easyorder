@@ -1,6 +1,6 @@
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
-import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/views/vistaQr.dart';
@@ -43,7 +43,7 @@ class _EscanearState extends State<Escanear> {
               }
               },
             style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFFFF5F04),
+            backgroundColor: primaryColor,
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10)

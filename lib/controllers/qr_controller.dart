@@ -52,7 +52,7 @@ class QrController {
 //        Pedido nuevoPedido = restaurante.mesas[j].pedidos[0];
 //        cartController.pedido = nuevoPedido;}
 //        else{
-        Pedido pedidoVacio = Pedido(productos: {});
+        Pedido pedidoVacio = Pedido(productos: []);
         cartController.pedido = pedidoVacio;
 //        }          
         navigateToMenu(context, restaurante, menu, idMesa);
