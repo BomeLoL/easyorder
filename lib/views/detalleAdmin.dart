@@ -1,55 +1,42 @@
-import 'package:easyorder/models/clases/menu.dart';
-import 'package:easyorder/models/clases/restaurante.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:easyorder/controllers/text_controller.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:easyorder/views/Widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:easyorder/controllers/cart_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
-import 'package:easyorder/views/Widgets/quantity_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class detalleAdmin extends StatefulWidget {
-  const detalleAdmin({super.key, required this.info, required this.producto});
+  const detalleAdmin({super.key, required this.info, this.producto = null});
   final String info;
-  final ItemMenu producto;
+  final ItemMenu? producto;
 
   @override
   State<detalleAdmin> createState() => _detalleAdminState();
 }
 
 class _detalleAdminState extends State<detalleAdmin> {
-  bool isCarrito = true;
-  late int cantidad;
+  late TextController textController;
+  final _formKey = GlobalKey<FormState>();
+
+  String? _selectedCategory;
+  bool _categoryValid = true;
+  bool _imageSelected = true;
 
   @override
   void initState() {
     super.initState();
-    cantidad =
-        context.read<CartController>().getOneProductQuantity(widget.producto);
-    if (cantidad == 0) {
-      cantidad = 1;
-      isCarrito = false;
-    }
+    textController = Provider.of<TextController>(context, listen: false);
   }
 
-  void agregar() {
-    setState(() {
-      cantidad++;
-    });
-  }
-
-  void eliminar() {
-    if ((isCarrito == true && cantidad > 0) ||
-        (isCarrito == false && cantidad > 1)) {
-      setState(() {
-        cantidad--;
-      });
-    }
+  @override
+  void dispose() {
+    textController.clearText('field1');
+    textController.clearText('field2');
+    textController.clearText('field3');
+    super.dispose();
   }
 
   File? _image;
@@ -93,6 +80,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                     child: Container(
                       child: Builder(builder: (context) {
                         if (_image != null) {
+                          _imageSelected = true;
                           return Image.file(
                             _image!,
                             fit: BoxFit.cover,
@@ -100,38 +88,39 @@ class _detalleAdminState extends State<detalleAdmin> {
                           );
                         } else {
                           return Container(
-                              color: Colors.black12,
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(25),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.upload,
+                            color: Colors.black12,
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(25),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.upload,
+                                      color: Colors.black54,
+                                      // Icono de cámara
+
+                                      size: 50,
+                                      // Tamaño del icono
+                                    ),
+                                    SizedBox(height: 10),
+                                    // Espacio entre el icono y el texto
+
+                                    Text(
+                                      'Selecciona la imagen del producto',
+                                      // Texto
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
                                         color: Colors.black54,
-                                  // Icono de cámara
-                                  
-                                        size: 50,
-                                  // Tamaño del icono
                                       ),
-                                      SizedBox(height: 10),
-                                  // Espacio entre el icono y el texto
-                                  
-                                      Text(
-                                        'Selecciona la imagen del producto',
-                                  // Texto
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black54,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ));
+                              ),
+                            ),
+                          );
                         }
                       }),
                     ),
@@ -144,10 +133,23 @@ class _detalleAdminState extends State<detalleAdmin> {
                   ),
                   child: Column(
                     children: [
+                      if (!_imageSelected)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Por favor, selecciona una imágen',
+                            style: GoogleFonts.poppins(
+                              fontSize: 12.5,
+                              color: Colors.red.shade900,
+                            ),
+                          ),
+                        ),
                       Container(
                         child: Padding(
                           padding: const EdgeInsets.all(35),
-                          child: Column(
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
@@ -161,22 +163,12 @@ class _detalleAdminState extends State<detalleAdmin> {
                                   ),
                                 ),
 
-                                TextField(
-                                  decoration: InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color:
-                                                Color.fromRGBO(255, 95, 4, 1)),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color:
-                                                Color.fromRGBO(125, 45, 0, 1)),
-                                      ),
-                                      hintText: 'Ej. Hamburguesa Clásica',
-                                      hintStyle: const TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.black38)),
+                                CustomTextFormField(
+                                  controller:
+                                      textController.getController('field1'),
+                                  hintText: 'Ej. Hamburguesa Clásica',
+                                  validator:
+                                      'Por favor, ingresa el nombre del producto',
                                 ),
 
                                 SizedBox(height: 25),
@@ -189,23 +181,12 @@ class _detalleAdminState extends State<detalleAdmin> {
                                     color: Colors.black,
                                   ),
                                 ),
-
-                                TextField(
-                                  decoration: InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color:
-                                                Color.fromRGBO(255, 95, 4, 1)),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color:
-                                                Color.fromRGBO(125, 45, 0, 1)),
-                                      ),
-                                      hintText: 'Ej. 12',
-                                      hintStyle: const TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.black38)),
+                                CustomTextFormField(
+                                  controller:
+                                      textController.getController('field2'),
+                                  hintText: 'Ej. 12',
+                                  keyboardType: TextInputType.number,
+                                  validator: 'Por favor, ingresa el precio',
                                 ),
 
                                 SizedBox(height: 25),
@@ -219,24 +200,13 @@ class _detalleAdminState extends State<detalleAdmin> {
                                   ),
                                 ),
 
-                                TextField(
-                                  maxLines: null,
-                                  decoration: InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color:
-                                                Color.fromRGBO(255, 95, 4, 1)),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color:
-                                                Color.fromRGBO(125, 45, 0, 1)),
-                                      ),
-                                      hintText:
-                                          'Ej. Pan brioche, 200g de carne, lechuga, tomate, queso amarillo...',
-                                      hintStyle: const TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.black38)),
+                                CustomTextFormField(
+                                  controller:
+                                      textController.getController('field3'),
+                                  hintText:
+                                      'Ej. Pan brioche, 200g de carne, lechuga, tomate, queso amarillo...',
+                                  validator:
+                                      'Por favor, ingresa la descripción',
                                 ),
 
                                 SizedBox(height: 25),
@@ -255,8 +225,10 @@ class _detalleAdminState extends State<detalleAdmin> {
                                         .infinity, // This makes the dropdown width fit the screen
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                          color: Color.fromRGBO(255, 95, 4,
-                                              1)), // Set the border color
+                                          color: _categoryValid
+                                              ? primaryColor
+                                              : Colors
+                                                  .red), // Set the border color
                                       borderRadius: BorderRadius.circular(
                                           4.0), // Optional: Add border radius
                                     ),
@@ -266,6 +238,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                                       child: DropdownButton<String>(
                                         isExpanded:
                                             true, // This makes the dropdown width fit the screen
+                                        value: _selectedCategory,
                                         items: [
                                           DropdownMenuItem(
                                             value: 'item1',
@@ -279,48 +252,36 @@ class _detalleAdminState extends State<detalleAdmin> {
                                             value: 'item3',
                                             child: Text('Elemento 3'),
                                           ),
-                                        ], // Add your dropdown items here
+                                        ],
                                         hint: Text('Seleccionar categoría',
-                                            style: TextStyle(
-                                                fontSize: 14.0,
-                                                color: Colors
-                                                    .black38)), // Set the hint text
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 14)),
                                         onChanged: (String? value) {
-                                          // Add your onChanged logic here
+                                          setState(() {
+                                            _selectedCategory = value;
+                                            _categoryValid =
+                                                true; // Clear the error when a category is selected
+                                          });
                                         },
                                       ),
                                     ),
                                   ),
                                 ),
-
-                                SizedBox(height: 25),
-                                Text(
-                                  'Descuento %',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                if (!_categoryValid)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.5, vertical: 8.0),
+                                    child: Text(
+                                      'Por favor, selecciona una categoría',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12.0,
+                                        color: Colors.red.shade900,
+                                      ),
+                                    ),
                                   ),
-                                ),
-
-                                TextField(
-                                  decoration: InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color:
-                                                Color.fromRGBO(255, 95, 4, 1)),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color:
-                                                Color.fromRGBO(125, 45, 0, 1)),
-                                      ),
-                                      hintText: 'Ej. 50',
-                                      hintStyle: const TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.black38)),
-                                ),
-                              ]),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -336,69 +297,34 @@ class _detalleAdminState extends State<detalleAdmin> {
         color: Colors.grey[50],
         child: Padding(
           padding: EdgeInsets.all(25),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                flex: 10,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors
-                        .white, // Establece el color de fondo del botón a blanco
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(7),
-                      side: BorderSide(
-                          color: Color.fromRGBO(
-                              255, 95, 4, 1)), // Establece el color del borde
-                    ),
-                  ),
-                  child: Text(
-                    'Cancelar',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromRGBO(255, 95, 4,
-                          1), // Establece el color del texto igual al color del borde
-                    ),
-                  ),
-                ),
+          child: Container(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () async {
+                setState(() {
+                  _categoryValid = _selectedCategory != null;
+                  _imageSelected = _image != null;
+                });
+                if (_formKey.currentState!.validate() &&
+                    _categoryValid &&
+                    _imageSelected) {
+                  
+                  return;
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(7),
+                  )),
+              child: Text(
+                'Guardar',
+                style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
-              Spacer(
-                flex: 1,
-              ),
-              Consumer<CartController>(
-                  builder: (context, cartController, child) {
-                return Expanded(
-                  flex: 10,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(255, 95, 4, 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                    ),
-                    child: Builder(builder: (context) {
-                      String textOfbutton = 'Agregar';
-                      if (isCarrito == true) {
-                        textOfbutton = 'Modificar';
-                      }
-                      return Text(
-                        textOfbutton,
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      );
-                    }),
-                  ),
-                );
-              }), // Agrega un espacio de 12.5 entre los botones
-              SizedBox(width: 12.5),
-            ],
+            ),
           ),
         ),
       ),
