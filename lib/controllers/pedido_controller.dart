@@ -29,8 +29,9 @@ class PedidoController extends ChangeNotifier {
     return _pedido.getProductIfExists(producto, comentario: comentario, extras: extras);
   }
 
-  void deleteProduct(ItemMenu producto, String info, int isPedido, {String comentario = '', List<String> extras = const []}) {
-    _pedido.deleteProduct(producto, info, isPedido, comentario: comentario, extras: extras);
+
+void deleteProduct(ItemMenu producto, String info, {String comentario = '', List<String> extras = const []}) {
+    _pedido.deleteProduct(producto, info, comentario: comentario, extras: extras);
     notifyListeners();
   }
 
@@ -46,16 +47,14 @@ class PedidoController extends ChangeNotifier {
   int getOneProductQuantity(ItemMenu producto, {String comentario = '', List<String> extras = const []}) {
     return _pedido.getOneProductQuantity(producto, comentario: comentario);
   }
-
-  int totalCantidad() {
-    return _pedido.totalCantidad();
-  }
-
-  void deleteProducts(itemPedido? producto, String info, context, int isPedido) {
-    _pedido.deleteProducts(producto, info, isPedido);
-    notifyListeners();
-  }
-
+int totalCantidad() {
+   return _pedido.totalCantidad();
+ } 
+  
+  void deleteProducts(itemPedido? producto, String info, context) {
+  _pedido.deleteProducts(producto, info);
+  notifyListeners();
+}
   double getTotalAmount() {
     return _pedido.getTotalAmount();
   }

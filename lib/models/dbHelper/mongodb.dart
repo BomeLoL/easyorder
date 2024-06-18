@@ -30,8 +30,6 @@ import 'package:easyorder/models/clases/menu.dart';
   static Future<Restaurante?> getRestaurante(String id) async {
     try {
       final restauranteMap = await coleccion_restaurante.findOne({'_id': id});
-
-
       if (restauranteMap != null) {
         Restaurante restaurante = Restaurante.fromMap(restauranteMap);
         return restaurante;

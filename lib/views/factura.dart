@@ -1,13 +1,16 @@
+import 'dart:ui';
+
 import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
-import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
+import 'package:easyorder/views/Widgets/listorder_card.dart';
+import 'package:easyorder/views/Widgets/order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,13 +18,14 @@ import 'package:provider/provider.dart';
 import 'package:easyorder/views/pantallaCarga.dart';
 
 class Factura extends StatefulWidget {
-  const Factura(
-      {super.key,
-      required this.info,
-      required this.menu,
-      required this.restaurante,
-      required this.idMesa});
-      
+  const Factura({
+    super.key,
+    required this.info,
+    required this.menu,
+    required this.restaurante,
+    required this.idMesa,
+  });
+
   final String info;
   final Restaurante restaurante;
   final Menu menu;
@@ -32,12 +36,14 @@ class Factura extends StatefulWidget {
 }
 
 class _detalleFacturaState extends State<Factura> {
-  
   bool funciona = false;
   bool confirmation = false;
   bool shouldPop = true;
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
@@ -47,13 +53,100 @@ class _detalleFacturaState extends State<Factura> {
       ),
       body: Consumer<CheckController>(
         builder: (context, checkcontroller, child) {
-          if (checkcontroller.totalCantidad() == 0 && shouldPop == true){
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.of(context).popUntil((route) {
-                return route.settings.name == 'menu';
-              });
-            });
-            return SizedBox();
+          if (checkcontroller.totalCantidad() == 0 && shouldPop == true) {
+            return Background_image(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: kToolbarHeight + size.height * 0.03,
+                    ),
+                    Text(
+                      'Mis Pedidos',
+                      style: GoogleFonts.poppins(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.18), // Ajusta este tamaño para controlar la altura
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                            child: Image.asset(
+                              'images/flyingHamburger.png', // Reemplaza con la ruta de tu imagen
+                              height: size.height * 0.23, // Ajusta el tamaño de la imagen según lo necesites
+                            ),
+                          ),
+                          SizedBox(height: 10), // Espacio entre la imagen y el texto
+                          Text(
+                            'Aún no has realizado pedidos',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 6), // Espacio entre los textos
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                            child: Text(
+                              'Busca entre todas nuestras opciones y disfruta de tu primer pedido',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Spacer(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: size.width * 0.05, vertical: size.height * 0.03),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 55,
+                              child: ElevatedButton(
+                                onPressed: () async {
+
+                                  // Acción del botón
+                                Navigator.of(context).popUntil((route) {
+                                  return route.settings.name == 'menu';
+                                });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xFFFF5F04),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Realizar un Pedido",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: MediaQuery.of(context).size.height * 0.018,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
           } else {
             return Background_image(
             child: Padding(
@@ -81,9 +174,8 @@ class _detalleFacturaState extends State<Factura> {
                         final producto = checkcontroller.pedido.productos[index];        
                         return Column(
                           children: [
-                            ProductCard(
+                            ListorderCard (
                               producto: producto.producto,
-                              isPedido: 3,
                               info: widget.info,
                               comment: producto.comentario!,
                             ),
@@ -133,7 +225,7 @@ class _detalleFacturaState extends State<Factura> {
                         ),
                        
                         Expanded(
-                          flex: 1, //Cambiar a 3 cuando se agrege nuevamente el Sub-total y Descuento
+                          flex: 1, 
                           child: Container(
                             width: double.infinity,
                             child: ElevatedButton(

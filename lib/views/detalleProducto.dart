@@ -10,7 +10,7 @@ import 'package:easyorder/views/Widgets/quantity_button.dart';
 
 class detalleProducto extends StatefulWidget {
   const detalleProducto(
-      {super.key, required this.info, required this.producto, required this.isPedido, this.comment = ''});
+      {super.key, required this.info, required this.producto, this.isPedido = 1, this.comment = ''});
   final String info;
   final ItemMenu producto;
   final int isPedido;

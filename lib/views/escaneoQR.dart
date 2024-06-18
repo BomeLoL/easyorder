@@ -1,11 +1,8 @@
-import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
-import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/login.dart';
 import 'package:easyorder/views/singUp.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/views/vistaQr.dart';
 

@@ -67,14 +67,14 @@ class Pedido {
     }
   }
 
-  void deleteProduct(ItemMenu producto, String info, int isPedido,
+  void deleteProduct(ItemMenu producto, String info,
       {String comentario = '', List<String> extras = const []}) {
     var existingProduct =
         getProductIfExists(producto, comentario: comentario, extras: extras);
     if (existingProduct != null && existingProduct.cantidad > 1) {
       existingProduct.cantidad -= 1;
     } else {
-      deleteProducts(existingProduct, info, isPedido);
+      deleteProducts(existingProduct, info);
     }
   }
 
@@ -100,7 +100,7 @@ class Pedido {
   }
 
   void deleteProducts(
-      itemPedido? producto, String info, int isPedido) {
+      itemPedido? producto, String info) {
     productos.remove(producto);
   }
 

@@ -4,10 +4,9 @@ import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
-import 'package:easyorder/views/Widgets/Product_card.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
-import 'package:easyorder/views/Widgets/custom_popup.dart';
+import 'package:easyorder/views/Widgets/order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -80,9 +79,8 @@ class _detallePedidoState extends State<detallePedido> {
                         final producto = cartController.pedido.productos[index];        
                         return Column(
                           children: [
-                            ProductCard(
+                            OrderCard(
                               producto: producto.producto,
-                              isPedido: 0,
                               info: widget.info,
                               comment: producto.comentario!,
                             ),
@@ -105,56 +103,7 @@ class _detallePedidoState extends State<detallePedido> {
                           ],
                         )),
                     child: Column(
-                      children: [
-                        // Expanded(
-                        //   flex: 2,
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     children: [
-                        //       // Text(
-                        //       //   'Sub-Total:',
-                        //       //   style: GoogleFonts.poppins(
-                        //       //     fontSize: 16,
-                        //       //     color: Colors.white,
-                        //       //     fontWeight: FontWeight.bold,
-                        //       //   ),
-                        //       // ),
-                        //       // Text(
-                        //       //   cartController.getTotalAmount().toString(),
-                        //       //   style: GoogleFonts.poppins(
-                        //       //     fontSize: 16,
-                        //       //     color: Colors.white,
-                        //       //     fontWeight: FontWeight.bold,
-                        //       //   ),
-                        //       // )
-                        //     ],
-                        //   ),
-                        // ),
-                        // Expanded(
-                        //   flex: 2,
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     children: [
-                        //       // Text(
-                        //       //   'Descuento:',
-                        //       //   style: GoogleFonts.poppins(
-                        //       //     fontSize: 16,
-                        //       //     color: Colors.white,
-                        //       //     fontWeight: FontWeight.bold,
-                        //       //   ),
-                        //       // ),
-                        //       // Text(
-                        //       //   '0',
-                        //       //   style: GoogleFonts.poppins(
-                        //       //     fontSize: 16,
-                        //       //     color: Colors.white,
-                        //       //     fontWeight: FontWeight.bold,
-                        //       //   ),
-                        //       // )
-                        //     ],
-                        //   ),
-                        // ),
-                    
+                      children: [  
                         Expanded(
                           flex: 2,
                           child: Row(
@@ -199,8 +148,9 @@ class _detallePedidoState extends State<detallePedido> {
                                     await Future.delayed(
                                         const Duration(seconds: 5));
                                     cartController.haPedido = true;
-                                    Navigator.pop(context);
-                                    _showSuccessDialog(context);
+                                    Navigator.of(context).popUntil((route) {
+                                      return route.settings.name == 'menu';
+                                    });
                                   } else {
                                     Navigator.pop(context);
                                     _showAlertDialog(context);
@@ -276,39 +226,6 @@ class _detallePedidoState extends State<detallePedido> {
       },
     );
   }
-
-  //Esta función muestra la ventanilla que indica que la orden fue completada exitosamente
-void _showSuccessDialog(BuildContext context) {
-        
-        showCustomPopup(
-          pop: false,
-          context: context,
-          title: 
-            '¡Pedido completado!',
-          content: const Text(
-            'Ya tu pedido está en la cocina y estará listo dentro de poco.',
-            textAlign: TextAlign.justify,
-          ),
-          actions: [
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.of(context).popUntil((route) {
-                     return route.settings.name == 'menu';
-                   });
-                },
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.poppins(
-                    color: primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-}
 
 
 Future<void> _showConfirmationDialog(BuildContext context) {
