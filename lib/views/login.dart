@@ -1,6 +1,8 @@
+import 'package:easyorder/controllers/navigate_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/usuario.dart';
 import 'package:easyorder/models/dbHelper/authService.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/connectWith.dart';
 import 'package:easyorder/views/Widgets/customTextField.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
@@ -13,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 
 class Login extends StatefulWidget {
@@ -112,7 +115,14 @@ class _LoginState extends State<Login> {
                                 
 
                                 cerrarTeclado(context);
-                                Navigator.pop(context);
+                                if (userController.usuario?.usertype == "Restaurante"){
+                                      var restaurante = await MongoDatabase.getRestaurante(userController.usuario!.id);
+                                      var menu = await MongoDatabase.getMenu(userController.usuario!.id);
+                                      if (restaurante!= null && menu!=null){
+                                      NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");}
+                                }else{
+
+                                Navigator.pop(context);}
                               } else {
                                 errorLogin(context);
                               }
@@ -154,21 +164,23 @@ class _LoginState extends State<Login> {
                               var email = await _auth.signinwithGoogle();
                               if (email != null) {
                                 _auth.getUserByEmailAndAccount(email, 'google');
-                                var y = await _auth.getUserByEmailAndAccount(email, 'google');
-                                if (y == null) {
+                                var getUsuario = await _auth.getUserByEmailAndAccount(email, 'google');
+                                if (getUsuario == null) {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => SignuP2(email: email,)),
                                   );
                                 } else {
                                     UserController userController = Provider.of<UserController>(context, listen: false);
-                                    Usuario? getUsuario = await _auth.getUserByEmailAndAccount(email,'google');
                                     userController.usuario = getUsuario;
+                                if (userController.usuario?.usertype == "Restaurante"){
+                                      var restaurante = await MongoDatabase.getRestaurante(userController.usuario!.id);
+                                      var menu = await MongoDatabase.getMenu(userController.usuario!.id);
+                                      if (restaurante!= null && menu!=null){
+                                      NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");}
+                                }else{
 
-                                  Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => Escanear()),
-                                );
+                                Navigator.pop(context);}
                                 }                                    
 
 

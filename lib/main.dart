@@ -1,5 +1,10 @@
 import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/controllers/menu_edit_controller.dart';
+
+import 'package:easyorder/controllers/menu_edit_controller.dart';
+import 'package:easyorder/controllers/navigation_controller.dart';
+import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/firebase_options.dart';
 import 'package:easyorder/models/dbHelper/Enviroment.dart';
@@ -51,10 +56,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) {
           return CartController();
         }),
+        ChangeNotifierProvider(create: (context) {return NavController();}),
+        
         ChangeNotifierProvider(
           create: (context) => TextController(),
           child: MyApp(),
         ),
+
       ],
       child: GetMaterialApp(
         defaultTransition: Transition.fade,

@@ -54,7 +54,7 @@ Future<String?> signinwithGoogle() async {
       );
       UserCredential userCredential = await _auth.signInWithCredential(authCredential);
       User? user = userCredential.user;
-      return user?.email;
+        return user?.email;
     }
   } catch (e) {
     print("Error signing in with Google: $e");
@@ -67,10 +67,12 @@ Future<String?> signinwithGoogle() async {
     required String nombre,
     required String correo,
     required String usertype,
+    required String id, 
   }) async {
     double saldo = 0;
     final newUser = _fs.collection('users').doc(correo+","+cuenta);
     final json = {
+      'id':id,
       'cuenta': cuenta,
       'nombre': nombre,
       'correo': correo,

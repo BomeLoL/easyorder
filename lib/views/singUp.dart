@@ -1,3 +1,5 @@
+import 'package:easyorder/controllers/menu_edit_controller.dart';
+import 'package:easyorder/controllers/navigate_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/views/login.dart';
 import 'package:easyorder/views/singUp2.dart';
@@ -208,19 +210,26 @@ String? _validatePassword(String? value) {
                                   );
                                   if (x != null) {
                                     _auth.createUserDoc(
+                                      id: v4,
                                       cuenta: "correo",
                                       nombre: textController.getController('fullName').text,
                                       correo: textController.getController('email').text,
                                       usertype: userType,
                                     );
-                                    if (userType == "Restaurante") {
-                                      MongoDatabase.insertarRestaurante(v4, textController.getController('fullName').text);
-                                    }
                                    UserController userController = Provider.of<UserController>(context, listen: false);
                                     var getUsuario = await _auth.getUserByEmailAndAccount(textController.getController('email').text,'correo');
                                     userController.usuario = getUsuario;
                                     cerrarTeclado(context);
-                                  Navigator.pop(context);
+                                    if (userType == "Restaurante") {
+                                      await MongoDatabase.insertarRestaurante(v4, textController.getController('fullName').text);
+                                      var restaurante = await MongoDatabase.getRestaurante(v4);
+                                      var menu = await MongoDatabase.getMenu(v4);
+                                      if (restaurante!= null && menu!=null){
+                                      NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");} 
+                                    }else{
+                                      Navigator.pop(context);
+                                    }
+
                                   }
                                   
                                   else {
@@ -263,17 +272,26 @@ String? _validatePassword(String? value) {
                             onPressed: () async {
                               email = await _auth.signinwithGoogle();
                               if (email != null) {
-                                _auth.getUserByEmailAndAccount(email, 'google');
-                                var y = await _auth.getUserByEmailAndAccount(email, 'google');
-                                if (y == null) {
+                                await _auth.getUserByEmailAndAccount(email, 'google');
+                                var getUsuario = await _auth.getUserByEmailAndAccount(email, 'google');
+                                if (getUsuario == null) {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => SignuP2(email: email,)),
                                   );
-                                } else {
-                                    Navigator.pop(context);}                              
-                                }
-                            },
+                                }  else {
+                                    UserController userController = Provider.of<UserController>(context, listen: false);
+                                    userController.usuario = getUsuario;
+                                if (userController.usuario?.usertype == "Restaurante"){
+                                      var restaurante = await MongoDatabase.getRestaurante(userController.usuario!.id);
+                                      var menu = await MongoDatabase.getMenu(userController.usuario!.id);
+                                      if (restaurante!= null && menu!=null){
+                                      NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");}
+                                }else{
+
+                                Navigator.pop(context);}
+                                }     
+                            }},
                           ),
                         ],
                       ),

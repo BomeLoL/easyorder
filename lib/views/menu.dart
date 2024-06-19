@@ -1,11 +1,14 @@
 import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/controllers/menu_edit_controller.dart';
+import 'package:easyorder/controllers/user_controller.dart';
+import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/Widgets/edit_product_card.dart';
 import 'package:easyorder/views/Widgets/menu_card.dart';
+import 'package:easyorder/views/Widgets/navigationBarClient.dart';
 import 'package:easyorder/views/detalleAdmin.dart';
 import 'package:easyorder/views/detallePedido.dart';
 import 'package:easyorder/views/vistaQr.dart';
@@ -20,7 +23,7 @@ class MenuView extends StatefulWidget {
     required this.info,
     required this.restaurante,
     required this.idMesa,
-    this.rol = 'admin',
+    this.rol = 'Restaurante',
   });
 
   final String info;
@@ -50,6 +53,7 @@ class _MenuState extends State<MenuView> {
 
   @override
   Widget build(BuildContext context) {
+    return Consumer<UserController>(builder: (context, userController, child){
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -82,24 +86,26 @@ class _MenuState extends State<MenuView> {
                       SizedBox(
                         height: 10,
                       ),
-                      if (widget.rol == 'admin') _buildDivider(),
+                      if (userController.usuario?.usertype == 'Restaurante') _buildDivider(),
                       Expanded(
                         child: _buildProductList()
                       ),
-                      if (widget.rol == 'admin') _buildAdminAddProductButton()
+                      if (userController.usuario?.usertype == 'Restaurante') _buildAdminAddProductButton()
                     ],
                   ),
                 ),
               ),
-              if(widget.rol == 'user') _buildCartSummary()
+              if(userController.usuario?.usertype == 'Comensal' ||userController.usuario == null) _buildCartSummary()
             ],
           ),
         ),
-        bottomNavigationBar: _buildBotomNavigationBar()
+        bottomNavigationBar: BarNavigationClient(idMesa: widget.idMesa, info: widget.info, restaurante: widget.restaurante),
       ),
     );
-  }
+  });}
+
   AppBar _buildAppBar(){
+
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: Color.fromARGB(0, 255, 255, 255),
@@ -115,7 +121,9 @@ class _MenuState extends State<MenuView> {
   }
 
   Widget _buildHeader(){
-    if(widget.rol == 'admin') {
+    return Consumer<UserController>(builder: (context, userController, child){
+
+    if(userController.usuario?.usertype == 'Restaurante') {
       return Row(
         children: [
           Expanded(
@@ -174,7 +182,7 @@ class _MenuState extends State<MenuView> {
        ),
      );
       }    
-  }
+  });}
 
   Widget _buildCategoriesSection() {
     return Consumer<MenuEditController> (builder: (context, menuController, child){
@@ -227,7 +235,7 @@ class _MenuState extends State<MenuView> {
 
   Widget _buildProductList(){
 
-    return Consumer<MenuEditController>(builder: (context, menuController, child){
+    return Consumer2<MenuEditController,UserController>(builder: (context, menuController, userController, child){
       return ListView.builder(
       scrollDirection: Axis.vertical,
       padding: EdgeInsets.zero,
@@ -238,7 +246,7 @@ class _MenuState extends State<MenuView> {
                 selectedCategoria) {
           return Column(
             children: [
-              widget.rol == 'admin'
+              userController.usuario?.usertype == 'Restaurante'
                   ? EditProductCard(
                       producto:
                           menuController.menu!.itemsMenu[index],
@@ -386,143 +394,7 @@ class _MenuState extends State<MenuView> {
   );
   }
 
-  Widget _buildBotomNavigationBar(){
-    return Consumer<CartController>(
-          builder: (context, cartController, child) {
-            return BottomNavigationBar(
-              backgroundColor: Colors.white,
-              fixedColor: Color.fromRGBO(142, 142, 142, 1),
-              selectedLabelStyle: GoogleFonts.poppins(
-                fontWeight: FontWeight.bold,
-              ),
-              unselectedLabelStyle: GoogleFonts.poppins(
-                fontWeight: FontWeight.bold,
-              ),
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.qr_code,
-                    size: 45.0,
-                    color: primaryColor,
-                  ),
-                  label: "Escanear",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.exit_to_app,
-                    size: 45.0,
-                    color: primaryColor,
-                  ),
-                  label: "Terminar sesión",
-                )
-              ],
-              onTap: (int clickedIndex) async {
-                if (clickedIndex == 1) {
-                  await _showConfirmationDialog(context);
-                  if (confirmation == true) {
-                    setState(() {
-                      cartController.haPedido = false;
-                    });
-                    Navigator.pop(context);
-                  }
-                } else if (clickedIndex == 0 &&
-                    cartController.haPedido == false) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return BarcodeScannerWithOverlay();
-                      },
-                    ),
-                  );
-                } else if (clickedIndex == 0 &&
-                    cartController.haPedido == true) {
-                  showCustomPopup(
-                      context: context,
-                      title: 'Finalice su estadía para escanear',
-                      content: Text(
-                          'Para escanear otro código, primero debes terminar tu sesión actual. Por favor, finaliza tu estadía para continuar.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(7))),
-                          child: Text(
-                            'Ok',
-                            style: GoogleFonts.poppins(
-                                color: primaryColor,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ]);
-                }
-              },
-            );
-          },
-        );
-  }
 
-  Future<void> _showConfirmationDialog(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          title: Text(
-            '¿Terminar su estadía?',
-            style:
-                GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          content: const Text(
-            'Al confirmar, un mesero vendrá a atenderle para procesar el pago y ya no podrá hacer más pedidos. ¿Desea continuar?',
-            textAlign: TextAlign.justify,
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      confirmation = false;
-                    });
-                    Navigator.pop(context);
-                  },
-                  style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7))),
-                  child: Text(
-                    'Cancelar',
-                    style: GoogleFonts.poppins(
-                        color: primaryColor, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      confirmation = true;
-                    });
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7))),
-                  child: Text(
-                    'Confirmar',
-                    style: GoogleFonts.poppins(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
+
+
 }
