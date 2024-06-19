@@ -29,4 +29,14 @@ class MenuEditController extends ChangeNotifier {
     }
   }
 
+  Future<void> editProduct(String restaurantId, ItemMenu itemMenu) async {
+    try {
+      await MongoDatabase.editarProducto(restaurantId, itemMenu);
+      menu = await MongoDatabase.getMenu(restaurantId);
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Error editing product: $e');
+    }
+  }
+
 }

@@ -183,6 +183,8 @@ class _MenuState extends State<MenuView> {
         builder: (context, menuController, child) {
       print(
           "Building Consumer: ${menuController.menu?.itemsMenu.length} items");
+      Set<String> categorias = {};
+      categorias.add('Todo');
       for (var elemento in menuController.menu!.itemsMenu) {
         categorias.add(elemento.categoria);
       }

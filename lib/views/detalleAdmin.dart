@@ -35,6 +35,12 @@ class _detalleAdminState extends State<detalleAdmin> {
     super.initState();
     textController = Provider.of<TextController>(context, listen: false);
     menuEditController = Provider.of<MenuEditController>(context, listen: false);
+    if(widget.producto != null){
+      textController.getController('nombre').text = widget.producto!.nombreProducto;
+      textController.getController('precio').text = widget.producto!.precio.toString();
+      textController.getController('descripcion').text = widget.producto!.descripcion;
+      _selectedCategory = widget.producto!.categoria;
+    }
   }
 
   @override
@@ -221,12 +227,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                                     ),
                           
                                     CustomTextFormField(
-                                      controller: widget.producto != null
-                                          ? textController.getController(
-                                              widget.producto!.nombreProducto,
-                                              savedValue:
-                                                  widget.producto!.nombreProducto)
-                                          : textController
+                                      controller: textController
                                               .getController('nombre'),
                                       hintText: 'Ej. Hamburguesa Clásica',
                                       validator:
@@ -244,12 +245,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                                       ),
                                     ),
                                     CustomTextFormField(
-                                      controller: widget.producto != null
-                                          ? textController.getController(
-                                              widget.producto!.precio.toString(),
-                                              savedValue: widget.producto!.precio
-                                                  .toString())
-                                          : textController
+                                      controller: textController
                                               .getController('precio'),
                                       hintText: 'Ej. 12',
                                       keyboardType: TextInputType.number,
@@ -268,13 +264,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                                     ),
                           
                                     CustomTextFormField(
-                                      controller: widget.producto != null
-                                          ? textController.getController(
-                                              widget.producto!.descripcion
-                                                  .toString(),
-                                              savedValue:
-                                                  widget.producto!.descripcion)
-                                          : textController
+                                      controller:textController
                                               .getController('descripcion'),
                                       hintText:
                                           'Ej. Pan brioche, 200g de carne, lechuga, tomate, queso amarillo...',
@@ -380,17 +370,28 @@ class _detalleAdminState extends State<detalleAdmin> {
                   _categoryValid = _selectedCategory != null;
                   _imageSelected = _image != null;
                 });
-                if (_formKey.currentState!.validate() &&
+                if ((_formKey.currentState!.validate() &&
                     _categoryValid &&
-                    _imageSelected) {
+                    _imageSelected) || (_formKey.currentState!.validate() &&
+                    _categoryValid && widget.producto != null)) {
+                      String? imageURL;
                       // Obtener el texto del campo
                       String precioTexto = textController.getText('precio');
                       String nombre = textController.getText('nombre').trim();
-                      String? imageURL = await _firebaseService.uploadImage(_image!);
+                      if(widget.producto != null && _image == null){
+                        imageURL = widget.producto!.imgUrl;
+                      } else {
+                        await _firebaseService.uploadImage(_image!);
+                      }
+
                       // Reemplazar comas por puntos
                       precioTexto = precioTexto.replaceAll(',', '.');
+                      int id_p = DateTime.now().millisecondsSinceEpoch;
+                      if(widget.producto != null){
+                        id_p = widget.producto!.id;
+                      }
                       final itemMenu = ItemMenu(
-                      id: DateTime.now().millisecondsSinceEpoch, 
+                      id: id_p, 
                       nombreProducto: nombre,
                       descripcion: textController.getText('descripcion'),
                       precio: double.parse(precioTexto),
@@ -398,7 +399,11 @@ class _detalleAdminState extends State<detalleAdmin> {
                       imgUrl: imageURL!,
                     );
                     try {
-                      await menuEditController.addProduct(widget.idRestaurante, itemMenu);
+                      if(widget.producto != null){
+                        await menuEditController.editProduct(widget.idRestaurante, itemMenu);
+                      } else{
+                        await menuEditController.addProduct(widget.idRestaurante, itemMenu);
+                      }
                       
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));

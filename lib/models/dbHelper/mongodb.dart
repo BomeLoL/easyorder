@@ -169,6 +169,28 @@ static Future<void> eliminarProducto(String idRestaurante, int idProducto) async
   }
 }
 
+///Este método es para editar un producto del menú del restaurante
+static Future<void> editarProducto(String idRestaurante, ItemMenu itemMenu) async {
+    try {
+      final menu = await getMenu(idRestaurante);
+      if (menu != null) {
+        // Encontrar el índice del producto a editar
+        int index = menu.itemsMenu.indexWhere((item) => item.id == itemMenu.id);
+        if (index != -1) {
+          // Reemplazar el producto existente con el nuevo
+          menu.itemsMenu[index] = itemMenu;
+          await actualizarMenu(menu);
+        } else {
+          throw Exception('Producto no encontrado en el menú');
+        }
+      } else {
+        throw Exception('Menú no encontrado');
+      }
+    } catch (e) {
+      throw Exception('Error al editar el producto: $e');
+    }
+  }
+
 static Future<Pedido?> consolidarPedidos(String restauranteId, int numeroMesa) async {
   if (db == null || !db.isConnected) {
     await connect();
