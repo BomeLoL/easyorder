@@ -210,8 +210,8 @@ class _MenuState extends State<MenuView> {
   Widget _buildCategoriesSection() {
     return Consumer2<MenuEditController, CategoriesController> (builder: (context, menuController, categoriesController, child){
       print("Building Consumer: ${menuController.menu?.itemsMenu.length} items");
-      if (categoriesController.categories == null || categoriesController.categories!.isEmpty) {
-        return Container(); // Muestra un indicador de carga mientras se obtienen las categorías
+      if (categoriesController.categories == null) {
+        return Container(); 
       }
       categorias.clear();
       categorias.add("Todo");

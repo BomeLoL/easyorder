@@ -69,9 +69,7 @@ class _EditCategoriesState extends State<EditCategories> {
     setState(() {
       productos.clear();
       widget.menu.itemsMenu.forEach((item) {
-        // if (item.categoria.isNotEmpty) {
         productos[item.nombreProducto] = item.categoria == categoriaSelect;
-        // }
       });
     });
   }
