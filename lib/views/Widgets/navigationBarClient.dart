@@ -17,7 +17,6 @@ class BarNavigationClient extends StatefulWidget {
     super.key,
     this.index,
     required this.info,
-    required this.menu,
     required this.restaurante,
     required this.idMesa,
   });
@@ -25,7 +24,6 @@ class BarNavigationClient extends StatefulWidget {
   final index;
   final String info;
   final Restaurante restaurante;
-  final Menu menu;
   final int idMesa;
 
   @override
@@ -103,7 +101,6 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
                   return Factura(
                     info: widget.info,
                     idMesa: widget.idMesa,
-                    menu: widget.menu,
                     restaurante: widget.restaurante,
                   );
                 }),
@@ -163,7 +160,6 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
                     return walletView(
                       idMesa: widget.idMesa,
                       info: widget.info,
-                      menu: widget.menu,
                       restaurante: widget.restaurante,
                     );
                   },

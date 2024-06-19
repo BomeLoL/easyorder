@@ -24,9 +24,11 @@ class Usuario {
       };
 
   static Usuario fromJson(Map<String, dynamic> json) => Usuario(
-        nombre: json['nombre'],
+        nombre: json['nombre'] ,
         usertype: json['usertype'],
-        saldo: json['saldo'],
+        saldo: json['saldo']is double
+        ? json['saldo']
+        : double.parse(json['saldo'].toString()),
         cuenta: json['cuenta'],
         correo: json['correo'],
       );

@@ -263,7 +263,7 @@ String? _validatePassword(String? value) {
                             onPressed: () async {
                               email = await _auth.signinwithGoogle();
                               if (email != null) {
-                                _auth.getUserByEmailAndAccount(email, 'google');
+                                await _auth.getUserByEmailAndAccount(email, 'google');
                                 var y = await _auth.getUserByEmailAndAccount(email, 'google');
                                 if (y == null) {
                                   Navigator.push(

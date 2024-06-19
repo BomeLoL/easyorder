@@ -1,4 +1,5 @@
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
@@ -72,7 +73,7 @@ class QrController {
         }
 
 //        }          
-        navigateToMenu(restaurante, menu, idMesa); //quito el context para intentar arreglar error
+        navigateToMenu(context,restaurante, menu, idMesa); //quito el context para intentar arreglar error
        // }
 
       } else { // no posee la mesa escaneada
@@ -94,31 +95,27 @@ class QrController {
   return 1;
 
 }
-  // void navigateToMenu(BuildContext context, Restaurante restaurante, Menu menu, String idMesa ){
-  //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) { //maybe push 
-  //           return   
-  //           MenuView(info: restaurante.id, restaurante: restaurante,menu: menu, idMesa: int.parse(idMesa));
-  //           },
-  //           settings: const RouteSettings(name: 'menu'),
-  //           ));
-  // } //se comento para ver si funcionaba la solucion de abajo 
+  void navigateToMenu(BuildContext context, Restaurante restaurante, Menu menu, String idMesa ){
+    Future.microtask(() {
+    MenuEditController _menuEditController = Provider.of<MenuEditController>(context, listen: false);
+    
+    // Manejo de errores para asegurarse de que el menú se establece correctamente
+    try {
+      _menuEditController.menu = menu;
+    } catch (e) {
+      print("Error al establecer el menú en MenuEditController: $e");
+      // Manejar el error adecuadamente, por ejemplo, navegando a una pantalla de error o mostrando un mensaje
+      return;
+    }
 
-  void navigateToMenu(Restaurante restaurante, Menu menu, String idMesa) {
-  if (context != null) {
-    Navigator.pushReplacement(
-      context!,
-      MaterialPageRoute(
-        builder: (context) {
-          return MenuView(
-            info: restaurante.id,
-            restaurante: restaurante,
-            menu: menu,
-            idMesa: int.parse(idMesa),
-          );
-        },
-        settings: const RouteSettings(name: 'menu'),
-      ),
-    );
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+            return   
+            MenuView(info: restaurante.id, restaurante: restaurante, idMesa: int.parse(idMesa));
+            },
+            settings: const RouteSettings(name: 'menu'),
+            ));
+    });
+    
   }
 }
-}
+

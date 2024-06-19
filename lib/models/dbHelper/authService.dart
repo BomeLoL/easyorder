@@ -54,7 +54,7 @@ Future<String?> signinwithGoogle() async {
       );
       UserCredential userCredential = await _auth.signInWithCredential(authCredential);
       User? user = userCredential.user;
-      return user?.email;
+        return user?.email;
     }
   } catch (e) {
     print("Error signing in with Google: $e");

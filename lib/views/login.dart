@@ -154,21 +154,17 @@ class _LoginState extends State<Login> {
                               var email = await _auth.signinwithGoogle();
                               if (email != null) {
                                 _auth.getUserByEmailAndAccount(email, 'google');
-                                var y = await _auth.getUserByEmailAndAccount(email, 'google');
-                                if (y == null) {
+                                var getUsuario = await _auth.getUserByEmailAndAccount(email, 'google');
+                                if (getUsuario == null) {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => SignuP2(email: email,)),
                                   );
                                 } else {
                                     UserController userController = Provider.of<UserController>(context, listen: false);
-                                    Usuario? getUsuario = await _auth.getUserByEmailAndAccount(email,'google');
                                     userController.usuario = getUsuario;
 
-                                  Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => Escanear()),
-                                );
+                                  Navigator.pop(context);
                                 }                                    
 
 
