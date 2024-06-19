@@ -59,7 +59,7 @@ class ListorderCard extends ProductCardBase {
   ///Construye los botones de agregar y eliminar una unidad de producto
   Widget _buildQuantityAdjuster(CheckController checkController, itemPedido productoPedido) {
     return Expanded(
-      flex: 8,
+      flex: 5,
       child: Row(
         children: [
           Spacer(flex: 1),
@@ -74,14 +74,23 @@ class ListorderCard extends ProductCardBase {
   Widget _buildProductQuantityText(itemPedido productoPedido) {
     return Expanded(
       flex: 2,
-      child: Text(
-        productoPedido.cantidad.toString(),
-        style: GoogleFonts.poppins(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+      child: Container(
+        decoration: BoxDecoration(
           color: primaryColor,
+          borderRadius: BorderRadius.circular(7)
         ),
-        textAlign: TextAlign.center,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Text(
+            productoPedido.cantidad.toString(),
+            style: GoogleFonts.poppins(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
     );
   }
