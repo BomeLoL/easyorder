@@ -4,7 +4,7 @@ class ItemMenu {
   final String nombreProducto;
   final String descripcion;
   final double precio;
-  final String categoria;
+   String categoria;
   final String imgUrl;
 
   ItemMenu({
@@ -50,7 +50,9 @@ class ItemMenu {
   }
 
   ItemMenu.fromMap(Map<String, dynamic> map)
-      : id = map['id'],
+    : id = map['id'] is int
+        ? map['id']
+        : int.parse(map['id'].toString()),
         nombreProducto = map['nombreProducto'],
         descripcion = map['descripcion'],
         precio = map['precio'],
