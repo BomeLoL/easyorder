@@ -1,5 +1,5 @@
-import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
@@ -73,7 +73,7 @@ class QrController {
         }
 
 //        }          
-        navigateToMenu(context, restaurante, menu, idMesa); //quito el context para intentar arreglar error
+        navigateToMenu(context,restaurante, menu, idMesa); //quito el context para intentar arreglar error
        // }
 
       } else { // no posee la mesa escaneada

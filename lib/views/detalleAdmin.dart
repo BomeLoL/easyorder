@@ -1,6 +1,7 @@
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:easyorder/models/dbHelper/firebase_service.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _detalleAdminState extends State<detalleAdmin> {
   late TextController textController;
   final _formKey = GlobalKey<FormState>();
   late MenuEditController menuEditController;
+  final _firebaseService = FirebaseService();
 
   String? _selectedCategory;
   bool _categoryValid = true;
@@ -314,7 +316,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                     _imageSelected) {
                       // Obtener el texto del campo
                       String precioTexto = textController.getText('precio');
-
+                      String? imageURL = await _firebaseService.uploadImage(_image!);
                       // Reemplazar comas por puntos
                       precioTexto = precioTexto.replaceAll(',', '.');
                       final itemMenu = ItemMenu(
@@ -323,7 +325,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                       descripcion: textController.getText('descripcion'),
                       precio: double.parse(precioTexto),
                       categoria: _selectedCategory!,
-                      imgUrl: 'https://upload.wikimedia.org/wikipedia/en/f/fd/Logo_of_Stardew_Valley.png',
+                      imgUrl: imageURL!,
                     );
                     try {
                       await menuEditController.addProduct(widget.idRestaurante, itemMenu);
