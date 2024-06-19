@@ -67,10 +67,12 @@ Future<String?> signinwithGoogle() async {
     required String nombre,
     required String correo,
     required String usertype,
+    required String id, 
   }) async {
     double saldo = 0;
     final newUser = _fs.collection('users').doc(correo+","+cuenta);
     final json = {
+      'id':id,
       'cuenta': cuenta,
       'nombre': nombre,
       'correo': correo,
