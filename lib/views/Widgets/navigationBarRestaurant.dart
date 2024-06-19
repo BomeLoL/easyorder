@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/restaurante_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
@@ -40,10 +41,10 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer4<CartController, NavController, CheckController,
-        UserController>(
+    return Consumer5<CartController, NavController, CheckController,
+        UserController, RestauranteController>(
       builder: (context, cartController, navController, checkController,
-          userController, child) {
+          userController, restauranteController, child) {
         return BottomNavigationBar(
           elevation: 0,
           backgroundColor: Colors.white,
@@ -85,6 +86,7 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
           ],
           currentIndex: navController.selectedIndex,
           onTap: (int clickedIndex) async {
+            print("AAAAAAAAAAAAAAAAAAAAAAAA ${clickedIndex}");
             if (clickedIndex == 0) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
@@ -93,17 +95,13 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
                 return route.settings.name == 'menu';
               });
             } else if (clickedIndex == 1) {
+              print("AAAAAAAAAAAAAAAAA");
               setState(() {
                 navController.selectedIndex = clickedIndex;
-                Navigator.of(context).popUntil((route) {
-                  return route.settings.name == 'menu';
-                });
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return Vistamesas(
-                    restaurante: widget.restaurante,
-                  );
-                }));
               });
+
+              restauranteController.getMesas(context);
+              // aqui va lo de gestionar mesas
             } else if (clickedIndex == 2) {
               setState(() {
                 navController.selectedIndex = clickedIndex;

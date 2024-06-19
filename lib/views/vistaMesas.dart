@@ -1,5 +1,5 @@
-import 'package:easyorder/controllers/restaurant_controller.dart';
-import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/controllers/restaurante_controller.dart';
+import 'package:easyorder/models/clases/mesa.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/registro_mesa.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,163 +8,161 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class Vistamesas extends StatefulWidget {
-  const Vistamesas({super.key, required this.restaurante});
-  final Restaurante restaurante;
+  const Vistamesas({super.key, required this.mesa});
 
+  final List<Mesa> mesa;
   @override
   State<Vistamesas> createState() => _VistamesasState();
 }
 
 class _VistamesasState extends State<Vistamesas> {
   bool confirmation = false;
-  List<Map<String, dynamic>> mesa = [
-    {'id': 1, 'pedidos': []},
-    {'id': 2, 'pedidos': []},
-    {'id': 3, 'pedidos': []},
-    {'id': 4, 'pedidos': []},
-    {'id': 5, 'pedidos': []},
-    {'id': 6, 'pedidos': []},
-    {'id': 7, 'pedidos': []},
-    {'id': 8, 'pedidos': []},
-    {'id': 9, 'pedidos': []},
-    {'id': 10, 'pedidos': []},
-    {'id': 11, 'pedidos': []},
-  ];
+  late RestauranteController restauranteController;
+
+  @override
+  void initState() {
+    super.initState();
+    restauranteController =
+        Provider.of<RestauranteController>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
-    //return Consumer<RestaurantController>(
-    //    builder: (context, RestaurantController, child) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Color.fromARGB(0, 255, 255, 255),
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        centerTitle: true,
-        title: Text(
-          "Mesas registradas",
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-              child: Padding(
-            padding: const EdgeInsets.only(
-              top: 16,
-              right: 16,
-              left: 16,
+    return Consumer<RestauranteController>(
+      builder: (context, restauranteController, child) {
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            backgroundColor: Color.fromARGB(0, 255, 255, 255),
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            centerTitle: true,
+            title: Text(
+              "Mesas registradas",
+              style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
             ),
-            child: Align(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  SizedBox(
-                      height: kToolbarHeight +
-                          MediaQuery.of(context).size.height * 0.07),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.55,
-                      child: ListView(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        scrollDirection: Axis.vertical,
-                        children: mesa.map((mesa) {
-                          return Column(
-                            children: [
-                              OutlinedButton(
-                                onPressed: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return RegistroMesa(
-                                      idMesa: mesa['id'],
-                                      idRestaurante: "1",
-                                    );
-                                  }));
-                                },
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "Mesa ${mesa['id']}",
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                  child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 16,
+                  right: 16,
+                  left: 16,
+                ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                          height: kToolbarHeight +
+                              MediaQuery.of(context).size.height * 0.07),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.55,
+                          child: ListView(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.zero,
+                            scrollDirection: Axis.vertical,
+                            children: widget.mesa.map((mesa) {
+                              return Column(
+                                children: [
+                                  OutlinedButton(
+                                    onPressed: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return RegistroMesa(
+                                          idMesa: mesa.id,
+                                          idRestaurante: int.parse(
+                                              restauranteController
+                                                  .restaurante!.id),
+                                        );
+                                      }));
+                                    },
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Mesa ${mesa.id}",
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                        ),
+                                        textAlign: TextAlign.start,
+                                      ),
                                     ),
-                                    textAlign: TextAlign.start,
+                                    style: OutlinedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: Colors.black,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      minimumSize: Size(300, 50),
+                                      side: BorderSide(
+                                          color: Color(0xFFFF5F04), width: 2),
+                                    ),
                                   ),
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: Colors.black,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                  SizedBox(
+                                    height: 15,
                                   ),
-                                  minimumSize: Size(300, 50),
-                                  side: BorderSide(
-                                      color: Color(0xFFFF5F04), width: 2),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                            ],
-                          );
-                        }).toList(),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+              )),
+              ElevatedButton(
+                onPressed: () {
+                  _showConfirmationDialog(context);
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          )),
-          ElevatedButton(
-            onPressed: () {
-              _showConfirmationDialog(context);
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+                    side: BorderSide(
+                      color: Color(0xFFFF5F04),
+                    ),
+                    minimumSize: Size(320, 50)),
+                child: Text(
+                  "Eliminar mesa",
+                  style: GoogleFonts.poppins(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFFF5F04)),
                 ),
-                side: BorderSide(
-                  color: Color(0xFFFF5F04),
-                ),
-                minimumSize: Size(320, 50)),
-            child: Text(
-              "Eliminar mesa",
-              style: GoogleFonts.poppins(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFFF5F04)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 25, bottom: 40),
-            child: ElevatedButton(
-              onPressed: () {
-                mesa.add({'id': mesa.length + 1, 'pedidos': []});
-              }, //ayuda de kevin para conectar con BD
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFFF5F04),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  minimumSize: Size(320, 50)),
-              child: Text(
-                "Registrar mesa",
-                style: GoogleFonts.poppins(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(top: 25, bottom: 40),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // widget.mesa.add({'id': widget.mesa.length + 1, 'pedidos': []});
+                  }, //ayuda de kevin para conectar con BD
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFFF5F04),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      minimumSize: Size(320, 50)),
+                  child: Text(
+                    "Registrar mesa",
+                    style: GoogleFonts.poppins(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
     //});
   }
@@ -185,10 +183,7 @@ class _VistamesasState extends State<Vistamesas> {
             children: [
               TextButton(
                 onPressed: () {
-                  setState(() {
-                    confirmation = false;
-                    print(mesa.length);
-                  });
+                  setState(() {});
                   Navigator.pop(context);
                 },
                 style: TextButton.styleFrom(
@@ -205,7 +200,9 @@ class _VistamesasState extends State<Vistamesas> {
                 onPressed: () {
                   setState(() {
                     confirmation = true;
-                    mesa.removeLast();
+                    widget.mesa.removeLast();
+                    restauranteController.deleteMesa(
+                        widget.mesa, restauranteController.restaurante!);
                   });
                   Navigator.pop(context);
                 },

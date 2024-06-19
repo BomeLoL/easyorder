@@ -1,4 +1,5 @@
 import 'package:easyorder/controllers/menu_edit_controller.dart';
+import 'package:easyorder/controllers/restaurante_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/menu.dart';
@@ -10,8 +11,12 @@ class NavigateController {
     Future.microtask(() {
       MenuEditController _menuEditController = Provider.of<MenuEditController>(context, listen: false);
 
+
+      RestauranteController _restauranteController = Provider.of<RestauranteController>(context, listen: false);
+
       // Manejo de errores para asegurarse de que el menú se establece correctamente
       try {
+        _restauranteController.restaurante=restaurante;
         _menuEditController.menu = menu;
       } catch (e) {
         print("Error al establecer el menú en MenuEditController: $e");

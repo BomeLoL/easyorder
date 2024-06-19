@@ -1,6 +1,7 @@
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/restaurante_controller.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/firebase_options.dart';
@@ -61,6 +62,9 @@ class MyApp extends StatelessWidget {
         }),
         ChangeNotifierProvider(create: (context) {
           return MenuEditController();
+        }),
+        ChangeNotifierProvider(create: (context) {
+          return RestauranteController();
         }),
         ChangeNotifierProvider(
           create: (context) => TextController(),
