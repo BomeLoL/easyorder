@@ -1,9 +1,11 @@
 import 'dart:ui';
 
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/models/dbHelper/authService.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
@@ -34,13 +36,20 @@ class Factura extends StatefulWidget {
 }
 
 class _detalleFacturaState extends State<Factura> {
-  bool funciona = false;
   bool confirmation = false;
+  bool paypal = false;
   bool shouldPop = true;
+  double saldo = 0; 
+  final _auth = Authservice();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    UserController userController =
+        Provider.of<UserController>(context, listen: false);
+    if (userController.usuario?.saldo != null) {
+      saldo = userController.usuario!.saldo;
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -228,23 +237,85 @@ class _detalleFacturaState extends State<Factura> {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () async {
-                              CartController cartController = Provider.of<CartController>(context, listen: false);
-                              final tester = await MongoDatabase.Test();
-                              if (tester == false){
-                              // ignore: use_build_context_synchronously
-                              dbErrorDialog(context);
-                              }
-                              else{
-                                await _showConfirmationDialog(context);
-                                if (confirmation == true) {
-                                    await MongoDatabase.vaciarPedidosDeMesa(widget.restaurante.id, widget.idMesa);
-                                    cartController.haPedido = false;
-                                    Navigator.of(context).popUntil((route) {
-                                      return route.settings.name == 'menu';
-                                    });
-                                  }                                   
-                              }
-                              },
+                                  CartController cartController =
+                                      Provider.of<CartController>(context,
+                                          listen: false);
+                                  final tester = await MongoDatabase.Test();
+                                  if (tester == false) {
+                                    // ignore: use_build_context_synchronously
+                                    dbErrorDialog(context);
+                                  } else {
+                                    if (userController.usuario!=null){
+                                    await _showOptionDialog(context);
+                                    if (paypal == true) {
+                                      await _showConfirmationDialog(context);
+                                      //Si quiere pagar por paypal y tiene saldo suficiente
+                                      if (confirmation == true &&
+                                          saldo >
+                                              checkcontroller
+                                                  .getTotalAmount()) {
+                                        //Modifica la cantidad de saldo
+                                        saldo = saldo -
+                                            checkcontroller.getTotalAmount();
+                                        //Lo cambia en la BD
+                                        if (userController.usuario != null) {
+                                          userController.usuario!.saldo = saldo;
+                                          _auth.updateUser(
+                                              userController.usuario!);
+                                        }
+                                        if (userController.usuario != null) {
+                                          var updateChangesUser = await _auth
+                                              .getUserByEmailAndAccount(
+                                            userController.usuario!.correo,
+                                            userController.usuario!.cuenta,
+                                          );
+                                          userController.usuario =
+                                              updateChangesUser;
+                                        }
+                                        await MongoDatabase.vaciarPedidosDeMesa(
+                                            widget.restaurante.id,
+                                            widget.idMesa);
+                                        cartController.haPedido = false;
+                                        Navigator.of(context).popUntil((route) {
+                                          return route.settings.name == 'menu';
+                                        });
+                                        Navigator.pop(context);
+                                      } else if (confirmation == true &&
+                                          saldo <
+                                              checkcontroller
+                                                  .getTotalAmount()) {
+                                        //Si quiere pagar por paypal y tiene saldo insuficiente
+                                        _showAlertDialog(context);
+                                      }
+                                    } else {
+                                      //No quiso pagar por paypal
+                                      await _showConfirmationDialog(context);
+                                      if (confirmation == true) {
+                                        await MongoDatabase.vaciarPedidosDeMesa(
+                                            widget.restaurante.id,
+                                            widget.idMesa);
+                                        cartController.haPedido = false;
+                                        Navigator.of(context).popUntil((route) {
+                                          return route.settings.name == 'menu';
+                                        });
+                                        Navigator.pop(context);
+                                      }
+                                    }
+                                  } else{
+                                      await _showConfirmationDialogWithoutAccount(context);
+                                      if (confirmation == true) {
+                                        await MongoDatabase.vaciarPedidosDeMesa(
+                                            widget.restaurante.id,
+                                            widget.idMesa);
+                                        cartController.haPedido = false;
+                                        Navigator.of(context).popUntil((route) {
+                                          return route.settings.name == 'menu';
+                                        });
+                                        Navigator.pop(context);
+                                      }
+                                  }
+                                  } 
+                                },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
@@ -252,7 +323,7 @@ class _detalleFacturaState extends State<Factura> {
                                 ),
                               ),
                               child: Text(
-                                'Pedir Cuenta',
+                                'Realizar pago',
                                 style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -276,6 +347,9 @@ class _detalleFacturaState extends State<Factura> {
     );
   }
 
+
+
+
   //Esta función muestra el mensaje de error de cuando la orden falla
   void _showAlertDialog(BuildContext context) {
     showDialog(
@@ -285,14 +359,12 @@ class _detalleFacturaState extends State<Factura> {
         return AlertDialog(
           backgroundColor: Colors.white,
           title: Text(
-            'Error',
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.bold
-            ),
+            'Fondos Insuficientes',
+            style:
+                GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           content: Text(
-            'Hubo un error inesperado procesando tu orden, por favor, inténtelo de nuevo',
+            'No hay fondos en su cuenta para realizar este pago',
           ),
           actions: [
             TextButton(
@@ -315,8 +387,132 @@ class _detalleFacturaState extends State<Factura> {
     );
   }
 
+  Future<void> _showOptionDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text(
+            '¿Cómo desea pagar?',
+            style:
+                GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'Escoja la forma en la que desea pagar',
+            textAlign: TextAlign.justify,
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      paypal = false;
+                    });
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7))),
+                  child: Text(
+                    'Efectivo',
+                    style: GoogleFonts.poppins(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      paypal = true;
+                    });
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7))),
+                  child: Text(
+                    'Billetera virtual',
+                    style: GoogleFonts.poppins(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-Future<void> _showConfirmationDialog(BuildContext context) {
+
+
+  Future<void> _showConfirmationDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text(
+            '¿Terminar su estadía?',
+            style:
+                GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'Desea procesar su pago?',
+            textAlign: TextAlign.justify,
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      confirmation = false;
+                    });
+                    Navigator.pop(context);
+                  },
+                  style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7))),
+                  child: Text(
+                    'Cancelar',
+                    style: GoogleFonts.poppins(
+                        color: primaryColor, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      confirmation = true;
+                    });
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7))),
+                  child: Text(
+                    'Confirmar',
+                    style: GoogleFonts.poppins(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+Future<void> _showConfirmationDialogWithoutAccount(BuildContext context) {
   return showDialog<void>(
     context: context,
     barrierDismissible: false,
@@ -375,6 +571,5 @@ Future<void> _showConfirmationDialog(BuildContext context) {
     },
   );
 }
-
 
 }

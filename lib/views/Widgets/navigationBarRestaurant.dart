@@ -62,7 +62,7 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
                 size: 45.0,
                 color: Color.fromRGBO(255, 95, 4, 1),
               ),
-              label: "Gestión de Menu",
+              label: "Menu",
             ),
             BottomNavigationBarItem(
               icon: Icon(
@@ -70,7 +70,7 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
                 size: 45.0,
                 color: Color.fromRGBO(255, 95, 4, 1),
               ),
-              label: "Gestión de Mesas",
+              label: "Mesas",
             ),
             BottomNavigationBarItem(
               icon: Icon(
