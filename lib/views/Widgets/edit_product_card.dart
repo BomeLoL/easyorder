@@ -5,9 +5,11 @@ import 'package:easyorder/views/detalleAdmin.dart';
 import 'package:flutter/material.dart';
 
 class EditProductCard extends ProductCardBase {
-  EditProductCard({
+  final String idRestaurante;
+  EditProductCard( {
     required ItemMenu producto,
     required String info,
+    required this.idRestaurante,
   }) : super(
           producto: producto,
           info: info,
@@ -23,6 +25,7 @@ class EditProductCard extends ProductCardBase {
               flex: 4,
               child: IconButton(
                 onPressed: () {
+                  navigateToDetalleProducto(context);
                 },
                 icon: Icon(
                   Icons.edit,
@@ -56,5 +59,16 @@ class EditProductCard extends ProductCardBase {
   }
 
   @override
-  void navigateToDetalleProducto(BuildContext context) {}
+  void navigateToDetalleProducto(BuildContext context) {
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => detalleAdmin(
+          producto: producto,
+          idRestaurante: idRestaurante,
+        ),
+      ),
+    );
+  }
 }

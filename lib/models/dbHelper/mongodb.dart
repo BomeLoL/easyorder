@@ -126,10 +126,30 @@ import 'package:easyorder/models/clases/menu.dart';
       await coleccion_menu.deleteOne({"idRestaurante": menu.idRestaurante});
     }
 
-    static void agregarPedidoARestaurante(Restaurante restaurante, int idMesa, Pedido nuevoPedido) {
-      Mesa? mesaEncontrada = restaurante.mesas.firstWhere((mesa) => mesa.id == idMesa);
-      mesaEncontrada.pedidos.add(nuevoPedido);  
-    }
+  static void agregarPedidoARestaurante(Restaurante restaurante, int idMesa, Pedido nuevoPedido) {
+    Mesa? mesaEncontrada = restaurante.mesas.firstWhere((mesa) => mesa.id == idMesa);
+    mesaEncontrada.pedidos.add(nuevoPedido);  
+  }
+
+  ///Agrega un producto nuevo al menú del restaurante
+  static Future<void> agregarProducto(String idRestaurante, ItemMenu itemMenu) async {
+  try {
+    final menu = await getMenu(idRestaurante);
+    if (menu != null) {
+      // Verificar si el producto ya existe en el menú
+      bool productoExistente = menu.itemsMenu.any((item) => item.id == itemMenu.id);
+      if (productoExistente) {
+        throw Exception('El producto ya existe en el menú');
+      }
+
+      // Si el producto no existe, agregarlo al menú
+      menu.itemsMenu.add(itemMenu);
+      await actualizarMenu(menu);
+    } 
+  } catch (e) {
+    throw Exception('Error al agregar el producto: $e');
+  }
+}
 
 static Future<Pedido?> consolidarPedidos(String restauranteId, int numeroMesa) async {
   if (db == null || !db.isConnected) {
@@ -217,26 +237,6 @@ static Future<Pedido?> consolidarPedidos(String restauranteId, int numeroMesa) a
 
   // ... otros métodos de la clase
 
-
-  ///Agrega un producto nuevo al menú del restaurante
-  static Future<void> agregarProducto(String idRestaurante, ItemMenu itemMenu) async {
-  try {
-    final menu = await getMenu(idRestaurante);
-    if (menu != null) {
-      // Verificar si el producto ya existe en el menú
-      bool productoExistente = menu.itemsMenu.any((item) => item.id == itemMenu.id);
-      if (productoExistente) {
-        throw Exception('El producto ya existe en el menú');
-      }
-
-      // Si el producto no existe, agregarlo al menú
-      menu.itemsMenu.add(itemMenu);
-      await actualizarMenu(menu);
-    } 
-  } catch (e) {
-    throw Exception('Error al agregar el producto: $e');
-  }
-}
 
 static Future<List<String>> getCategorias(String idRestaurante) async {
   try {

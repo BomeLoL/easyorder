@@ -17,7 +17,6 @@ import 'package:easyorder/views/detallePedido.dart';
 import 'package:easyorder/views/edit_categories.dart';
 import 'package:easyorder/views/vistaQr.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
@@ -203,10 +202,7 @@ class _MenuState extends State<MenuView> {
       } else {
         return Text(
        "Menú del Restaurante",
-       style: GoogleFonts.poppins(
-         fontSize: 25,
-         fontWeight: FontWeight.bold,
-       ),
+       style: titleStyle
      );
       }    
   });}
@@ -278,7 +274,8 @@ class _MenuState extends State<MenuView> {
                   ? EditProductCard(
                       producto:
                           menuController.menu!.itemsMenu[index],
-                      info: nombreRes)
+                      info: nombreRes,
+                      idRestaurante: widget.restaurante.id,)
                   : MenuCard(
                       producto:
                           menuController.menu!.itemsMenu[index],

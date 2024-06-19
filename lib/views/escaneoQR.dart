@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/login.dart';

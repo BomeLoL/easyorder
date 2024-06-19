@@ -1,7 +1,9 @@
 import 'package:easyorder/controllers/navigate_controller.dart';
+import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/usuario.dart';
 import 'package:easyorder/models/dbHelper/authService.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/connectWith.dart';
 import 'package:easyorder/views/Widgets/customTextField.dart';
@@ -107,13 +109,11 @@ class _LoginState extends State<Login> {
                                 textController.getController('password').text
                               );
                               if (result != null) {
-
+                                Provider.of<SpinnerController>(context, listen: false).setLoading(true);
                                  UserController userController = Provider.of<UserController>(context, listen: false);
-
+                                
                                 Usuario? getUsuario = await _auth.getUserByEmailAndAccount(textController.getController('email').text,'correo');
                                 userController.usuario = getUsuario;
-                                
-
                                 cerrarTeclado(context);
                                 if (userController.usuario?.usertype == "Restaurante"){
                                       var restaurante = await MongoDatabase.getRestaurante(userController.usuario!.id);
@@ -123,8 +123,10 @@ class _LoginState extends State<Login> {
                                 }else{
 
                                 Navigator.pop(context);}
+                                Provider.of<SpinnerController>(context, listen: false).setLoading(false);
                               } else {
                                 errorLogin(context);
+                                Provider.of<SpinnerController>(context, listen: false).setLoading(false);
                               }
                             },
 
@@ -160,8 +162,9 @@ class _LoginState extends State<Login> {
                           IconDisplayButton(
                             iconPath: "images/googleIcon.png",
                             text: "Iniciar sesión con Google",
-                            onPressed: () async {
-                              var email = await _auth.signinwithGoogle();
+                            onPressed: () async {  
+                              Provider.of<SpinnerController>(context, listen: false).setLoading(true);                            
+                              var email = await _auth.signinwithGoogle();                              
                               if (email != null) {
                                 _auth.getUserByEmailAndAccount(email, 'google');
                                 var getUsuario = await _auth.getUserByEmailAndAccount(email, 'google');
@@ -193,6 +196,7 @@ class _LoginState extends State<Login> {
 
 
                               }
+                              Provider.of<SpinnerController>(context, listen: false).setLoading(false);
                             },
                           ),
                         ],
@@ -230,6 +234,31 @@ class _LoginState extends State<Login> {
                   ),
                 ],
               ),
+              Consumer<SpinnerController>(builder: (context, spinnerController, child){
+                if(spinnerController.isLoading){
+                  return AbsorbPointer(
+                    absorbing: true,
+                    child: Container(
+                      child: Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 238, 228, 221),  // Color de fondo del contenedor
+                            borderRadius: BorderRadius.circular(10),  // Radio de los bordes
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: CircularProgressIndicator(
+                              color: primaryColor,
+                            ),
+                          ),
+                        ),
+                        ),
+                    ),
+                  );
+                }else{
+                  return Container();
+                }
+              })
             ],
           ),
         ),

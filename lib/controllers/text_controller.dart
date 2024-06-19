@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class TextController with ChangeNotifier {
   final Map<String, TextEditingController> _controllers = {};
 
-  TextEditingController getController(String key) {
+  TextEditingController getController(String key, {String? savedValue}) {
+    String textValue = savedValue ?? '';
     if (!_controllers.containsKey(key)) {
-      _controllers[key] = TextEditingController();
+      _controllers[key] = TextEditingController.fromValue(TextEditingValue(text: textValue));
     }
     return _controllers[key]!;
   }

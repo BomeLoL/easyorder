@@ -49,9 +49,7 @@ class ItemMenu {
   }
 
   ItemMenu.fromMap(Map<String, dynamic> map)
-    : id = map['id'] is int
-        ? map['id']
-        : int.parse(map['id'].toString()),
+      : id = map['id']is int ? map['id'] : int.parse(map['id'].toString()),
         nombreProducto = map['nombreProducto'],
         descripcion = map['descripcion'],
         precio = map['precio'],

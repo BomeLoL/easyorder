@@ -1,6 +1,7 @@
 import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/models/clases/itemPedido.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/views/Widgets/product_card_base.dart';
 import 'package:easyorder/views/detalleProducto.dart';
 import 'package:flutter/material.dart';
@@ -22,17 +23,6 @@ class ListorderCard extends ProductCardBase {
   
   @override
   void navigateToDetalleProducto(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => detalleProducto(
-          info: info,
-          producto: producto,
-          isPedido: isPedido,
-          comment: comment,
-        ),
-      ),
-    );
   }
 
   @override
@@ -69,7 +59,7 @@ class ListorderCard extends ProductCardBase {
   ///Construye los botones de agregar y eliminar una unidad de producto
   Widget _buildQuantityAdjuster(CheckController checkController, itemPedido productoPedido) {
     return Expanded(
-      flex: 8,
+      flex: 5,
       child: Row(
         children: [
           Spacer(flex: 1),
@@ -84,10 +74,23 @@ class ListorderCard extends ProductCardBase {
   Widget _buildProductQuantityText(itemPedido productoPedido) {
     return Expanded(
       flex: 2,
-      child: Text(
-        productoPedido.cantidad.toString(),
-        style: GoogleFonts.poppins(),
-        textAlign: TextAlign.center,
+      child: Container(
+        decoration: BoxDecoration(
+          color: primaryColor,
+          borderRadius: BorderRadius.circular(7)
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Text(
+            productoPedido.cantidad.toString(),
+            style: GoogleFonts.poppins(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
     );
   }
