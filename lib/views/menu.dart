@@ -111,7 +111,7 @@ class _MenuState extends State<MenuView> {
         return BarNavigationClientLogged(idMesa: widget.idMesa, info: widget.info, restaurante: widget.restaurante);
           }
           else if (userController.usuario?.usertype == "Restaurante"){
-        return BarNavigationRestaurant(idMesa: widget.idMesa, info: widget.info, restaurante: widget.restaurante);
+        return BarNavigationRestaurant();
 
           }
         }

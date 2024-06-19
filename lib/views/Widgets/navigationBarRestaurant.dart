@@ -19,15 +19,9 @@ class BarNavigationRestaurant extends StatefulWidget {
   const BarNavigationRestaurant({
     super.key,
     this.index,
-    required this.info,
-    required this.restaurante,
-    required this.idMesa,
   });
 
   final index;
-  final String info;
-  final Restaurante restaurante;
-  final int idMesa;
 
   @override
   State<BarNavigationRestaurant> createState() => _NavigationbarClientState();
@@ -84,7 +78,6 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
           ],
           currentIndex: navController.selectedIndex,
           onTap: (int clickedIndex) async {
-            print("AAAAAAAAAAAAAAAAAAAAAAAA ${clickedIndex}");
             if (clickedIndex == 0) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
@@ -93,7 +86,6 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
                 return route.settings.name == 'menu';
               });
             } else if (clickedIndex == 1) {
-              print("AAAAAAAAAAAAAAAAA");
               setState(() {
                 navController.selectedIndex = clickedIndex;
               });
@@ -108,7 +100,7 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
                 return route.settings.name == 'menu';
               });
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ProfileView(idMesa: widget.idMesa, info: widget.info,restaurante: widget.restaurante,);
+                return ProfileView();
               }));});
 
 
