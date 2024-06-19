@@ -1,5 +1,8 @@
+import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:easyorder/models/dbHelper/firebase_service.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,9 +12,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class detalleAdmin extends StatefulWidget {
-  const detalleAdmin({super.key, required this.info, this.producto});
-  final String info;
+  const detalleAdmin({super.key, this.producto, required this.idRestaurante});
   final ItemMenu? producto;
+  final String idRestaurante;
 
   @override
   State<detalleAdmin> createState() => _detalleAdminState();
@@ -20,6 +23,8 @@ class detalleAdmin extends StatefulWidget {
 class _detalleAdminState extends State<detalleAdmin> {
   late TextController textController;
   final _formKey = GlobalKey<FormState>();
+  late MenuEditController menuEditController;
+  final _firebaseService = FirebaseService();
 
   String? _selectedCategory;
   bool _categoryValid = true;
@@ -29,13 +34,14 @@ class _detalleAdminState extends State<detalleAdmin> {
   void initState() {
     super.initState();
     textController = Provider.of<TextController>(context, listen: false);
+    menuEditController = Provider.of<MenuEditController>(context, listen: false);
   }
 
   @override
   void dispose() {
-    textController.clearText('NameField');
-    textController.clearText('PriceField');
-    textController.clearText('DescriptionField');
+    textController.clearText('nombre');
+    textController.clearText('precio');
+    textController.clearText('descripcion');
     super.dispose();
   }
 
@@ -221,7 +227,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                                               savedValue:
                                                   widget.producto!.nombreProducto)
                                           : textController
-                                              .getController('NameField'),
+                                              .getController('nombre'),
                                       hintText: 'Ej. Hamburguesa Clásica',
                                       validator:
                                           'Por favor, ingresa el nombre del producto',
@@ -244,7 +250,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                                               savedValue: widget.producto!.precio
                                                   .toString())
                                           : textController
-                                              .getController('PriceField'),
+                                              .getController('precio'),
                                       hintText: 'Ej. 12',
                                       keyboardType: TextInputType.number,
                                       validator: 'Por favor, ingresa el precio',
@@ -269,7 +275,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                                               savedValue:
                                                   widget.producto!.descripcion)
                                           : textController
-                                              .getController('DescriptionField'),
+                                              .getController('descripcion'),
                                       hintText:
                                           'Ej. Pan brioche, 200g de carne, lechuga, tomate, queso amarillo...',
                                       validator:
@@ -377,7 +383,28 @@ class _detalleAdminState extends State<detalleAdmin> {
                 if (_formKey.currentState!.validate() &&
                     _categoryValid &&
                     _imageSelected) {
-                  return;
+                      // Obtener el texto del campo
+                      String precioTexto = textController.getText('precio');
+                      String nombre = textController.getText('nombre').trim();
+                      String? imageURL = await _firebaseService.uploadImage(_image!);
+                      // Reemplazar comas por puntos
+                      precioTexto = precioTexto.replaceAll(',', '.');
+                      final itemMenu = ItemMenu(
+                      id: DateTime.now().millisecondsSinceEpoch, 
+                      nombreProducto: nombre,
+                      descripcion: textController.getText('descripcion'),
+                      precio: double.parse(precioTexto),
+                      categoria: _selectedCategory!,
+                      imgUrl: imageURL!,
+                    );
+                    try {
+                      await menuEditController.addProduct(widget.idRestaurante, itemMenu);
+                      
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+                    }
+                    Navigator.pop(context);
+
                 }
               },
               style: ElevatedButton.styleFrom(

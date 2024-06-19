@@ -5,9 +5,11 @@ import 'package:easyorder/views/detalleAdmin.dart';
 import 'package:flutter/material.dart';
 
 class EditProductCard extends ProductCardBase {
-  EditProductCard({
+  final String idRestaurante;
+  EditProductCard( {
     required ItemMenu producto,
     required String info,
+    required this.idRestaurante,
   }) : super(
           producto: producto,
           info: info,
@@ -63,8 +65,8 @@ class EditProductCard extends ProductCardBase {
       context,
       MaterialPageRoute(
         builder: (context) => detalleAdmin(
-          info: info,
-          producto: producto
+          producto: producto,
+          idRestaurante: idRestaurante,
         ),
       ),
     );

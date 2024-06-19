@@ -17,9 +17,15 @@ class _BarcodeScannerWithOverlayState extends State<BarcodeScannerWithOverlay> {
   final MobileScannerController controller = MobileScannerController(
     formats: const [BarcodeFormat.qrCode],
   );
-
+  bool isWidgetMounted = false;
   int tipo=0;
   QrController qrController = QrController();
+    @override
+  void initState() {
+    super.initState();
+    isWidgetMounted = true;
+  }
+
  @override
 Widget build(BuildContext context) {
   
@@ -59,17 +65,26 @@ Widget build(BuildContext context) {
               );
             },
             onDetect: (barcode)async{
-              if(barcode.barcodes.isNotEmpty){
+              if(barcode.barcodes.isNotEmpty && isWidgetMounted){
                 // bool continuar;
                 int continuarOerror = await qrController.revisarBd(barcode.barcodes, context);
-                if (continuarOerror == 1) {
+                // if (continuarOerror == 1) { //esto comentado por ahora, si aparece un error a futuro se descomenta 
+                //   setState(() {
+                //     tipo=1;
+                //   });
+                // }else if (continuarOerror == 2) {
+                //   setState(() {
+                //     tipo=2;
+                //   }); }
+                 if (isWidgetMounted) { //al hacer debug salian excepciones aqui, puse esto para ver si se evitaba, si causa problemas o no funciona se puede borrar y se descomenta lo de arriba
                   setState(() {
-                    tipo=1;
+                    if (continuarOerror == 1) {
+                      tipo = 1;
+                    } else if (continuarOerror == 2) {
+                      tipo = 2;
+                    }
                   });
-                }else if (continuarOerror == 2) {
-                  setState(() {
-                    tipo=2;
-                  }); }
+                }
                 barcode.barcodes.removeAt(0);
               }
             },
@@ -95,6 +110,7 @@ Widget build(BuildContext context) {
 
   @override
   Future<void> dispose() async {
+    isWidgetMounted = false;
     super.dispose();
     await controller.dispose();
   }

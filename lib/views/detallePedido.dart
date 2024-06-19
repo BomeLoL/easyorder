@@ -1,4 +1,4 @@
-import 'package:easyorder/controllers/cart_controller.dart';
+import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
@@ -17,12 +17,10 @@ class detallePedido extends StatefulWidget {
   const detallePedido(
       {super.key,
       required this.info,
-      required this.menu,
       required this.restaurante, required this.idMesa});
       
   final String info;
   final Restaurante restaurante;
-  final Menu menu;
   final int idMesa;
 
   @override
@@ -294,7 +292,9 @@ Future<void> _showConfirmationDialog(BuildContext context) {
                             if (verificador == true) {
                               shouldPop = false;
                               CartController cartController = Provider.of<CartController>(context, listen: false);
+                              CheckController checkController = Provider.of<CheckController>(context, listen: false);
                               Pedido pedidoVacio = Pedido(productos: []);
+                              checkController.pedido = cartController.pedido;
                               cartController.pedido = pedidoVacio;
                               Navigator.pop(context, true);
                               Navigator.of(context).push(

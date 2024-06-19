@@ -1,4 +1,6 @@
-import 'package:easyorder/controllers/cart_controller.dart';
+import 'package:easyorder/controllers/navigate_controller.dart';
+import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
@@ -10,8 +12,11 @@ import 'package:provider/provider.dart';
 
 class QrController {
 
+  BuildContext? context; //nuevo para intentar arreglar un error que salia en el debug, el error solo aparece como excepcion en el debud
+
   Future<int> revisarBd(barcode, context) async {
   String infoQr = barcode.first.displayValue;
+  this.context = context; //nuevo para intentar arreglar un error que salia en el debug
 
   try {
     bool? tester = await MongoDatabase.Test();
@@ -42,7 +47,7 @@ class QrController {
       if (existeMesa) { // el restaurante si posee la mesa escaneada
        // if (restaurante.mesa[idMesa].pedidos.length==0) {//la mesa no esta ocupada, se va al menu normal      
        // Obtener la instancia de CartController
-      CartController cartController = Provider.of<CartController>(context, listen: false);
+      
 //        bool exist = true;
 // Llamar al setter pedido para establecer el nuevo pedido
 //        try{
@@ -52,10 +57,24 @@ class QrController {
 //        Pedido nuevoPedido = restaurante.mesas[j].pedidos[0];
 //        cartController.pedido = nuevoPedido;}
 //        else{
+        CartController cartController = Provider.of<CartController>(context, listen: false);
         Pedido pedidoVacio = Pedido(productos: []);
         cartController.pedido = pedidoVacio;
+
+        CheckController checkController = Provider.of<CheckController>(context, listen: false);
+        Pedido? pedido = await MongoDatabase.consolidarPedidos(idRestaurante, int.parse(idMesa));
+
+        if (pedido!= null){
+          if (pedido.productos.isEmpty){
+            cartController.haPedido = false;
+          }else{
+            cartController.haPedido = true;
+          }
+          checkController.pedido = pedido;
+        }
+
 //        }          
-        navigateToMenu(context, restaurante, menu, idMesa);
+        NavigateController().navigateToMenu(context,restaurante, menu, idMesa,"Comensal"); //quito el context para intentar arreglar error
        // }
 
       } else { // no posee la mesa escaneada
@@ -77,12 +96,6 @@ class QrController {
   return 1;
 
 }
-  void navigateToMenu(BuildContext context, Restaurante restaurante, Menu menu, String idMesa ){
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-            return   
-            MenuView(info: restaurante.id, restaurante: restaurante,menu: menu, idMesa: int.parse(idMesa));
-            },
-            settings: const RouteSettings(name: 'menu'),
-            ));
-  }
+
 }
+
