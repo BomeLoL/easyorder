@@ -1,4 +1,3 @@
-
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
@@ -39,7 +38,8 @@ Future<void> main() async {
   }
 
   // Configuración de orientaciones de pantalla y ejecución de la aplicación
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
     runApp(const MyApp());
   });
 }
@@ -56,14 +56,16 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => TextController()),
         ChangeNotifierProvider(create: (context) => CheckController()),
         ChangeNotifierProvider(create: (context) => UserController()),
-        ChangeNotifierProvider(create: (context) {return NavController();}),
-        ChangeNotifierProvider(create:(context) {return MenuEditController();}),
-        
+        ChangeNotifierProvider(create: (context) {
+          return NavController();
+        }),
+        ChangeNotifierProvider(create: (context) {
+          return MenuEditController();
+        }),
         ChangeNotifierProvider(
           create: (context) => TextController(),
           child: MyApp(),
         ),
-
       ],
       child: GetMaterialApp(
         defaultTransition: Transition.fade,

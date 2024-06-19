@@ -1,11 +1,15 @@
+import 'package:easyorder/controllers/restaurant_controller.dart';
+import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/registro_mesa.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class Vistamesas extends StatefulWidget {
-  const Vistamesas({super.key});
+  const Vistamesas({super.key, required this.restaurante});
+  final Restaurante restaurante;
 
   @override
   State<Vistamesas> createState() => _VistamesasState();
@@ -26,8 +30,11 @@ class _VistamesasState extends State<Vistamesas> {
     {'id': 10, 'pedidos': []},
     {'id': 11, 'pedidos': []},
   ];
+
   @override
   Widget build(BuildContext context) {
+    //return Consumer<RestaurantController>(
+    //    builder: (context, RestaurantController, child) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
@@ -75,7 +82,7 @@ class _VistamesasState extends State<Vistamesas> {
                                       MaterialPageRoute(builder: (context) {
                                     return RegistroMesa(
                                       idMesa: mesa['id'],
-                                      idRestaurante: 1,
+                                      idRestaurante: "1",
                                     );
                                   }));
                                 },
@@ -159,6 +166,7 @@ class _VistamesasState extends State<Vistamesas> {
         ],
       ),
     );
+    //});
   }
 
   void _showConfirmationDialog(BuildContext context) {
