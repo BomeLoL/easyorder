@@ -137,14 +137,6 @@ class _MenuState extends State<MenuView> {
           IconButton(
             onPressed: () {
               categoriesController.getCategoriasfromBD(context,menuEditController.menu!, 0);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) {
-              //       return EditCategories(menu: menuEditController.menu!, tipo: 0,);
-              //     },
-              //   ),
-              // );
             },
             icon: Icon(
               Icons.add,

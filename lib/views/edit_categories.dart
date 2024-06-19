@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/text_controller.dart';
+import 'package:easyorder/views/Widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,7 +12,11 @@ import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/controllers/categories_controller.dart';
 
 class EditCategories extends StatefulWidget {
-  const EditCategories({super.key, required this.menu, required this.tipo, required this.categoria});
+  const EditCategories(
+      {super.key,
+      required this.menu,
+      required this.tipo,
+      required this.categoria});
 
   final Menu menu;
   final int tipo;
@@ -23,15 +28,14 @@ class EditCategories extends StatefulWidget {
 
 class _EditCategoriesState extends State<EditCategories> {
   late TextController textController;
-
   late CategoriesController categoriesController;
   late MenuEditController menuEditController;
-
+  final _formKey = GlobalKey<FormState>();
   List<String> categorias = [];
   Map<String, bool> productos = {};
   String categoriaSelect = "";
 
-  List cambiar=[];
+  List cambiar = [];
 
   bool guardarPresionado = false;
 
@@ -39,22 +43,23 @@ class _EditCategoriesState extends State<EditCategories> {
   void initState() {
     super.initState();
     textController = Provider.of<TextController>(context, listen: false);
-    menuEditController = Provider.of<MenuEditController>(context, listen: false);
-    
-    categoriesController = Provider.of<CategoriesController>(context, listen: false);
-    categoriesController.categories!.forEach((item){
+    menuEditController =
+        Provider.of<MenuEditController>(context, listen: false);
+
+    categoriesController =
+        Provider.of<CategoriesController>(context, listen: false);
+    categoriesController.categories!.forEach((item) {
       categorias.add(item);
     });
 
-    
-    if (categorias.isNotEmpty && (widget.tipo==1 || widget.tipo==2)) {
+    if (categorias.isNotEmpty && (widget.tipo == 1 || widget.tipo == 2)) {
       categoriaSelect = categorias[0];
     }
 
-    if (widget.tipo==0) {
+    if (widget.tipo == 0) {
       textController.getController("New_Categoria").clear();
       categoriaSelect = "Nueva Categoria";
-    } else if (widget.tipo==1 || widget.tipo==2) {
+    } else if (widget.tipo == 1 || widget.tipo == 2) {
       textController.getController("New_Categoria").text = categoriaSelect;
     }
     updateProductos();
@@ -65,11 +70,21 @@ class _EditCategoriesState extends State<EditCategories> {
       productos.clear();
       widget.menu.itemsMenu.forEach((item) {
         // if (item.categoria.isNotEmpty) {
-          productos[item.nombreProducto] = item.categoria == categoriaSelect;
+        productos[item.nombreProducto] = item.categoria == categoriaSelect;
         // }
       });
     });
   }
+
+  String? categoriaValidator(String? value) {
+  if (value == null || value.trim().isEmpty) {
+    return 'Este campo es obligatorio';
+  }
+  if (categorias.contains(value.trim())) {
+    return 'Esta categoría ya existe';
+  }
+  return null;
+}
 
   @override
   void dispose() {
@@ -82,8 +97,16 @@ class _EditCategoriesState extends State<EditCategories> {
     final textController = Provider.of<TextController>(context);
     if (widget.tipo == 1) {
       //se va editar
-      return Consumer2<CategoriesController, MenuEditController>(
-        builder: (context, categoriesController, menuEditController, child) {
+      return WillPopScope(
+        onWillPop: () async {
+          Navigator.of(context).popUntil((route) {
+            return route.settings.name == 'menu';
+          });
+
+          return await true;
+        },
+        child: Consumer2<CategoriesController, MenuEditController>(builder:
+            (context, categoriesController, menuEditController, child) {
           return Scaffold(
             extendBodyBehindAppBar: true,
             backgroundColor: Colors.white,
@@ -128,12 +151,20 @@ class _EditCategoriesState extends State<EditCategories> {
               ),
             ),
           );
-        }
+        }),
       );
     } else if (widget.tipo == 0) {
       // se va a crear nueva categoria
-      return Consumer<CategoriesController>(
-        builder: (context, categoriesController, child) {
+      return WillPopScope(
+        onWillPop: () async {
+          Navigator.of(context).popUntil((route) {
+            return route.settings.name == 'menu';
+          });
+
+          return await true;
+        },
+        child: Consumer<CategoriesController>(
+            builder: (context, categoriesController, child) {
           return Scaffold(
             extendBodyBehindAppBar: true,
             backgroundColor: Colors.white,
@@ -176,11 +207,19 @@ class _EditCategoriesState extends State<EditCategories> {
               ),
             ),
           );
-        }
+        }),
       );
-    } else if (widget.tipo==2) {
-      return Consumer2<CategoriesController, MenuEditController>(
-        builder: (context, categoriesController, menuEditController, child) {
+    } else if (widget.tipo == 2) {
+      return WillPopScope(
+        onWillPop: () async {
+          Navigator.of(context).popUntil((route) {
+            return route.settings.name == 'menu';
+          });
+
+          return await true;
+        },
+        child: Consumer2<CategoriesController, MenuEditController>(builder:
+            (context, categoriesController, menuEditController, child) {
           return Scaffold(
             extendBodyBehindAppBar: true,
             backgroundColor: Colors.white,
@@ -223,13 +262,11 @@ class _EditCategoriesState extends State<EditCategories> {
               ),
             ),
           );
-        }
+        }),
       );
-
     } else {
       return Container();
     }
-
   }
 
   Widget showCategorias(BuildContext context) {
@@ -257,7 +294,9 @@ class _EditCategoriesState extends State<EditCategories> {
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 isExpanded: true,
-                value: categorias.contains(categoriaSelect) ? categoriaSelect : null,
+                value: categorias.contains(categoriaSelect)
+                    ? categoriaSelect
+                    : null,
                 icon: Icon(Icons.keyboard_arrow_down),
                 items: categorias.map((String categoria) {
                   return DropdownMenuItem<String>(
@@ -284,85 +323,57 @@ class _EditCategoriesState extends State<EditCategories> {
 
   Widget editCategoriaField(BuildContext context, textController) {
     if (widget.tipo == 1) {
-      return Column(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Nombre *",
-              textAlign: TextAlign.left,
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          TextField(
-            controller: textController.getController("New_Categoria"),
-            style: GoogleFonts.poppins(
-              fontSize: 14.0,
-              color: Colors.black,
-            ),
-            cursorColor: primaryColor,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: primaryColor,
-                  width: 2,
+      return Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Nombre *",
+                textAlign: TextAlign.left,
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              hintText: categoriaSelect,
-              hintStyle: GoogleFonts.poppins(
-                fontSize: 14.0,
-                color: Colors.black38,
-              ),
             ),
-          ),
-        ],
+            SizedBox(height: 10),
+            CustomTextFormField(
+              controller: textController.getController("New_Categoria"),
+              hintText: categoriaSelect,
+              validator: 'Por favor, ingrese un nombre para la categoria',
+            ),
+          ],
+        ),
       );
     } else if (widget.tipo == 0) {
-      // textController.getController("New_Categoria").clear();
-      return Column(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Nombre *",
-              textAlign: TextAlign.left,
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          TextField(
-            controller: textController.getController("New_Categoria"),
-            style: GoogleFonts.poppins(
-              fontSize: 14.0,
-              color: Colors.black,
-            ),
-            cursorColor: primaryColor,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: primaryColor,
-                  width: 2,
+      return Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Nombre *",
+                textAlign: TextAlign.left,
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              hintText: "Nombre de la nueva categoría",
-              hintStyle: GoogleFonts.poppins(
-                fontSize: 14.0,
-                color: Colors.black38,
-              ),
             ),
-          ),
-        ],
+            SizedBox(height: 10),
+
+            CustomTextFormField(
+              controller: textController.getController("New_Categoria"),
+              hintText: "Nombre de la nueva categoría",
+              validator: 'Por favor, ingrese un nombre para la categoria',
+            ),
+          ],
+        ),
       );
     } else {
       return Container();
@@ -378,48 +389,47 @@ class _EditCategoriesState extends State<EditCategories> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: productos.keys.map((nombreP) {
-          if(widget.tipo==0){//creando categoria
+          if (widget.tipo == 0) {
+            //creando categoria
             return CheckboxListTile(
-            activeColor: primaryColor,
-            title: Text(nombreP),
-            value: productos[nombreP],
-            onChanged: (bool? value) {
-              setState(() {
-                productos[nombreP] = value ?? false;
-                if (value == false) {
-                  // Si se desmarca el producto lo metemos en cambiar para cambiar al darle a guardar
-                  widget.menu.itemsMenu.forEach((producto) {
-                    if (producto.nombreProducto == nombreP &&
-                        producto.categoria == categoriaSelect) {
-                          cambiar.add(producto);
-                          
-                    }
-                  });
-                }
-              });
-            },
-          );
-          } else if (widget.tipo==1 || widget.tipo==2) {
+              activeColor: primaryColor,
+              title: Text(nombreP),
+              value: productos[nombreP],
+              onChanged: (bool? value) {
+                setState(() {
+                  productos[nombreP] = value ?? false;
+                  if (value == false) {
+                    // Si se desmarca el producto lo metemos en cambiar para cambiar al darle a guardar
+                    widget.menu.itemsMenu.forEach((producto) {
+                      if (producto.nombreProducto == nombreP &&
+                          producto.categoria == categoriaSelect) {
+                        cambiar.add(producto);
+                      }
+                    });
+                  }
+                });
+              },
+            );
+          } else if (widget.tipo == 1 || widget.tipo == 2) {
             return CheckboxListTile(
-            activeColor: primaryColor,
-            title: Text(nombreP),
-            value: productos[nombreP],
-            onChanged: (bool? value) {
-              setState(() {
-                productos[nombreP] = value ?? false;
-                if (value == false) {
-                  // Si se desmarca el producto lo metemos en cambiar para cambiar al darle a guardar
-                  widget.menu.itemsMenu.forEach((producto) {
-                    if (producto.nombreProducto == nombreP &&
-                        producto.categoria == categoriaSelect) {
-                          cambiar.add(producto);
-                          
-                    }
-                  });
-                }
-              });
-            },
-          ); 
+              activeColor: primaryColor,
+              title: Text(nombreP),
+              value: productos[nombreP],
+              onChanged: (bool? value) {
+                setState(() {
+                  productos[nombreP] = value ?? false;
+                  if (value == false) {
+                    // Si se desmarca el producto lo metemos en cambiar para cambiar al darle a guardar
+                    widget.menu.itemsMenu.forEach((producto) {
+                      if (producto.nombreProducto == nombreP &&
+                          producto.categoria == categoriaSelect) {
+                        cambiar.add(producto);
+                      }
+                    });
+                  }
+                });
+              },
+            );
           }
           return Container();
         }).toList(),
@@ -428,6 +438,12 @@ class _EditCategoriesState extends State<EditCategories> {
   }
 
   Widget save_exit_button(BuildContext context) {
+    String texto;
+    if (widget.tipo == 2) {
+      texto = "Eliminar";
+    } else {
+      texto = "Guardar";
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -437,7 +453,9 @@ class _EditCategoriesState extends State<EditCategories> {
           width: 150,
           child: TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.of(context).popUntil((route) {
+                return route.settings.name == 'menu';
+              });
             },
             style: TextButton.styleFrom(
                 shape: RoundedRectangleBorder(
@@ -457,23 +475,46 @@ class _EditCategoriesState extends State<EditCategories> {
           width: 150,
           child: ElevatedButton(
             onPressed: () {
-              if (widget.tipo == 1) { //editar
+              if (widget.tipo == 1 && _formKey.currentState!.validate()) {
+                //editar
                 categoriesController.editarCategoria(
                     textController.getController("New_Categoria").text,
-                    productos, cambiar, categoriaSelect, menuEditController.menu!, categorias);
-                  menuEditController.selectedCategoria = "Todo";
-
-                Navigator.pop(context);
-              } else if (widget.tipo == 0) { //crear
-                if (textController.getController("New_Categoria").text.trim().isNotEmpty) {
-                  categoriesController.crearCategoria(textController.getController("New_Categoria").text, productos, menuEditController.menu!, categorias);
-                  menuEditController.selectedCategoria = "Todo";
-                  Navigator.pop(context);
-                }
-              } else if (widget.tipo == 2) {
-                categoriesController.eliminarCategoria(textController.getController("New_Categoria").text, productos, menuEditController.menu!, categorias);
+                    productos,
+                    cambiar,
+                    categoriaSelect,
+                    menuEditController.menu!,
+                    categorias);
                 menuEditController.selectedCategoria = "Todo";
-                Navigator.pop(context);
+
+                Navigator.of(context).popUntil((route) {
+                  return route.settings.name == 'menu';
+                });
+              } else if (widget.tipo == 0 && _formKey.currentState!.validate()) {
+                //crear
+                  categoriesController.crearCategoria(
+                      textController.getController("New_Categoria").text,
+                      productos,
+                      menuEditController.menu!,
+                      categorias);
+                  menuEditController.selectedCategoria = "Todo";
+                  Navigator.of(context).popUntil((route) {
+                    return route.settings.name == 'menu';
+                  });
+              } else if (widget.tipo == 2) {
+                categoriesController.eliminarCategoria(
+                    textController.getController("New_Categoria").text,
+                    productos,
+                    menuEditController.menu!,
+                    categorias);
+                menuEditController.selectedCategoria = "Todo";
+                Navigator.of(context).popUntil((route) {
+                  return route.settings.name == 'menu';
+                });
+              }
+
+              if (!_formKey.currentState!.validate()) {
+                textController.getController("New_Categoria").clear();
+
               }
             },
             style: ElevatedButton.styleFrom(
@@ -481,7 +522,7 @@ class _EditCategoriesState extends State<EditCategories> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(7))),
             child: Text(
-              'Guardar',
+              texto,
               style: GoogleFonts.poppins(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

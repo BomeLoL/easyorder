@@ -34,7 +34,7 @@ class CustomTextFormField extends StatelessWidget {
             fontSize: 14.0,
             color: Colors.black38)),
         validator: (value) {
-          if (validator != null && (value == null || value.isEmpty)) {
+          if (validator != null && (value == null || value.trim().isEmpty)) {
             return validator;
           }
           return null;
