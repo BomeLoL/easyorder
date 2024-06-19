@@ -247,7 +247,8 @@ class _MenuState extends State<MenuView> {
                   ? EditProductCard(
                       producto:
                           menuController.menu!.itemsMenu[index],
-                      info: nombreRes)
+                      info: nombreRes,
+                      idRestaurante: widget.restaurante.id,)
                   : MenuCard(
                       producto:
                           menuController.menu!.itemsMenu[index],
