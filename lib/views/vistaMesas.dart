@@ -76,9 +76,8 @@ class _VistamesasState extends State<Vistamesas> {
                                           MaterialPageRoute(builder: (context) {
                                         return RegistroMesa(
                                           idMesa: mesa.id,
-                                          idRestaurante: int.parse(
-                                              restauranteController
-                                                  .restaurante!.id),
+                                          idRestaurante: restauranteController
+                                              .restaurante!.id,
                                         );
                                       }));
                                     },
@@ -142,7 +141,10 @@ class _VistamesasState extends State<Vistamesas> {
                 padding: const EdgeInsets.only(top: 25, bottom: 40),
                 child: ElevatedButton(
                   onPressed: () {
-                    // widget.mesa.add({'id': widget.mesa.length + 1, 'pedidos': []});
+                    widget.mesa
+                        .add(Mesa(id: widget.mesa.length + 1, pedidos: []));
+                    restauranteController.addMesa(
+                        widget.mesa, restauranteController.restaurante!);
                   }, //ayuda de kevin para conectar con BD
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFFF5F04),
@@ -200,9 +202,13 @@ class _VistamesasState extends State<Vistamesas> {
                 onPressed: () {
                   setState(() {
                     confirmation = true;
-                    widget.mesa.removeLast();
-                    restauranteController.deleteMesa(
-                        widget.mesa, restauranteController.restaurante!);
+                    if (widget.mesa.length == 1) {
+                      print('No puedes eliminar todas tus mesas!');
+                    } else {
+                      widget.mesa.removeLast();
+                      restauranteController.deleteMesa(
+                          widget.mesa, restauranteController.restaurante!);
+                    }
                   });
                   Navigator.pop(context);
                 },
