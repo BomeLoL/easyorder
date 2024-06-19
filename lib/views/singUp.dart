@@ -273,16 +273,25 @@ String? _validatePassword(String? value) {
                               email = await _auth.signinwithGoogle();
                               if (email != null) {
                                 await _auth.getUserByEmailAndAccount(email, 'google');
-                                var y = await _auth.getUserByEmailAndAccount(email, 'google');
-                                if (y == null) {
+                                var getUsuario = await _auth.getUserByEmailAndAccount(email, 'google');
+                                if (getUsuario == null) {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => SignuP2(email: email,)),
                                   );
-                                } else {
-                                    Navigator.pop(context);}                              
-                                }
-                            },
+                                }  else {
+                                    UserController userController = Provider.of<UserController>(context, listen: false);
+                                    userController.usuario = getUsuario;
+                                if (userController.usuario?.usertype == "Restaurante"){
+                                      var restaurante = await MongoDatabase.getRestaurante(userController.usuario!.id);
+                                      var menu = await MongoDatabase.getMenu(userController.usuario!.id);
+                                      if (restaurante!= null && menu!=null){
+                                      NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");}
+                                }else{
+
+                                Navigator.pop(context);}
+                                }     
+                            }},
                           ),
                         ],
                       ),

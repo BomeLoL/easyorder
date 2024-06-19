@@ -40,6 +40,7 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
     return Consumer3<CartController, NavController, CheckController>(
       builder: (context, cartController, navController, checkController, child) {
         return BottomNavigationBar(
+          elevation: 0,
           backgroundColor: Colors.white,
           selectedLabelStyle: GoogleFonts.poppins(
               fontWeight: FontWeight.bold, color: Colors.black),
@@ -48,8 +49,7 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
             color: Color.fromRGBO(142, 142, 142, 1),
           ),
           fixedColor: Color.fromRGBO(142, 142, 142, 1),
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
+
           items: [
             BottomNavigationBarItem(
               icon: Icon(
