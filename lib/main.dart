@@ -1,4 +1,4 @@
-
+import 'package:easyorder/controllers/categories_controller.dart';
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
@@ -58,7 +58,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserController()),
         ChangeNotifierProvider(create: (context) {return NavController();}),
         ChangeNotifierProvider(create:(context) {return MenuEditController();}),
-        
+        ChangeNotifierProvider(create:(context) {return CategoriesController();}),
+
         ChangeNotifierProvider(
           create: (context) => TextController(),
           child: MyApp(),

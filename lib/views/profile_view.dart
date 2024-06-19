@@ -11,14 +11,8 @@ import 'package:easyorder/views/Widgets/background_image.dart';
 class ProfileView extends StatefulWidget {
   const ProfileView({
     Key? key,
-    required this.info,
-    required this.restaurante,
-    required this.idMesa,
   }) : super(key: key);
 
-  final String info;
-  final Restaurante restaurante;
-  final int idMesa;
 
   @override
   _ProfileViewState createState() => _ProfileViewState();

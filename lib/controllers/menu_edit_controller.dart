@@ -8,6 +8,15 @@ class MenuEditController extends ChangeNotifier {
 
   Menu? menu;
 
+  String _selectedCategoria = "Todo";
+
+  String get selectedCategoria => _selectedCategoria;
+
+  set selectedCategoria(String value) {
+    _selectedCategoria = value;
+    notifyListeners();
+  }
+
   Future<void> addProduct(String restaurantId, ItemMenu itemMenu) async {
     try {
       await MongoDatabase.agregarProducto(restaurantId, itemMenu);

@@ -3,7 +3,7 @@ class ItemMenu {
   final String nombreProducto;
   final String descripcion;
   final double precio;
-  final String categoria;
+  String categoria;
   final String imgUrl;
 
   ItemMenu({

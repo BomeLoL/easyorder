@@ -11,7 +11,7 @@ import 'package:easyorder/models/clases/menu.dart';
   import 'package:mongo_dart/mongo_dart.dart';
 
   class MongoDatabase {
-    static var db, coleccion_restaurante, coleccion_menu, coleccion_test;
+    static var db, coleccion_restaurante, coleccion_menu, coleccion_test,coleccion_categories;
     // ignore: unused_field
     static Timer? _connectionCheckTimer;
     static String? MONGO_URL = dotenv.env["MONGO_URL"];
@@ -22,6 +22,8 @@ import 'package:easyorder/models/clases/menu.dart';
       coleccion_menu = db.collection(CMenu);
       coleccion_restaurante = db.collection(CRestaurante);
       coleccion_test = db.collection(Ctest);
+      coleccion_categories = db.collection(Ccategories);
+
       }
       catch(e){
         print(e);
@@ -52,9 +54,20 @@ import 'package:easyorder/models/clases/menu.dart';
       mesas: [Mesa(id: 1, pedidos: [])],
       comentarios: [],
     );
-    Menu menu = Menu(idRestaurante: id,itemsMenu: []);
-    await coleccion_restaurante.insertAll([restaurante.toMap()]);
-    await coleccion_menu.insertAll([menu.toMap()]);
+
+    Menu menu = Menu(idRestaurante: id, itemsMenu: []);
+    
+    // Insertar restaurante
+    await coleccion_restaurante.insertOne(restaurante.toMap());
+
+    // Insertar menú
+    await coleccion_menu.insertOne(menu.toMap());
+
+    // Insertar categorías vacías
+    await coleccion_categories.insertOne({
+      'idRestaurante': id,
+      'categorias': [], // Categorías inicialmente vacías
+    });
   }
 
   static actualizarRestaurante(Restaurante restaurante) async {
@@ -224,5 +237,33 @@ static Future<Pedido?> consolidarPedidos(String restauranteId, int numeroMesa) a
     throw Exception('Error al agregar el producto: $e');
   }
 }
+
+static Future<List<String>> getCategorias(String idRestaurante) async {
+  try {
+    final categorias = await coleccion_categories.findOne({'idRestaurante': idRestaurante});
+
+    if (categorias != null && categorias['categorias'] != null) {
+      // Si se encontraron categorías y el campo 'categorias' no es nulo
+      List<String> categoriasList = List<String>.from(categorias['categorias']);
+      return categoriasList;
+    } else {
+      // Si no se encontraron categorías o el campo 'categorias' está vacío
+      return [];
+    }
+  } catch (e) {
+    // Manejar cualquier error durante la consulta
+    print('Error al obtener categorías: $e');
+    return []; // Devolver una lista vacía en caso de error
+  }
+}
+
+static actualizaCategorias (List categorias, String idRestaurante) async {
+   await coleccion_categories.updateOne(
+        where.eq('idRestaurante', idRestaurante),
+        modify.set('categorias', categorias),
+      );
+}
+
+
 
 }

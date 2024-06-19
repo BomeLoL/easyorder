@@ -18,15 +18,9 @@ class BarNavigationRestaurant extends StatefulWidget {
   const BarNavigationRestaurant({
     super.key,
     this.index,
-    required this.info,
-    required this.restaurante,
-    required this.idMesa,
   });
 
   final index;
-  final String info;
-  final Restaurante restaurante;
-  final int idMesa;
 
   @override
   State<BarNavigationRestaurant> createState() => _NavigationbarClientState();
@@ -104,7 +98,7 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
                 return route.settings.name == 'menu';
               });
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ProfileView(idMesa: widget.idMesa, info: widget.info,restaurante: widget.restaurante,);
+                return ProfileView();
               }));});
 
 

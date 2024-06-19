@@ -222,7 +222,7 @@ class MenuCard extends ProductCardBase {
             SizedBox(height: 5),
           ],
         );
-      },
+      },  
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/navigate_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/categories_controller.dart';
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';

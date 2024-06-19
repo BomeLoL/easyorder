@@ -1,4 +1,5 @@
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/categories_controller.dart';
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
@@ -13,6 +14,7 @@ import 'package:easyorder/views/Widgets/navigationBarClientUnLogged.dart';
 import 'package:easyorder/views/Widgets/navigationBarRestaurant.dart';
 import 'package:easyorder/views/detalleAdmin.dart';
 import 'package:easyorder/views/detallePedido.dart';
+import 'package:easyorder/views/edit_categories.dart';
 import 'package:easyorder/views/vistaQr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -45,13 +47,17 @@ class _MenuState extends State<MenuView> {
   String selectedCategoria = "Todo";
   Color colorBoton1 = primaryColor;
   bool confirmation = false;
+  late CategoriesController categoriesController;
+  late MenuEditController menuEditController;
 
   @override
   void initState() {
     super.initState();
+    menuEditController = Provider.of<MenuEditController>(context, listen: false);
+    categoriesController = Provider.of<CategoriesController>(context, listen: false);
     nombreRes = widget.restaurante.nombre;
     categorias.add("Todo");
-    selectedCategoria = "Todo";
+    selectedCategoria = menuEditController.selectedCategoria;
   }
 
   @override
@@ -82,10 +88,9 @@ class _MenuState extends State<MenuView> {
                       _buildHeader(),
                       Gap(15),
                       Container(
-                        width: double.infinity,
-                        height: 50,
-                        child: _buildCategoriesSection()
-                      ),
+                          width: double.infinity,
+                          height: 50,
+                          child: _buildCategoriesSection()),
                       SizedBox(
                         height: 10,
                       ),
@@ -111,7 +116,7 @@ class _MenuState extends State<MenuView> {
         return BarNavigationClientLogged(idMesa: widget.idMesa, info: widget.info, restaurante: widget.restaurante);
           }
           else if (userController.usuario?.usertype == "Restaurante"){
-        return BarNavigationRestaurant(idMesa: widget.idMesa, info: widget.info, restaurante: widget.restaurante);
+        return BarNavigationRestaurant();
 
           }
         }
@@ -131,7 +136,7 @@ class _MenuState extends State<MenuView> {
         nombreRes,
         style: GoogleFonts.poppins(
           fontWeight: FontWeight.bold,
-          ),
+        ),
       ),
     );
   }
@@ -147,12 +152,14 @@ class _MenuState extends State<MenuView> {
             child: Text(
               'Categorías',
               style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
+                  fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
+          //crear categoria
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              categoriesController.getCategoriasfromBD(context,menuEditController.menu!, 0);
+            },
             icon: Icon(
               Icons.add,
               color: Colors.white,
@@ -160,28 +167,32 @@ class _MenuState extends State<MenuView> {
             style: IconButton.styleFrom(
                 backgroundColor: primaryColor,
                 shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(7))),
+                    borderRadius: BorderRadius.circular(7))),
           ),
+          //editar categoria
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              categoriesController.getCategoriasfromBD(context,menuEditController.menu!, 1);
+              
+            },
             style: IconButton.styleFrom(
                 backgroundColor: primaryColor,
                 shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(7))),
+                    borderRadius: BorderRadius.circular(7))),
             icon: Icon(
               Icons.edit,
               color: Colors.white,
             ),
           ),
+          //eliminar categoria
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              categoriesController.getCategoriasfromBD(context,menuEditController.menu!, 2);
+            },
             style: IconButton.styleFrom(
                 backgroundColor: primaryColor,
                 shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(7))),
+                    borderRadius: BorderRadius.circular(7))),
             icon: Icon(
               Icons.delete,
               color: Colors.white,
@@ -201,10 +212,15 @@ class _MenuState extends State<MenuView> {
   });}
 
   Widget _buildCategoriesSection() {
-    return Consumer<MenuEditController> (builder: (context, menuController, child){
+    return Consumer2<MenuEditController, CategoriesController> (builder: (context, menuController, categoriesController, child){
       print("Building Consumer: ${menuController.menu?.itemsMenu.length} items");
-      for (var elemento in menuController.menu!.itemsMenu) {
-      categorias.add(elemento.categoria);
+      if (categoriesController.categories == null || categoriesController.categories!.isEmpty) {
+        return Container(); // Muestra un indicador de carga mientras se obtienen las categorías
+      }
+      categorias.clear();
+      categorias.add("Todo");
+      for (var elemento in categoriesController.categories!) {
+      categorias.add(elemento);
       }
       return ListView(
       scrollDirection: Axis.horizontal,
@@ -212,28 +228,24 @@ class _MenuState extends State<MenuView> {
         Row(
             children: categorias
                 .map((elemento) {
-                  Color color =
-                      elemento == selectedCategoria
-                          ? Color(0xFFFF5F04)
-                          : Colors.white;
-                  Color color1 =
-                      elemento == selectedCategoria
-                          ? Colors.white
-                          : Colors.black;
+                  Color color = elemento == menuEditController.selectedCategoria
+                      ? Color(0xFFFF5F04)
+                      : Colors.white;
+                  Color color1 = elemento == menuEditController.selectedCategoria
+                      ? Colors.white
+                      : Colors.black;
                   return [
                     OutlinedButton(
                         onPressed: () {
                           setState(() {
-                            selectedCategoria = elemento;
+                            menuEditController.selectedCategoria = elemento;
                           });
                         },
                         style: OutlinedButton.styleFrom(
                           backgroundColor: color,
                           foregroundColor: color1,
                           shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(
-                                      10)),
+                              borderRadius: BorderRadius.circular(10)),
                           minimumSize: Size(45, 40),
                         ),
                         child: Text(elemento)),
@@ -257,9 +269,9 @@ class _MenuState extends State<MenuView> {
       padding: EdgeInsets.zero,
       itemCount: menuController.menu!.itemsMenu.length,
       itemBuilder: (context, index) {
-        if (selectedCategoria == "Todo" ||
+        if (menuEditController.selectedCategoria == "Todo" ||
             menuController.menu!.itemsMenu[index].categoria ==
-                selectedCategoria) {
+                menuEditController.selectedCategoria) {
           return Column(
             children: [
               userController.usuario?.usertype == 'Restaurante'
@@ -296,15 +308,13 @@ class _MenuState extends State<MenuView> {
         Gap(10),
         Text(
           'Productos',
-          style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.bold),
+          style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         Gap(10),
       ],
-    );  
-    }
-  
+    );
+  }
+
   Widget _buildAdminAddProductButton() {
     return Column(
       children: [
@@ -314,24 +324,22 @@ class _MenuState extends State<MenuView> {
           child: ElevatedButton(
             onPressed: () {
               Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return detalleAdmin(idRestaurante: widget.restaurante.id);
-                      },
-                    ),
-                  );
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return detalleAdmin(idRestaurante: widget.restaurante.id);
+                  },
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: primaryColor,
                 shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(7))),
+                    borderRadius: BorderRadius.circular(7))),
             child: Text(
               'Agregar un producto',
               style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
+                  color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -340,7 +348,7 @@ class _MenuState extends State<MenuView> {
     );
   }
 
-  Widget _buildCartSummary(){
+  Widget _buildCartSummary() {
     return Consumer<CartController>(
       builder: (context, cartController, child) {
     if (cartController.pedido.productos.isNotEmpty) {
@@ -410,7 +418,7 @@ class _MenuState extends State<MenuView> {
   );
   }
 
-
-
-
 }
+
+
+

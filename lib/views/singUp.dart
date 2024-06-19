@@ -294,6 +294,7 @@ String? _validatePassword(String? value) {
                                     UserController userController = Provider.of<UserController>(context, listen: false);
                                     userController.usuario = getUsuario;
                                 if (userController.usuario?.usertype == "Restaurante"){
+                                  
                                       var restaurante = await MongoDatabase.getRestaurante(userController.usuario!.id);
                                       var menu = await MongoDatabase.getMenu(userController.usuario!.id);
                                       if (restaurante!= null && menu!=null){

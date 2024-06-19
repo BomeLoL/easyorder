@@ -170,6 +170,7 @@ String? _validateFullName(String? value) {
                                     var getUsuario = await _auth.getUserByEmailAndAccount(widget.email,'google');
                                     userController.usuario = getUsuario;
                                       if (userType == "Restaurante") {
+
                                         await MongoDatabase.insertarRestaurante(
                                           v4,
                                           textController.getController('fullName').text,
