@@ -1,6 +1,7 @@
-import 'package:easyorder/controllers/products_controller.dart';
+import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,7 +22,7 @@ class detalleAdmin extends StatefulWidget {
 class _detalleAdminState extends State<detalleAdmin> {
   late TextController textController;
   final _formKey = GlobalKey<FormState>();
-  final productsController = ProductsController();
+  late MenuEditController menuEditController;
 
   String? _selectedCategory;
   bool _categoryValid = true;
@@ -31,6 +32,7 @@ class _detalleAdminState extends State<detalleAdmin> {
   void initState() {
     super.initState();
     textController = Provider.of<TextController>(context, listen: false);
+    menuEditController = Provider.of<MenuEditController>(context, listen: false);
   }
 
   @override
@@ -324,7 +326,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                       imgUrl: 'https://upload.wikimedia.org/wikipedia/en/f/fd/Logo_of_Stardew_Valley.png',
                     );
                     try {
-                      await productsController.addProduct(widget.idRestaurante, itemMenu);
+                      await menuEditController.addProduct(widget.idRestaurante, itemMenu);
                       
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));

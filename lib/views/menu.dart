@@ -1,4 +1,6 @@
 import 'package:easyorder/controllers/cart_controller.dart';
+import 'package:easyorder/controllers/categories_controller.dart';
+import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
@@ -21,14 +23,12 @@ class MenuView extends StatefulWidget {
   const MenuView({
     super.key,
     required this.info,
-    required this.menu,
     required this.restaurante,
     required this.idMesa,
     this.rol = 'admin',
   });
 
   final String info;
-  final Menu menu;
   final Restaurante restaurante;
   final int idMesa;
   final String rol;
@@ -44,15 +44,15 @@ class _MenuState extends State<MenuView> {
   String selectedCategoria = "Todo";
   Color colorBoton1 = primaryColor;
   bool confirmation = false;
+  CategoriesController categoriesController = CategoriesController();
+  late MenuEditController menuEditController;
 
   @override
   void initState() {
     super.initState();
+    menuEditController = Provider.of<MenuEditController>(context, listen: false);
     nombreRes = widget.restaurante.nombre;
     categorias.add("Todo");
-    for (var elemento in widget.menu.itemsMenu) {
-      categorias.add(elemento.categoria);
-    }
     selectedCategoria = "Todo";
   }
 
@@ -135,14 +135,15 @@ class _MenuState extends State<MenuView> {
           //crear categoria
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return EditCategories(menu: widget.menu, tipo: 0,);
-                  },
-                ),
-              );
+              categoriesController.getCategoriasfromBD(context,menuEditController.menu!, 0);
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return EditCategories(menu: menuEditController.menu!, tipo: 0,);
+              //     },
+              //   ),
+              // );
             },
             icon: Icon(
               Icons.add,
@@ -156,14 +157,17 @@ class _MenuState extends State<MenuView> {
           //editar categoria
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return EditCategories(menu: widget.menu, tipo: 1,);
-                  },
-                ),
-              );
+              categoriesController.getCategoriasfromBD(context,menuEditController.menu!, 1);
+              //   Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return EditCategories(menu: menuEditController.menu!, tipo: 1,);
+              //     },
+              //   ),
+              // );
+              
+              
             },
             style: IconButton.styleFrom(
                 backgroundColor: primaryColor,
@@ -200,7 +204,12 @@ class _MenuState extends State<MenuView> {
   }
 
   Widget _buildCategoriesSection() {
-    return ListView(
+    return Consumer<MenuEditController> (builder: (context, menuController, child){
+      print("Building Consumer: ${menuController.menu?.itemsMenu.length} items");
+      for (var elemento in menuController.menu!.itemsMenu) {
+      categorias.add(elemento.categoria);
+      }
+      return ListView(
       scrollDirection: Axis.horizontal,
       children: [
         Row(
@@ -235,24 +244,32 @@ class _MenuState extends State<MenuView> {
                 .expand((widgets) => widgets)
                 .toList()),
       ],
-    );
+      );
+    });    
   }
 
-  Widget _buildProductList() {
-    return ListView.builder(
+  Widget _buildProductList(){
+
+    return Consumer<MenuEditController>(builder: (context, menuController, child){
+      return ListView.builder(
       scrollDirection: Axis.vertical,
       padding: EdgeInsets.zero,
-      itemCount: widget.menu.itemsMenu.length,
+      itemCount: menuController.menu!.itemsMenu.length,
       itemBuilder: (context, index) {
         if (selectedCategoria == "Todo" ||
-            widget.menu.itemsMenu[index].categoria == selectedCategoria) {
+            menuController.menu!.itemsMenu[index].categoria ==
+                selectedCategoria) {
           return Column(
             children: [
               widget.rol == 'admin'
                   ? EditProductCard(
-                      producto: widget.menu.itemsMenu[index], info: nombreRes)
+                      producto:
+                          menuController.menu!.itemsMenu[index],
+                      info: nombreRes)
                   : MenuCard(
-                      producto: widget.menu.itemsMenu[index], info: nombreRes),
+                      producto:
+                          menuController.menu!.itemsMenu[index],
+                      info: nombreRes),
               SizedBox(
                 height: 10,
               )
@@ -263,6 +280,8 @@ class _MenuState extends State<MenuView> {
         }
       },
     );
+    });
+    
   }
 
   Widget _buildDivider() {
@@ -319,68 +338,209 @@ class _MenuState extends State<MenuView> {
   Widget _buildCartSummary() {
     return Consumer<CartController>(
       builder: (context, cartController, child) {
-        if (cartController.pedido.productos.isNotEmpty) {
-          final nroProductos = cartController.totalCantidad();
-          return Container(
-            color: Colors.white,
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 7,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      child: Text(
-                        nroProductos.toString() + ' producto(s) en el carrito',
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          color: Colors.grey,
-                        ),
-                      ),
+    if (cartController.pedido.productos.isNotEmpty) {
+      final nroProductos = cartController.totalCantidad();
+      return Container(
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 7,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: Text(
+                    nroProductos.toString() +
+                        ' producto(s) en el carrito',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Colors.grey,
                     ),
                   ),
-                  Spacer(
-                    flex: 1,
-                  ),
-                  Expanded(
-                    flex: 8,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7),
-                          )),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => detallePedido(
-                                  info: nombreRes,
-                                  menu: widget.menu,
-                                  restaurante: widget.restaurante,
-                                  idMesa: widget.idMesa)),
-                        );
-                      },
-                      child: Text(
-                        'Ver mi pedido',
-                        style: GoogleFonts.poppins(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  )
-                ],
+                ),
               ),
+              Spacer(
+                flex: 1,
+              ),
+              Expanded(
+                flex: 8,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      )),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => detallePedido(
+                              info: nombreRes,
+                              restaurante: widget.restaurante,
+                              idMesa: widget.idMesa)),
+                    );
+                  },
+                  child: Text(
+                    'Ver mi pedido',
+                    style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        width: 0,
+        height: 0,
+      );
+    }
+  },
+  );
+  }
+
+  Widget _buildBotomNavigationBar(){
+    return Consumer<CartController>(
+          builder: (context, cartController, child) {
+            return BottomNavigationBar(
+              backgroundColor: Colors.white,
+              fixedColor: Color.fromRGBO(142, 142, 142, 1),
+              selectedLabelStyle: GoogleFonts.poppins(
+                fontWeight: FontWeight.bold,
+              ),
+              unselectedLabelStyle: GoogleFonts.poppins(
+                fontWeight: FontWeight.bold,
+              ),
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.qr_code,
+                    size: 45.0,
+                    color: primaryColor,
+                  ),
+                  label: "Escanear",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.exit_to_app,
+                    size: 45.0,
+                    color: primaryColor,
+                  ),
+                  label: "Terminar sesión",
+                )
+              ],
+              onTap: (int clickedIndex) async {
+                if (clickedIndex == 1) {
+                  await _showConfirmationDialog(context);
+                  if (confirmation == true) {
+                    setState(() {
+                      cartController.haPedido = false;
+                    });
+                    Navigator.pop(context);
+                  }
+                } else if (clickedIndex == 0 &&
+                    cartController.haPedido == false) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return BarcodeScannerWithOverlay();
+                      },
+                    ),
+                  );
+                } else if (clickedIndex == 0 &&
+                    cartController.haPedido == true) {
+                  showCustomPopup(
+                      context: context,
+                      title: 'Finalice su estadía para escanear',
+                      content: Text(
+                          'Para escanear otro código, primero debes terminar tu sesión actual. Por favor, finaliza tu estadía para continuar.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: TextButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7))),
+                          child: Text(
+                            'Ok',
+                            style: GoogleFonts.poppins(
+                                color: primaryColor,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ]);
+                }
+              },
+            );
+          },
+        );
+  }
+
+  Future<void> _showConfirmationDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text(
+            '¿Terminar su estadía?',
+            style:
+                GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'Al confirmar, un mesero vendrá a atenderle para procesar el pago y ya no podrá hacer más pedidos. ¿Desea continuar?',
+            textAlign: TextAlign.justify,
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      confirmation = false;
+                    });
+                    Navigator.pop(context);
+                  },
+                  style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7))),
+                  child: Text(
+                    'Cancelar',
+                    style: GoogleFonts.poppins(
+                        color: primaryColor, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      confirmation = true;
+                    });
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7))),
+                  child: Text(
+                    'Confirmar',
+                    style: GoogleFonts.poppins(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
             ),
-          );
-        } else {
-          return Container(
-            width: 0,
-            height: 0,
-          );
-        }
+          ],
+        );
       },
     );
   }

@@ -10,7 +10,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class MongoDatabase {
-  static var db, coleccion_restaurante, coleccion_menu, coleccion_test;
+  static var db, coleccion_restaurante, coleccion_menu, coleccion_test, coleccion_categories;
   // ignore: unused_field
   static Timer? _connectionCheckTimer;
   static String? MONGO_URL = dotenv.env["MONGO_URL"];
@@ -21,6 +21,7 @@ class MongoDatabase {
     coleccion_menu = db.collection(CMenu);
     coleccion_restaurante = db.collection(CRestaurante);
     coleccion_test = db.collection(Ctest);
+    coleccion_categories = db.collection(Ccategories);
   }
 
 static Future<Restaurante?> getRestaurante(String id) async {
@@ -124,12 +125,43 @@ static actualizarMenu(Menu menu) async {
 
       // Si el producto no existe, agregarlo al menú
       menu.itemsMenu.add(itemMenu);
-      print("AAAAAAAAAAAA");
       await actualizarMenu(menu);
     } 
   } catch (e) {
     throw Exception('Error al agregar el producto: $e');
   }
 }
+
+static Future<List> getCategorias() async {
+  try {
+    final categorias =await coleccion_categories.findOne();
+    if(categorias!=null && categorias['categorias']!=null) {
+      return categorias['categorias'];
+    }
+    else {
+      return [];
+    }
+    
+  } catch (e) {
+
+    return [];
+    
+  }
+} 
+
+static actualizaCategorias (List categorias) async {
+   await coleccion_categories.updateOne(
+        where.eq('_id', 1),
+        modify.set('categorias', categorias),
+      );
+}
+
+// static actualizarMenu(Menu menu) async {
+//   await coleccion_menu.updateMany(
+//     where.eq('idRestaurante', menu.idRestaurante),
+//     modify
+//       .set('itemsMenu', menu.itemsMenu.map((item) => item.toMap()).toList()),
+//   );
+// }
 
 }

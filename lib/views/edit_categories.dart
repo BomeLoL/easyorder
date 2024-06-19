@@ -10,10 +10,11 @@ import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/controllers/categories_controller.dart';
 
 class EditCategories extends StatefulWidget {
-  const EditCategories({super.key, required this.menu, required this.tipo});
+  const EditCategories({super.key, required this.menu, required this.tipo, required this.categoria});
 
   final Menu menu;
   final int tipo;
+  final List categoria;
 
   @override
   State<EditCategories> createState() => _EditCategoriesState();
@@ -37,8 +38,10 @@ class _EditCategoriesState extends State<EditCategories> {
   void initState() {
     super.initState();
     textController = Provider.of<TextController>(context, listen: false);
-    categorias =
-        widget.menu.itemsMenu.map((item) => item.categoria).toSet().toList();
+    widget.categoria.forEach((item){
+      categorias.add(item);
+    });
+    // categorias = widget.menu.itemsMenu.map((item) => item.categoria).toSet().toList();
     if (categorias.isNotEmpty) {
       categoriaSelect = categorias[0];
       textController.getController("New_Categoria").text = categoriaSelect;
@@ -315,7 +318,7 @@ class _EditCategoriesState extends State<EditCategories> {
               setState(() {
                 productos[nombreP] = value ?? false;
                 if (value == false) {
-                  // Si se desmarca el producto, verificamos y actualizamos la categoría
+                  // Si se desmarca el producto lo metemos en cambiar para cambiar al darle a guardar
                   widget.menu.itemsMenu.forEach((producto) {
                     if (producto.nombreProducto == nombreP &&
                         producto.categoria == categoriaSelect) {
@@ -363,13 +366,9 @@ class _EditCategoriesState extends State<EditCategories> {
           child: ElevatedButton(
             onPressed: () {
               if (widget.tipo == 1) { //editar
-                // widget.menu.itemsMenu.forEach((item) {
-                //   print(
-                //       "Categoría: ${item.categoria}, Producto: ${item.nombreProducto}");
-                // });
                 categoriesController.editarCategoria(
                     textController.getController("New_Categoria").text,
-                    productos, cambiar);
+                    productos, cambiar, categoriaSelect, widget.menu, categorias);
                 Navigator.pop(context);
               } else if (widget.tipo == 0) {
 
