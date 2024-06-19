@@ -1,3 +1,4 @@
+import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -21,10 +22,10 @@ class EditCategories extends StatefulWidget {
 }
 
 class _EditCategoriesState extends State<EditCategories> {
-  // final TextEditingController textFieldController = TextEditingController();
   late TextController textController;
 
-  CategoriesController categoriesController = CategoriesController();
+  late CategoriesController categoriesController;
+  late MenuEditController menuEditController;
 
   List<String> categorias = [];
   Map<String, bool> productos = {};
@@ -38,12 +39,21 @@ class _EditCategoriesState extends State<EditCategories> {
   void initState() {
     super.initState();
     textController = Provider.of<TextController>(context, listen: false);
-    widget.categoria.forEach((item){
+    menuEditController = Provider.of<MenuEditController>(context, listen: false);
+    
+    categoriesController = Provider.of<CategoriesController>(context, listen: false);
+    categoriesController.categories!.forEach((item){
       categorias.add(item);
     });
-    // categorias = widget.menu.itemsMenu.map((item) => item.categoria).toSet().toList();
-    if (categorias.isNotEmpty) {
+
+    
+    if (categorias.isNotEmpty && widget.tipo==1) {
       categoriaSelect = categorias[0];
+    }
+
+    if (widget.tipo==0) {
+      textController.getController("New_Categoria").clear();
+    } else if (widget.tipo==1) {
       textController.getController("New_Categoria").text = categoriaSelect;
     }
     updateProductos();
@@ -53,7 +63,9 @@ class _EditCategoriesState extends State<EditCategories> {
     setState(() {
       productos.clear();
       widget.menu.itemsMenu.forEach((item) {
-        productos[item.nombreProducto] = item.categoria == categoriaSelect;
+        if (item.categoria.isNotEmpty) {
+          productos[item.nombreProducto] = item.categoria == categoriaSelect;
+        }
       });
     });
   }
@@ -69,99 +81,153 @@ class _EditCategoriesState extends State<EditCategories> {
     final textController = Provider.of<TextController>(context);
     if (widget.tipo == 1) {
       //se va editar
-      return Scaffold(
-        extendBodyBehindAppBar: true,
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          automaticallyImplyLeading: false,
-          backgroundColor: Color.fromARGB(0, 255, 255, 255),
-          elevation: 0,
-          centerTitle: true,
-          title: Text(
-            "Categorias",
-            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 100, right: 16, left: 16),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 10),
-                showCategorias(context),
-                SizedBox(height: 30),
-                editCategoriaField(context, textController),
-                SizedBox(height: 30),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Productos",
-                    textAlign: TextAlign.left,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                showProductos(context),
-                SizedBox(height: 50),
-                save_exit_button(context),
-              ],
+      return Consumer2<CategoriesController, MenuEditController>(
+        builder: (context, categoriesController, menuEditController, child) {
+          return Scaffold(
+            extendBodyBehindAppBar: true,
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              scrolledUnderElevation: 0,
+              backgroundColor: Color.fromARGB(0, 255, 255, 255),
+              elevation: 0,
+              centerTitle: true,
+              title: Text(
+                "Categorias",
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-        ),
+            body: Padding(
+              padding: const EdgeInsets.only(top: 100, right: 16, left: 16),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    showCategorias(context),
+                    SizedBox(height: 30),
+                    editCategoriaField(context, textController),
+                    SizedBox(height: 30),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Productos",
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    showProductos(context),
+                    SizedBox(height: 50),
+                    save_exit_button(context),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
       );
     } else if (widget.tipo == 0) {
       // se va a crear nueva categoria
-      return Scaffold(
-        extendBodyBehindAppBar: true,
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          automaticallyImplyLeading: false,
-          backgroundColor: Color.fromARGB(0, 255, 255, 255),
-          elevation: 0,
-          centerTitle: true,
-          title: Text(
-            "Categorias",
-            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 100, right: 16, left: 16),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 10),
-                editCategoriaField(context, textController),
-                SizedBox(height: 50),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Productos",
-                    textAlign: TextAlign.left,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                showProductos(context),
-                SizedBox(height: 90),
-                save_exit_button(context),
-              ],
+      return Consumer<CategoriesController>(
+        builder: (context, categoriesController, child) {
+          return Scaffold(
+            extendBodyBehindAppBar: true,
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              scrolledUnderElevation: 0,
+              backgroundColor: Color.fromARGB(0, 255, 255, 255),
+              elevation: 0,
+              centerTitle: true,
+              title: Text(
+                "Categorias",
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-        ),
+            body: Padding(
+              padding: const EdgeInsets.only(top: 100, right: 16, left: 16),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    editCategoriaField(context, textController),
+                    SizedBox(height: 50),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Productos",
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    showProductos(context),
+                    SizedBox(height: 90),
+                    save_exit_button(context),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
       );
-    } else {
+    } else if (widget.tipo==2) {
+      return Consumer2<CategoriesController, MenuEditController>(
+        builder: (context, categoriesController, menuEditController, child) {
+          return Scaffold(
+            extendBodyBehindAppBar: true,
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              scrolledUnderElevation: 0,
+              backgroundColor: Color.fromARGB(0, 255, 255, 255),
+              elevation: 0,
+              centerTitle: true,
+              title: Text(
+                "Categorias",
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              ),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.only(top: 100, right: 16, left: 16),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    showCategorias(context),
+                    SizedBox(height: 30),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Productos",
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    showProductos(context),
+                    SizedBox(height: 50),
+                    save_exit_button(context),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+      );
+
+    } 
       return Container();
-    }
+  
   }
 
   Widget showCategorias(BuildContext context) {
@@ -189,7 +255,7 @@ class _EditCategoriesState extends State<EditCategories> {
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 isExpanded: true,
-                value: categoriaSelect,
+                value: categorias.contains(categoriaSelect) ? categoriaSelect : null,
                 icon: Icon(Icons.keyboard_arrow_down),
                 items: categorias.map((String categoria) {
                   return DropdownMenuItem<String>(
@@ -256,7 +322,7 @@ class _EditCategoriesState extends State<EditCategories> {
         ],
       );
     } else if (widget.tipo == 0) {
-      textController.getController("New_Categoria").clear();
+      // textController.getController("New_Categoria").clear();
       return Column(
         children: [
           Align(
@@ -310,7 +376,8 @@ class _EditCategoriesState extends State<EditCategories> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: productos.keys.map((nombreP) {
-          return CheckboxListTile(
+          if(widget.tipo==0){//creando categoria
+            return CheckboxListTile(
             activeColor: primaryColor,
             title: Text(nombreP),
             value: productos[nombreP],
@@ -330,6 +397,29 @@ class _EditCategoriesState extends State<EditCategories> {
               });
             },
           );
+          } else if (widget.tipo==1) {
+            return CheckboxListTile(
+            activeColor: primaryColor,
+            title: Text(nombreP),
+            value: productos[nombreP],
+            onChanged: (bool? value) {
+              setState(() {
+                productos[nombreP] = value ?? false;
+                if (value == false) {
+                  // Si se desmarca el producto lo metemos en cambiar para cambiar al darle a guardar
+                  widget.menu.itemsMenu.forEach((producto) {
+                    if (producto.nombreProducto == nombreP &&
+                        producto.categoria == categoriaSelect) {
+                          cambiar.add(producto);
+                          
+                    }
+                  });
+                }
+              });
+            },
+          ); 
+          }
+          return Container();
         }).toList(),
       ),
     );
@@ -368,10 +458,16 @@ class _EditCategoriesState extends State<EditCategories> {
               if (widget.tipo == 1) { //editar
                 categoriesController.editarCategoria(
                     textController.getController("New_Categoria").text,
-                    productos, cambiar, categoriaSelect, widget.menu, categorias);
-                Navigator.pop(context);
-              } else if (widget.tipo == 0) {
+                    productos, cambiar, categoriaSelect, menuEditController.menu!, categorias);
+                  menuEditController.selectedCategoria = "Todo";
 
+                Navigator.pop(context);
+              } else if (widget.tipo == 0) { //crear
+                if (textController.getController("New_Categoria").text.trim().isNotEmpty) {
+                  categoriesController.crearCategoria(textController.getController("New_Categoria").text, productos, menuEditController.menu!, categorias);
+                  menuEditController.selectedCategoria = "Todo";
+                  Navigator.pop(context);
+                }
               }
             },
             style: ElevatedButton.styleFrom(

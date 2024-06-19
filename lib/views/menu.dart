@@ -44,16 +44,17 @@ class _MenuState extends State<MenuView> {
   String selectedCategoria = "Todo";
   Color colorBoton1 = primaryColor;
   bool confirmation = false;
-  CategoriesController categoriesController = CategoriesController();
+  late CategoriesController categoriesController;
   late MenuEditController menuEditController;
 
   @override
   void initState() {
     super.initState();
     menuEditController = Provider.of<MenuEditController>(context, listen: false);
+    categoriesController = Provider.of<CategoriesController>(context, listen: false);
     nombreRes = widget.restaurante.nombre;
     categorias.add("Todo");
-    selectedCategoria = "Todo";
+    selectedCategoria = menuEditController.selectedCategoria;
   }
 
   @override
@@ -158,15 +159,6 @@ class _MenuState extends State<MenuView> {
           IconButton(
             onPressed: () {
               categoriesController.getCategoriasfromBD(context,menuEditController.menu!, 1);
-              //   Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) {
-              //       return EditCategories(menu: menuEditController.menu!, tipo: 1,);
-              //     },
-              //   ),
-              // );
-              
               
             },
             style: IconButton.styleFrom(
@@ -204,10 +196,15 @@ class _MenuState extends State<MenuView> {
   }
 
   Widget _buildCategoriesSection() {
-    return Consumer<MenuEditController> (builder: (context, menuController, child){
+    return Consumer2<MenuEditController, CategoriesController> (builder: (context, menuController, categoriesController, child){
       print("Building Consumer: ${menuController.menu?.itemsMenu.length} items");
-      for (var elemento in menuController.menu!.itemsMenu) {
-      categorias.add(elemento.categoria);
+      if (categoriesController.categories == null || categoriesController.categories!.isEmpty) {
+        return Container(); // Muestra un indicador de carga mientras se obtienen las categorías
+      }
+      categorias.clear();
+      categorias.add("Todo");
+      for (var elemento in categoriesController.categories!) {
+      categorias.add(elemento);
       }
       return ListView(
       scrollDirection: Axis.horizontal,
@@ -215,17 +212,17 @@ class _MenuState extends State<MenuView> {
         Row(
             children: categorias
                 .map((elemento) {
-                  Color color = elemento == selectedCategoria
+                  Color color = elemento == menuEditController.selectedCategoria
                       ? Color(0xFFFF5F04)
                       : Colors.white;
-                  Color color1 = elemento == selectedCategoria
+                  Color color1 = elemento == menuEditController.selectedCategoria
                       ? Colors.white
                       : Colors.black;
                   return [
                     OutlinedButton(
                         onPressed: () {
                           setState(() {
-                            selectedCategoria = elemento;
+                            menuEditController.selectedCategoria = elemento;
                           });
                         },
                         style: OutlinedButton.styleFrom(
@@ -250,15 +247,15 @@ class _MenuState extends State<MenuView> {
 
   Widget _buildProductList(){
 
-    return Consumer<MenuEditController>(builder: (context, menuController, child){
+    return Consumer2<MenuEditController, CategoriesController>(builder: (context, menuController,categoriesController, child){
       return ListView.builder(
       scrollDirection: Axis.vertical,
       padding: EdgeInsets.zero,
       itemCount: menuController.menu!.itemsMenu.length,
       itemBuilder: (context, index) {
-        if (selectedCategoria == "Todo" ||
+        if (menuEditController.selectedCategoria == "Todo" ||
             menuController.menu!.itemsMenu[index].categoria ==
-                selectedCategoria) {
+                menuEditController.selectedCategoria) {
           return Column(
             children: [
               widget.rol == 'admin'

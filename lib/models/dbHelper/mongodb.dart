@@ -132,9 +132,9 @@ static actualizarMenu(Menu menu) async {
   }
 }
 
-static Future<List> getCategorias() async {
+static Future<List> getCategorias(String idRestaurante) async {
   try {
-    final categorias =await coleccion_categories.findOne();
+    final categorias =await coleccion_categories.findOne({'idRestaurante': idRestaurante});
     if(categorias!=null && categorias['categorias']!=null) {
       return categorias['categorias'];
     }
@@ -149,19 +149,12 @@ static Future<List> getCategorias() async {
   }
 } 
 
-static actualizaCategorias (List categorias) async {
+static actualizaCategorias (List categorias, String idRestaurante) async {
    await coleccion_categories.updateOne(
-        where.eq('_id', 1),
+        where.eq('idRestaurante', idRestaurante),
         modify.set('categorias', categorias),
       );
 }
 
-// static actualizarMenu(Menu menu) async {
-//   await coleccion_menu.updateMany(
-//     where.eq('idRestaurante', menu.idRestaurante),
-//     modify
-//       .set('itemsMenu', menu.itemsMenu.map((item) => item.toMap()).toList()),
-//   );
-// }
 
 }

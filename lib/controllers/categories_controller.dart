@@ -8,13 +8,22 @@ import 'package:easyorder/views/edit_categories.dart';
 import 'package:easyorder/views/menu.dart';
 import 'package:provider/provider.dart';
 
-class CategoriesController {
+class CategoriesController extends ChangeNotifier{
+
+  List? _categories;
+
+  List? get categories => _categories;
+
   Future<void> getCategoriasfromBD(context, menu, tipo) async {
     var categorias;
-    categorias = await MongoDatabase.getCategorias();
+    categorias = await MongoDatabase.getCategorias(menu.idRestaurante);
 
-    if (categorias.isNotEmpty && tipo == 0) {
-      Navigator.push(
+    if (categorias.isNotEmpty) {
+      _categories = categorias;
+      notifyListeners();
+
+      if (tipo==0) {
+        Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) {
@@ -26,8 +35,8 @@ class CategoriesController {
           },
         ),
       );
-    } else if (categorias.isNotEmpty && tipo == 1) {
-      Navigator.push(
+      } else if (tipo==1) {
+        Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) {
@@ -39,16 +48,17 @@ class CategoriesController {
           },
         ),
       );
+
+      }
+
     }
   }
 
   void editarCategoria(String newCategory, Map<String, bool> productos,List cambiar, String oldCategory, Menu menu, List categories) async {
 
-    //poner en string vacio las que se quedaron sin categoria
+    //poner en string de otros las que se quedaron sin categoria
     cambiar.forEach((producto) {
-      print(
-          "Se cambia a categoria vacio el producto ${producto.nombreProducto}");
-      producto.categoria = "";
+      producto.categoria = "otros";
     });
 
     //cambiar la categoria de los productos seleccionados
@@ -56,7 +66,6 @@ class CategoriesController {
       if (estaSeleccionado) {
         menu.itemsMenu.forEach((producto) {
           if (producto.nombreProducto == nombreProducto) {
-            print("Actualizando ${producto.nombreProducto} a la categoría $newCategory");
             producto.categoria = newCategory;
           }
         });
@@ -72,7 +81,41 @@ class CategoriesController {
 
     MongoDatabase.actualizarMenu(menu);
 
-    MongoDatabase.actualizaCategorias(categories);
+    MongoDatabase.actualizaCategorias(categories, menu.idRestaurante);
+
+    _categories = categories;
+    notifyListeners();
+
+
+  }
+
+  void crearCategoria(String newCategory, Map<String, bool> productos,Menu menu, List categories) async {
+    bool hayProductoSeleccionado = false;
+    //cambiar la categoria de los productos seleccionados
+    productos.forEach((nombreProducto, estaSeleccionado) {
+      if (estaSeleccionado) {
+        hayProductoSeleccionado=true;
+        menu.itemsMenu.forEach((producto) {
+          if (producto.nombreProducto == nombreProducto) {
+            producto.categoria = newCategory;
+          }
+        });
+      }
+    });
+    //añadir categoria nueva
+    categories.add(newCategory);
+  if (hayProductoSeleccionado==true) {
+    MongoDatabase.actualizarMenu(menu);
+  }
+  
+  MongoDatabase.actualizaCategorias(categories, menu.idRestaurante);
+
+    _categories = categories;
+    notifyListeners();
+
+  }
+
+  void eliminarCategoria(String deleteCategory, Map<String, bool> productos,Menu menu, List categories) async{
 
 
   }

@@ -1,4 +1,5 @@
 import 'package:easyorder/controllers/cart_controller.dart';
+import 'package:easyorder/controllers/categories_controller.dart';
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/views/edit_categories.dart';
@@ -49,7 +50,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(create:(context) {
           return MenuEditController();
-        },)
+        },),
+        ChangeNotifierProvider(create: (context){
+          return CategoriesController();
+        })
       ],
       child: const MaterialApp(
         home: Escanear(),
