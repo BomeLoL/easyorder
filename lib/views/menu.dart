@@ -8,7 +8,9 @@ import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/Widgets/edit_product_card.dart';
 import 'package:easyorder/views/Widgets/menu_card.dart';
-import 'package:easyorder/views/Widgets/navigationBarClient.dart';
+import 'package:easyorder/views/Widgets/navigationBarClientLogged.dart';
+import 'package:easyorder/views/Widgets/navigationBarClientUnLogged.dart';
+import 'package:easyorder/views/Widgets/navigationBarRestaurant.dart';
 import 'package:easyorder/views/detalleAdmin.dart';
 import 'package:easyorder/views/detallePedido.dart';
 import 'package:easyorder/views/vistaQr.dart';
@@ -100,7 +102,20 @@ class _MenuState extends State<MenuView> {
             ],
           ),
         ),
-        bottomNavigationBar: BarNavigationClient(idMesa: widget.idMesa, info: widget.info, restaurante: widget.restaurante),
+        
+        bottomNavigationBar: () {
+        if (userController.usuario == null) { 
+        return BarNavigationClientUnlogged(idMesa: widget.idMesa, info: widget.info, restaurante: widget.restaurante);}
+        else if (userController.usuario!=null){
+          if (userController.usuario?.usertype == "Comensal"){
+        return BarNavigationClientLogged(idMesa: widget.idMesa, info: widget.info, restaurante: widget.restaurante);
+          }
+          else if (userController.usuario?.usertype == "Restaurante"){
+        return BarNavigationRestaurant(idMesa: widget.idMesa, info: widget.info, restaurante: widget.restaurante);
+
+          }
+        }
+        }() 
       ),
     );
   });}

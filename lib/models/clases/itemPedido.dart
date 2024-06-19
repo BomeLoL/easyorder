@@ -14,7 +14,7 @@ class itemPedido {
     this.extras = const [],
   });
 
-  @override
+  @override   
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 

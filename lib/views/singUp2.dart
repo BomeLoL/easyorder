@@ -179,6 +179,8 @@ String? _validateFullName(String? value) {
                                       if (restaurante!= null && menu!=null){
                                       NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");} 
                                       } else {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
                                         Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(builder: (context) => Escanear()),

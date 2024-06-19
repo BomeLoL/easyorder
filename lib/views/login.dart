@@ -118,7 +118,7 @@ class _LoginState extends State<Login> {
                                 if (userController.usuario?.usertype == "Restaurante"){
                                       var restaurante = await MongoDatabase.getRestaurante(userController.usuario!.id);
                                       var menu = await MongoDatabase.getMenu(userController.usuario!.id);
-                                      if (restaurante!= null && menu!=null){
+                                      if (restaurante!= null && menu!=null){  
                                       NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");}
                                 }else{
 
@@ -179,8 +179,16 @@ class _LoginState extends State<Login> {
                                       if (restaurante!= null && menu!=null){
                                       NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");}
                                 }else{
-
-                                Navigator.pop(context);}
+                                Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return Escanear();
+                      
+                                      }
+                                    ),
+                                  );}
                                 }                                    
 
 

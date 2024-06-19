@@ -1,19 +1,21 @@
 import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/factura.dart';
+import 'package:easyorder/views/profile_view.dart';
 import 'package:easyorder/views/vistaQr.dart';
 import 'package:easyorder/views/walletView.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class BarNavigationClient extends StatefulWidget {
-  const BarNavigationClient({
+class BarNavigationClientLogged extends StatefulWidget {
+  const BarNavigationClientLogged({
     super.key,
     this.index,
     required this.info,
@@ -27,18 +29,18 @@ class BarNavigationClient extends StatefulWidget {
   final int idMesa;
 
   @override
-  State<BarNavigationClient> createState() => _NavigationbarClientState();
+  State<BarNavigationClientLogged> createState() => _NavigationbarClientState();
 }
 
-class _NavigationbarClientState extends State<BarNavigationClient> {
+class _NavigationbarClientState extends State<BarNavigationClientLogged> {
   bool confirmation = false;
   int selectedIndex = 0;
   bool isWalletSelected = false;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<CartController, NavController, CheckController>(
-      builder: (context, cartController, navController, checkController, child) {
+    return Consumer4<CartController, NavController, CheckController, UserController>(
+      builder: (context, cartController, navController, checkController,userController, child) {
         return BottomNavigationBar(
           elevation: 0,
           backgroundColor: Colors.white,
@@ -46,10 +48,13 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
               fontWeight: FontWeight.bold, color: Colors.black),
           unselectedLabelStyle: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
-            color: Color.fromRGBO(142, 142, 142, 1),
+            color: Colors.black,
           ),
           fixedColor: Color.fromRGBO(142, 142, 142, 1),
-
+          unselectedItemColor:Color.fromRGBO(142, 142, 142, 1) ,
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+          
           items: [
             BottomNavigationBarItem(
               icon: Icon(
@@ -89,7 +94,12 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
             if (clickedIndex == 3) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
+              Navigator.of(context).popUntil((route) {
+                return route.settings.name == 'menu';
               });
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ProfileView(idMesa: widget.idMesa, info: widget.info,restaurante: widget.restaurante,);
+              }));});
             } else if (clickedIndex == 2) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
@@ -151,12 +161,13 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
                   ),
                 ]
               );
-            } else if (clickedIndex == 1 && !navController.isWalletSelected) {
+            } else if (clickedIndex == 1 ) {
               setState(() {
-                navController.isWalletSelected = true;
                 navController.selectedIndex = clickedIndex;
               });
-
+              Navigator.of(context).popUntil((route) {
+                return route.settings.name == 'menu';
+              });
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -168,18 +179,10 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
                     );
                   },
                 ),
-              ).then((_) {
-                setState(() {
-                  navController.isWalletSelected = false;
-                });
-              });
-            } else if (clickedIndex == 1 && navController.isWalletSelected) {
-              setState(() {
-                navController.selectedIndex = clickedIndex;
-              });
-            }
+              );
+            } 
           },
-        );
+      );
       },
     );
   }

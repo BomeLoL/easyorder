@@ -1,6 +1,7 @@
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/navigate_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
+import 'package:easyorder/views/escaneoQR.dart';
 import 'package:easyorder/views/login.dart';
 import 'package:easyorder/views/singUp2.dart';
 import 'package:flutter/gestures.dart';
@@ -91,6 +92,16 @@ String? _validatePassword(String? value) {
           child: TextButton(
             onPressed: () {
               Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return Escanear();
+                
+                  },
+                ),
+              );
             },
             child: Text(
               'OK',
@@ -151,7 +162,7 @@ String? _validatePassword(String? value) {
                   child: Column(
                     children: [
                       CustomTextField(
-                        hintText: "Nombre completo",
+                        hintText: "Nombre del Comensal o Restaurante",
                         controller: textController.getController('fullName'),
                         errorText: _validateFullName(textController.getController('fullName').text),
                       ),
@@ -288,8 +299,16 @@ String? _validatePassword(String? value) {
                                       if (restaurante!= null && menu!=null){
                                       NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");}
                                 }else{
-
-                                Navigator.pop(context);}
+                                Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return Escanear();
+                      
+                                      }
+                                    ),
+                                  );}
                                 }     
                             }},
                           ),

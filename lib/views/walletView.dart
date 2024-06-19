@@ -3,7 +3,7 @@ import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/authService.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
-import 'package:easyorder/views/Widgets/navigationBarClient.dart';
+import 'package:easyorder/views/Widgets/navigationBarClientLogged.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,7 +42,6 @@ class _walletViewState extends State<walletView> {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(0, 255, 255, 255),
         elevation: 0,
         centerTitle: true,
@@ -306,7 +305,7 @@ class _walletViewState extends State<walletView> {
           ),
         ),
       ),
-      bottomNavigationBar: BarNavigationClient(idMesa: widget.idMesa,info: widget.info,restaurante: widget.restaurante),
+      bottomNavigationBar: BarNavigationClientLogged(idMesa: widget.idMesa,info: widget.info,restaurante: widget.restaurante),
     );
 }
 }
