@@ -47,13 +47,14 @@ class _EditCategoriesState extends State<EditCategories> {
     });
 
     
-    if (categorias.isNotEmpty && widget.tipo==1) {
+    if (categorias.isNotEmpty && (widget.tipo==1 || widget.tipo==2)) {
       categoriaSelect = categorias[0];
     }
 
     if (widget.tipo==0) {
       textController.getController("New_Categoria").clear();
-    } else if (widget.tipo==1) {
+      categoriaSelect = "Nueva Categoria";
+    } else if (widget.tipo==1 || widget.tipo==2) {
       textController.getController("New_Categoria").text = categoriaSelect;
     }
     updateProductos();
@@ -63,9 +64,9 @@ class _EditCategoriesState extends State<EditCategories> {
     setState(() {
       productos.clear();
       widget.menu.itemsMenu.forEach((item) {
-        if (item.categoria.isNotEmpty) {
+        // if (item.categoria.isNotEmpty) {
           productos[item.nombreProducto] = item.categoria == categoriaSelect;
-        }
+        // }
       });
     });
   }
@@ -225,9 +226,10 @@ class _EditCategoriesState extends State<EditCategories> {
         }
       );
 
-    } 
+    } else {
       return Container();
-  
+    }
+
   }
 
   Widget showCategorias(BuildContext context) {
@@ -397,7 +399,7 @@ class _EditCategoriesState extends State<EditCategories> {
               });
             },
           );
-          } else if (widget.tipo==1) {
+          } else if (widget.tipo==1 || widget.tipo==2) {
             return CheckboxListTile(
             activeColor: primaryColor,
             title: Text(nombreP),
@@ -468,6 +470,10 @@ class _EditCategoriesState extends State<EditCategories> {
                   menuEditController.selectedCategoria = "Todo";
                   Navigator.pop(context);
                 }
+              } else if (widget.tipo == 2) {
+                categoriesController.eliminarCategoria(textController.getController("New_Categoria").text, productos, menuEditController.menu!, categorias);
+                menuEditController.selectedCategoria = "Todo";
+                Navigator.pop(context);
               }
             },
             style: ElevatedButton.styleFrom(

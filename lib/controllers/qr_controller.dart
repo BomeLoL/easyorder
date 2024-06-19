@@ -86,7 +86,7 @@ class QrController {
     Future.microtask(() {
     MenuEditController _menuEditController = Provider.of<MenuEditController>(context, listen: false);
     CategoriesController _categoriesController=Provider.of<CategoriesController>(context, listen: false);
-    _categoriesController.getCategoriasfromBD(context, menu, 2);
+    _categoriesController.getCategoriasfromBD(context, menu, 3);
     
     // Manejo de errores para asegurarse de que el menú se establece correctamente
     try {

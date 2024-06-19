@@ -172,7 +172,9 @@ class _MenuState extends State<MenuView> {
           ),
           //eliminar categoria
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              categoriesController.getCategoriasfromBD(context,menuEditController.menu!, 2);
+            },
             style: IconButton.styleFrom(
                 backgroundColor: primaryColor,
                 shape: RoundedRectangleBorder(
