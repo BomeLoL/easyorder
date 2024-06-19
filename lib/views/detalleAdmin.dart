@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class detalleAdmin extends StatefulWidget {
-  const detalleAdmin({super.key, required this.info, this.producto = null});
+  const detalleAdmin({super.key, required this.info, this.producto});
   final String info;
   final ItemMenu? producto;
 
@@ -33,9 +33,9 @@ class _detalleAdminState extends State<detalleAdmin> {
 
   @override
   void dispose() {
-    textController.clearText('field1');
-    textController.clearText('field2');
-    textController.clearText('field3');
+    textController.clearText('NameField');
+    textController.clearText('PriceField');
+    textController.clearText('DescriptionField');
     super.dispose();
   }
 
@@ -79,12 +79,61 @@ class _detalleAdminState extends State<detalleAdmin> {
                     },
                     child: Container(
                       child: Builder(builder: (context) {
-                        if (_image != null) {
+                        if (_image != null ||
+                            widget.producto != null && _image == null) {
                           _imageSelected = true;
-                          return Image.file(
-                            _image!,
-                            fit: BoxFit.cover,
-                            filterQuality: FilterQuality.high,
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Container(
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(25),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.upload,
+                                          color: Colors.black,
+                                          // Icono de cámara
+
+                                          size: 50,
+                                          // Tamaño del icono
+                                        ),
+                                        SizedBox(height: 10),
+                                        // Espacio entre el icono y el texto
+
+                                        Text(
+                                          'Selecciona la imagen del producto',
+                                          // Texto
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Opacity(
+                                opacity: 0.5,
+                                child: _image != null
+                                    ? Image.file(
+                                        _image!,
+                                        fit: BoxFit.cover,
+                                        filterQuality: FilterQuality.high,
+                                      )
+                                    : Image.network(
+                                        widget.producto!.imgUrl,
+                                        fit: BoxFit.cover,
+                                        filterQuality: FilterQuality.high,
+                                      ),
+                              ),
+                            ],
                           );
                         } else {
                           return Container(
@@ -144,145 +193,165 @@ class _detalleAdminState extends State<detalleAdmin> {
                             ),
                           ),
                         ),
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.all(35),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                //Icon(icon);
-                                Text(
-                                  'Nombre del producto *',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-
-                                CustomTextFormField(
-                                  controller:
-                                      textController.getController('field1'),
-                                  hintText: 'Ej. Hamburguesa Clásica',
-                                  validator:
-                                      'Por favor, ingresa el nombre del producto',
-                                ),
-
-                                SizedBox(height: 25),
-
-                                Text(
-                                  'Precio *',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                CustomTextFormField(
-                                  controller:
-                                      textController.getController('field2'),
-                                  hintText: 'Ej. 12',
-                                  keyboardType: TextInputType.number,
-                                  validator: 'Por favor, ingresa el precio',
-                                ),
-
-                                SizedBox(height: 25),
-
-                                Text(
-                                  'Descripción *',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-
-                                CustomTextFormField(
-                                  controller:
-                                      textController.getController('field3'),
-                                  hintText:
-                                      'Ej. Pan brioche, 200g de carne, lechuga, tomate, queso amarillo...',
-                                  validator:
-                                      'Por favor, ingresa la descripción',
-                                ),
-
-                                SizedBox(height: 25),
-                                Text(
-                                  'Categoría *',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-
-                                DropdownButtonHideUnderline(
-                                  child: Container(
-                                    width: double
-                                        .infinity, // This makes the dropdown width fit the screen
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: _categoryValid
-                                              ? primaryColor
-                                              : Colors
-                                                  .red), // Set the border color
-                                      borderRadius: BorderRadius.circular(
-                                          4.0), // Optional: Add border radius
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12.5),
-                                      child: DropdownButton<String>(
-                                        isExpanded:
-                                            true, // This makes the dropdown width fit the screen
-                                        value: _selectedCategory,
-                                        items: [
-                                          DropdownMenuItem(
-                                            value: 'item1',
-                                            child: Text('Elemento 1'),
-                                          ),
-                                          DropdownMenuItem(
-                                            value: 'item2',
-                                            child: Text('Elemento 2'),
-                                          ),
-                                          DropdownMenuItem(
-                                            value: 'item3',
-                                            child: Text('Elemento 3'),
-                                          ),
-                                        ],
-                                        hint: Text('Seleccionar categoría',
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 14)),
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            _selectedCategory = value;
-                                            _categoryValid =
-                                                true; // Clear the error when a category is selected
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                if (!_categoryValid)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12.5, vertical: 8.0),
-                                    child: Text(
-                                      'Por favor, selecciona una categoría',
+                      Consumer(
+                        builder: (context, cartController, child) {
+                          return Container(
+                            child: Padding(
+                              padding: const EdgeInsets.all(35),
+                              child: Form(
+                                key: _formKey,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    //Icon(icon);
+                                    Text(
+                                      'Nombre del producto *',
                                       style: GoogleFonts.poppins(
-                                        fontSize: 12.0,
-                                        color: Colors.red.shade900,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
                                       ),
                                     ),
-                                  ),
-                              ],
+                          
+                                    CustomTextFormField(
+                                      controller: widget.producto != null
+                                          ? textController.getController(
+                                              widget.producto!.nombreProducto,
+                                              savedValue:
+                                                  widget.producto!.nombreProducto)
+                                          : textController
+                                              .getController('NameField'),
+                                      hintText: 'Ej. Hamburguesa Clásica',
+                                      validator:
+                                          'Por favor, ingresa el nombre del producto',
+                                    ),
+                          
+                                    SizedBox(height: 25),
+                          
+                                    Text(
+                                      'Precio *',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    CustomTextFormField(
+                                      controller: widget.producto != null
+                                          ? textController.getController(
+                                              widget.producto!.precio.toString(),
+                                              savedValue: widget.producto!.precio
+                                                  .toString())
+                                          : textController
+                                              .getController('PriceField'),
+                                      hintText: 'Ej. 12',
+                                      keyboardType: TextInputType.number,
+                                      validator: 'Por favor, ingresa el precio',
+                                    ),
+                          
+                                    SizedBox(height: 25),
+                          
+                                    Text(
+                                      'Descripción *',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                          
+                                    CustomTextFormField(
+                                      controller: widget.producto != null
+                                          ? textController.getController(
+                                              widget.producto!.descripcion
+                                                  .toString(),
+                                              savedValue:
+                                                  widget.producto!.descripcion)
+                                          : textController
+                                              .getController('DescriptionField'),
+                                      hintText:
+                                          'Ej. Pan brioche, 200g de carne, lechuga, tomate, queso amarillo...',
+                                      validator:
+                                          'Por favor, ingresa la descripción',
+                                    ),
+                          
+                                    SizedBox(height: 25),
+                                    Text(
+                                      'Categoría *',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                          
+                                    DropdownButtonHideUnderline(
+                                      child: Container(
+                                        width: double
+                                            .infinity, // This makes the dropdown width fit the screen
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: _categoryValid
+                                                  ? primaryColor
+                                                  : Colors
+                                                      .red), // Set the border color
+                                          borderRadius: BorderRadius.circular(
+                                              4.0), // Optional: Add border radius
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12.5),
+                                          child: DropdownButton<String>(
+                                            isExpanded:
+                                                true, // This makes the dropdown width fit the screen
+                                            value: _selectedCategory,
+                                            items: [
+                                              DropdownMenuItem(
+                                                value: 'item1',
+                                                child: Text('Elemento 1'),
+                                              ),
+                                              DropdownMenuItem(
+                                                value: 'item2',
+                                                child: Text('Elemento 2'),
+                                              ),
+                                              DropdownMenuItem(
+                                                value: 'item3',
+                                                child: Text('Elemento 3'),
+                                              ),
+                                            ],
+                                            hint: Text('Seleccionar categoría',
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 14)),
+                                            onChanged: (String? value) {
+                                              setState(() {
+                                                _selectedCategory = value;
+                                                _categoryValid =
+                                                    true; // Clear the error when a category is selected
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    if (!_categoryValid)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12.5, vertical: 8.0),
+                                        child: Text(
+                                          'Por favor, selecciona una categoría',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12.0,
+                                            color: Colors.red.shade900,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        }
                       ),
                     ],
                   ),
@@ -308,7 +377,6 @@ class _detalleAdminState extends State<detalleAdmin> {
                 if (_formKey.currentState!.validate() &&
                     _categoryValid &&
                     _imageSelected) {
-                  
                   return;
                 }
               },

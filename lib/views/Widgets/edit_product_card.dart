@@ -23,6 +23,7 @@ class EditProductCard extends ProductCardBase {
               flex: 4,
               child: IconButton(
                 onPressed: () {
+                  navigateToDetalleProducto(context);
                 },
                 icon: Icon(
                   Icons.edit,
@@ -56,5 +57,16 @@ class EditProductCard extends ProductCardBase {
   }
 
   @override
-  void navigateToDetalleProducto(BuildContext context) {}
+  void navigateToDetalleProducto(BuildContext context) {
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => detalleAdmin(
+          info: info,
+          producto: producto
+        ),
+      ),
+    );
+  }
 }
