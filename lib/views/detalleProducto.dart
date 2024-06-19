@@ -73,7 +73,7 @@ class _detalleProductoState extends State<detalleProducto> {
         scrolledUnderElevation: 0,
         title: Text(
           'Detalles del producto',
-          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
+          style: titleStyle,
         ),
       ),
       body: CustomScrollView(slivers: [
@@ -108,11 +108,7 @@ class _detalleProductoState extends State<detalleProducto> {
                                 //Icon(icon);
                                 Text(
                                   widget.producto.nombreProducto,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
+                                  style: biggerTitle
                                 ),
 
                                 SizedBox(height: 25),
@@ -132,11 +128,7 @@ class _detalleProductoState extends State<detalleProducto> {
                                 Text(
                                   widget.producto.descripcion,
                                   textAlign: TextAlign.justify,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                  ),
+                                  style: normalTextStyle
                                 ),
                               SizedBox(height: 25),
 

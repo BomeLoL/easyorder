@@ -1,3 +1,4 @@
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/login.dart';
@@ -56,9 +57,9 @@ class _EscanearState extends State<Escanear> {
               child: Column(
                 children: [
                   SizedBox(height: 20),
-                  Text("Bienvenido", style: GoogleFonts.poppins(fontSize: MediaQuery.of(context).size.width * 0.05, fontWeight: FontWeight.bold)),
+                  Text("Bienvenido", style: titleStyle),
                   SizedBox(height: 10),
-                  Text("¡Descubre todo lo que EasyOrder te ofrece!", style: GoogleFonts.poppins(fontSize: MediaQuery.of(context).size.width * 0.028, fontWeight: FontWeight.w500)),
+                  Text("¡Descubre todo lo que EasyOrder te ofrece!", style: subtitleStyle2),
                   SizedBox(height: 18),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 35), // Agrega un espacio a cada lado del botón

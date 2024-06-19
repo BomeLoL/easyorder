@@ -316,12 +316,13 @@ class _detalleAdminState extends State<detalleAdmin> {
                     _imageSelected) {
                       // Obtener el texto del campo
                       String precioTexto = textController.getText('precio');
+                      String nombre = textController.getText('nombre').trim();
                       String? imageURL = await _firebaseService.uploadImage(_image!);
                       // Reemplazar comas por puntos
                       precioTexto = precioTexto.replaceAll(',', '.');
                       final itemMenu = ItemMenu(
                       id: DateTime.now().millisecondsSinceEpoch, 
-                      nombreProducto: textController.getText('nombre'),
+                      nombreProducto: nombre,
                       descripcion: textController.getText('descripcion'),
                       precio: double.parse(precioTexto),
                       categoria: _selectedCategory!,

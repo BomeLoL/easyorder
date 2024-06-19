@@ -1,6 +1,8 @@
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/navigate_controller.dart';
+import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/views/login.dart';
 import 'package:easyorder/views/singUp2.dart';
 import 'package:flutter/gestures.dart';
@@ -111,228 +113,262 @@ String? _validatePassword(String? value) {
     return Scaffold(
       body: Container(
         color: Colors.white,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(height: size.height * 0.065),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
-                  child: Text(
-                    "Créate una cuenta",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      fontSize: MediaQuery.of(context).size.height * 0.035,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(height: size.height * 0.02),
-                Stack(
+        child: Stack(
+          children: [
+            SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Container(
+                    SizedBox(height: size.height * 0.065),
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
                       child: Text(
-                        "Cree una cuenta para acceder a todas nuestras funcionalidades",
+                        "Créate una cuenta",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
-                          fontSize: MediaQuery.of(context).size.height * 0.018,
-                          fontWeight: FontWeight.w500,
-                          height: 2,
+                          fontSize: MediaQuery.of(context).size.height * 0.035,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    Stack(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
+                          child: Text(
+                            "Cree una cuenta para acceder a todas nuestras funcionalidades",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: MediaQuery.of(context).size.height * 0.018,
+                              fontWeight: FontWeight.w500,
+                              height: 2,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: size.height * 0.03),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
+                      child: Column(
+                        children: [
+                          CustomTextField(
+                            hintText: "Nombre completo",
+                            controller: textController.getController('fullName'),
+                            errorText: _validateFullName(textController.getController('fullName').text),
+                          ),
+                          SizedBox(height: size.height * 0.025),
+                          CustomTextField(
+                            hintText: "Ingresa tu correo electrónico",
+                            controller: textController.getController('email'),
+                            errorText: _validateEmail(textController.getController('email').text),
+                          ),
+                          SizedBox(height: size.height * 0.025),
+                          CustomDropdown(
+                            hintText: "¿Eres un Comensal o un Restaurante?",
+                            options: ["Comensal", "Restaurante"],
+                            showError: showErrorUserType,  // Estado para mostrar el error del tipo de usuario
+                            errorText: _validateUserType(userType),  // Mensaje de error para el tipo de usuario
+                            onChanged: (value) {
+                              setState(() {
+                                userType = value!;  // Actualizar el tipo de usuario seleccionado
+                                showErrorUserType = false;  // Ocultar el mensaje de error del tipo de usuario
+                              });
+                              print("Selected option: $value");
+                            },
+                          ),
+                          SizedBox(height: size.height * 0.025),
+                          CustomTextField(
+                            hintText: "Ingresa tu contraseña",
+                            controller: textController.getController('password'),
+                            errorText: _validatePassword(textController.getController('password').text),
+                          ),
+                          SizedBox(height: size.height * 0.05),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: size.height * 0.08,
+                              child: ElevatedButton(
+                            onPressed: () async {
+                              setState(() {
+                                _submitted = true;
+                              });
+                                  String? emailError = _validateEmail(textController.getController('email').text);
+                                  String? fullNameError = _validateFullName(textController.getController('fullName').text);
+                                  String? passwordError = _validatePassword(textController.getController('password').text);
+                                  String? userTypeError = _validateUserType(userType);
+            
+            
+                                  if (emailError != null || fullNameError != null || passwordError != null || userTypeError !=null)  {
+                                    // Mostrar errores si hay campos inválidos
+                                  } else {
+                                    try {
+                                      Provider.of<SpinnerController>(context, listen: false).setLoading(true);
+                                      var v4 = Uuid().generateV4();
+                                      var x = await _auth.createUserWithEmailAndPassword(
+                                        textController.getController('email').text,
+                                        textController.getController('password').text,
+                                      );
+                                      if (x != null) {
+                                        _auth.createUserDoc(
+                                          id: v4,
+                                          cuenta: "correo",
+                                          nombre: textController.getController('fullName').text,
+                                          correo: textController.getController('email').text,
+                                          usertype: userType,
+                                        );
+                                       UserController userController = Provider.of<UserController>(context, listen: false);
+                                        var getUsuario = await _auth.getUserByEmailAndAccount(textController.getController('email').text,'correo');
+                                        userController.usuario = getUsuario;
+                                        cerrarTeclado(context);
+                                        if (userType == "Restaurante") {
+                                          await MongoDatabase.insertarRestaurante(v4, textController.getController('fullName').text);
+                                          var restaurante = await MongoDatabase.getRestaurante(v4);
+                                          var menu = await MongoDatabase.getMenu(v4);
+                                          if (restaurante!= null && menu!=null){
+                                          NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");} 
+                                        }else{
+                                          Navigator.pop(context);
+                                        }
+                                      }
+                                      
+                                      else {
+                                        showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus datos');
+            
+                                      }
+                                    } catch (e) {
+                                      Provider.of<SpinnerController>(context, listen: false).setLoading(false);
+                                      showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus datos');
+                                    }
+                                    Provider.of<SpinnerController>(context, listen: false).setLoading(false);
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xFFFF5F04),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Crear cuenta",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: MediaQuery.of(context).size.height * 0.020,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+            
+                            ],
+                          ),
+                          SizedBox(height: size.height * 0.06),
+                          ConnectWith(),
+                          SizedBox(height: size.height * 0.04),
+                          Row(
+                            children: [
+                              IconDisplayButton(
+                                iconPath: "images/googleIcon.png",
+                                text: "Registrarse con Google",
+                                onPressed: () async {
+                                  Provider.of<SpinnerController>(context, listen: false).setLoading(true);
+                                  email = await _auth.signinwithGoogle();
+                                  if (email != null) {
+                                    await _auth.getUserByEmailAndAccount(email, 'google');
+                                    var getUsuario = await _auth.getUserByEmailAndAccount(email, 'google');
+                                    if (getUsuario == null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => SignuP2(email: email,)),
+                                      );
+                                    }  else {
+                                        UserController userController = Provider.of<UserController>(context, listen: false);
+                                        userController.usuario = getUsuario;
+                                    if (userController.usuario?.usertype == "Restaurante"){
+                                          var restaurante = await MongoDatabase.getRestaurante(userController.usuario!.id);
+                                          var menu = await MongoDatabase.getMenu(userController.usuario!.id);
+                                          if (restaurante!= null && menu!=null){
+                                          NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");}
+                                    }else{
+            
+                                    Navigator.pop(context);}
+                                    }     
+                                }
+                                Provider.of<SpinnerController>(context, listen: false).setLoading(false);
+                                },
+                              ),
+                            ],
+                          ),
+            
+                          SizedBox(height: size.height * 0.075),
+                          Center(
+                            child: Text.rich(
+                              TextSpan(
+                                text: "¿Ya tienes cuenta? ",
+                                style: GoogleFonts.poppins(
+                                  fontSize: MediaQuery.of(context).size.height * 0.015,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: "Iniciar sesión",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: MediaQuery.of(context).size.height * 0.015,
+                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.underline,
+                                       color: Color(0xFFFF5F04),
+                                      decorationColor: Color(0xFFFF5F04),
+                                    ),
+                                  recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => Login()),
+                                    );},
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: size.height * 0.075),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: size.height * 0.03),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
-                  child: Column(
-                    children: [
-                      CustomTextField(
-                        hintText: "Nombre completo",
-                        controller: textController.getController('fullName'),
-                        errorText: _validateFullName(textController.getController('fullName').text),
-                      ),
-                      SizedBox(height: size.height * 0.025),
-                      CustomTextField(
-                        hintText: "Ingresa tu correo electrónico",
-                        controller: textController.getController('email'),
-                        errorText: _validateEmail(textController.getController('email').text),
-                      ),
-                      SizedBox(height: size.height * 0.025),
-                      CustomDropdown(
-                        hintText: "¿Eres un Comensal o un Restaurante?",
-                        options: ["Comensal", "Restaurante"],
-                        showError: showErrorUserType,  // Estado para mostrar el error del tipo de usuario
-                        errorText: _validateUserType(userType),  // Mensaje de error para el tipo de usuario
-                        onChanged: (value) {
-                          setState(() {
-                            userType = value!;  // Actualizar el tipo de usuario seleccionado
-                            showErrorUserType = false;  // Ocultar el mensaje de error del tipo de usuario
-                          });
-                          print("Selected option: $value");
-                        },
-                      ),
-                      SizedBox(height: size.height * 0.025),
-                      CustomTextField(
-                        hintText: "Ingresa tu contraseña",
-                        controller: textController.getController('password'),
-                        errorText: _validatePassword(textController.getController('password').text),
-                      ),
-                      SizedBox(height: size.height * 0.05),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: size.height * 0.08,
-                          child: ElevatedButton(
-                        onPressed: () async {
-                          setState(() {
-                            _submitted = true;
-                          });
-                              String? emailError = _validateEmail(textController.getController('email').text);
-                              String? fullNameError = _validateFullName(textController.getController('fullName').text);
-                              String? passwordError = _validatePassword(textController.getController('password').text);
-                              String? userTypeError = _validateUserType(userType);
-
-
-                              if (emailError != null || fullNameError != null || passwordError != null || userTypeError !=null)  {
-                                // Mostrar errores si hay campos inválidos
-                              } else {
-                                try {
-                                  var v4 = Uuid().generateV4();
-                                  var x = await _auth.createUserWithEmailAndPassword(
-                                    textController.getController('email').text,
-                                    textController.getController('password').text,
-                                  );
-                                  if (x != null) {
-                                    _auth.createUserDoc(
-                                      id: v4,
-                                      cuenta: "correo",
-                                      nombre: textController.getController('fullName').text,
-                                      correo: textController.getController('email').text,
-                                      usertype: userType,
-                                    );
-                                   UserController userController = Provider.of<UserController>(context, listen: false);
-                                    var getUsuario = await _auth.getUserByEmailAndAccount(textController.getController('email').text,'correo');
-                                    userController.usuario = getUsuario;
-                                    cerrarTeclado(context);
-                                    if (userType == "Restaurante") {
-                                      await MongoDatabase.insertarRestaurante(v4, textController.getController('fullName').text);
-                                      var restaurante = await MongoDatabase.getRestaurante(v4);
-                                      var menu = await MongoDatabase.getMenu(v4);
-                                      if (restaurante!= null && menu!=null){
-                                      NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");} 
-                                    }else{
-                                      Navigator.pop(context);
-                                    }
-
-                                  }
-                                  
-                                  else {
-                                    showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus datos');
-
-                                  }
-                                } catch (e) {
-                                  showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus datos');
-                                }
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFFFF5F04),
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: Text(
-                              "Crear cuenta",
-                              style: GoogleFonts.poppins(
-                                fontSize: MediaQuery.of(context).size.height * 0.020,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                        ],
-                      ),
-                      SizedBox(height: size.height * 0.06),
-                      ConnectWith(),
-                      SizedBox(height: size.height * 0.04),
-                      Row(
-                        children: [
-                          IconDisplayButton(
-                            iconPath: "images/googleIcon.png",
-                            text: "Registrarse con Google",
-                            onPressed: () async {
-                              email = await _auth.signinwithGoogle();
-                              if (email != null) {
-                                await _auth.getUserByEmailAndAccount(email, 'google');
-                                var getUsuario = await _auth.getUserByEmailAndAccount(email, 'google');
-                                if (getUsuario == null) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => SignuP2(email: email,)),
-                                  );
-                                }  else {
-                                    UserController userController = Provider.of<UserController>(context, listen: false);
-                                    userController.usuario = getUsuario;
-                                if (userController.usuario?.usertype == "Restaurante"){
-                                      var restaurante = await MongoDatabase.getRestaurante(userController.usuario!.id);
-                                      var menu = await MongoDatabase.getMenu(userController.usuario!.id);
-                                      if (restaurante!= null && menu!=null){
-                                      NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");}
-                                }else{
-
-                                Navigator.pop(context);}
-                                }     
-                            }},
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: size.height * 0.075),
-                      Center(
-                        child: Text.rich(
-                          TextSpan(
-                            text: "¿Ya tienes cuenta? ",
-                            style: GoogleFonts.poppins(
-                              fontSize: MediaQuery.of(context).size.height * 0.015,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: "Iniciar sesión",
-                                style: GoogleFonts.poppins(
-                                  fontSize: MediaQuery.of(context).size.height * 0.015,
-                                  fontWeight: FontWeight.w600,
-                                  decoration: TextDecoration.underline,
-                                   color: Color(0xFFFF5F04),
-                                  decorationColor: Color(0xFFFF5F04),
-                                ),
-                              recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => Login()),
-                                );},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.075),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            Consumer<SpinnerController>(builder: (context, spinnerController, child){
+                if(spinnerController.isLoading){
+                  return AbsorbPointer(
+                    absorbing: true,
+                    child: Container(
+                      child: Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 238, 228, 221),  // Color de fondo del contenedor
+                            borderRadius: BorderRadius.circular(10),  // Radio de los bordes
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: CircularProgressIndicator(
+                              color: primaryColor,
+                            ),
+                          ),
+                        ),
+                        ),
+                    ),
+                  );
+                }else{
+                  return Container();
+                }
+              })
+          ],
         ),
       ),
     );

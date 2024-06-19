@@ -1,6 +1,7 @@
 import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/models/clases/itemPedido.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/views/Widgets/product_card_base.dart';
 import 'package:easyorder/views/detalleProducto.dart';
 import 'package:flutter/material.dart';
@@ -22,17 +23,6 @@ class ListorderCard extends ProductCardBase {
   
   @override
   void navigateToDetalleProducto(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => detalleProducto(
-          info: info,
-          producto: producto,
-          isPedido: isPedido,
-          comment: comment,
-        ),
-      ),
-    );
   }
 
   @override
@@ -86,7 +76,11 @@ class ListorderCard extends ProductCardBase {
       flex: 2,
       child: Text(
         productoPedido.cantidad.toString(),
-        style: GoogleFonts.poppins(),
+        style: GoogleFonts.poppins(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: primaryColor,
+        ),
         textAlign: TextAlign.center,
       ),
     );

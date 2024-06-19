@@ -176,10 +176,7 @@ class _MenuState extends State<MenuView> {
       } else {
         return Text(
        "Menú del Restaurante",
-       style: GoogleFonts.poppins(
-         fontSize: 25,
-         fontWeight: FontWeight.bold,
-       ),
+       style: titleStyle
      );
       }    
   });}
