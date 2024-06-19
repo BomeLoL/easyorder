@@ -1,8 +1,10 @@
+
+import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/firebase_options.dart';
-import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/dbHelper/Enviroment.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/escaneoQR.dart';
@@ -54,9 +56,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => TextController()),
         ChangeNotifierProvider(create: (context) => CheckController()),
         ChangeNotifierProvider(create: (context) => UserController()),
-        ChangeNotifierProvider(create: (context) {
-          return NavController();
-        })
+        ChangeNotifierProvider(create: (context) {return NavController();}),
+        ChangeNotifierProvider(create:(context) {return MenuEditController();}),
+        
+        ChangeNotifierProvider(
+          create: (context) => TextController(),
+          child: MyApp(),
+        ),
+
       ],
       child: GetMaterialApp(
         defaultTransition: Transition.fade,

@@ -1,6 +1,7 @@
   import 'dart:async';
 
   import 'package:easyorder/models/clases/itemPedido.dart';
+import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/models/clases/menu.dart';
   import 'package:easyorder/models/clases/mesa.dart';
   import 'package:easyorder/models/clases/pedido.dart';
@@ -202,9 +203,26 @@ static Future<Pedido?> consolidarPedidos(String restauranteId, int numeroMesa) a
   }
 
   // ... otros métodos de la clase
+
+
+  ///Agrega un producto nuevo al menú del restaurante
+  static Future<void> agregarProducto(String idRestaurante, ItemMenu itemMenu) async {
+  try {
+    final menu = await getMenu(idRestaurante);
+    if (menu != null) {
+      // Verificar si el producto ya existe en el menú
+      bool productoExistente = menu.itemsMenu.any((item) => item.id == itemMenu.id);
+      if (productoExistente) {
+        throw Exception('El producto ya existe en el menú');
+      }
+
+      // Si el producto no existe, agregarlo al menú
+      menu.itemsMenu.add(itemMenu);
+      await actualizarMenu(menu);
+    } 
+  } catch (e) {
+    throw Exception('Error al agregar el producto: $e');
+  }
 }
 
-
-
-
-  
+}

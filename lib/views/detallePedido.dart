@@ -17,12 +17,10 @@ class detallePedido extends StatefulWidget {
   const detallePedido(
       {super.key,
       required this.info,
-      required this.menu,
       required this.restaurante, required this.idMesa});
       
   final String info;
   final Restaurante restaurante;
-  final Menu menu;
   final int idMesa;
 
   @override

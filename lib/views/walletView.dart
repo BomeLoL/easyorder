@@ -3,7 +3,7 @@ import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/authService.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
-import 'package:easyorder/views/Widgets/navigationBarClient.dart';
+import 'package:easyorder/views/Widgets/navigationBarClientLogged.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,13 +13,11 @@ import 'package:provider/provider.dart';
 class walletView extends StatefulWidget {
   const walletView({super.key,
       required this.info,
-      required this.menu,
       required this.restaurante,
       required this.idMesa});
       
   final String info;
   final Restaurante restaurante;
-  final Menu menu;
   final int idMesa;
   
   @override
@@ -44,7 +42,6 @@ class _walletViewState extends State<walletView> {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(0, 255, 255, 255),
         elevation: 0,
         centerTitle: true,
@@ -308,7 +305,7 @@ class _walletViewState extends State<walletView> {
           ),
         ),
       ),
-      bottomNavigationBar: BarNavigationClient(idMesa: widget.idMesa,info: widget.info,menu: widget.menu,restaurante: widget.restaurante),
+      bottomNavigationBar: BarNavigationClientLogged(idMesa: widget.idMesa,info: widget.info,restaurante: widget.restaurante),
     );
 }
 }

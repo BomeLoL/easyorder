@@ -1,3 +1,4 @@
+import 'package:easyorder/controllers/navigate_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/views/escaneoQR.dart';
 import 'package:flutter/material.dart';
@@ -158,28 +159,32 @@ String? _validateFullName(String? value) {
                                     try {
                                       var v4 = Uuid().generateV4();
                                       await _auth.createUserDoc(
+                                        id: v4,
                                         cuenta: "google",
                                         nombre: textController.getController('fullName').text,
                                         correo: widget.email,
                                         usertype: userType,
                                       );
+                                    cerrarTeclado(context);
+                                    UserController userController = Provider.of<UserController>(context, listen: false);
+                                    var getUsuario = await _auth.getUserByEmailAndAccount(widget.email,'google');
+                                    userController.usuario = getUsuario;
                                       if (userType == "Restaurante") {
                                         await MongoDatabase.insertarRestaurante(
                                           v4,
                                           textController.getController('fullName').text,
                                         );
+                                      var restaurante = await MongoDatabase.getRestaurante(v4);
+                                      var menu = await MongoDatabase.getMenu(v4);
+                                      if (restaurante!= null && menu!=null){
+                                      NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");} 
                                       } else {
-                                        // uwu
-                                      }
-                                    cerrarTeclado(context);
-
-                                    UserController userController = Provider.of<UserController>(context, listen: false);
-                                    var getUsuario = await _auth.getUserByEmailAndAccount(widget.email,'google');
-                                    userController.usuario = getUsuario;
-                                  Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => Escanear()),
-                                );
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => Escanear()),
+                                      );                                      }
                                     } catch (e) {
                                       errorSignup(context);
                                     }

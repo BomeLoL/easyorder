@@ -1,4 +1,6 @@
+import 'package:easyorder/controllers/navigate_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
@@ -72,7 +74,7 @@ class QrController {
         }
 
 //        }          
-        navigateToMenu(restaurante, menu, idMesa); //quito el context para intentar arreglar error
+        NavigateController().navigateToMenu(context,restaurante, menu, idMesa,"Comensal"); //quito el context para intentar arreglar error
        // }
 
       } else { // no posee la mesa escaneada
@@ -94,31 +96,6 @@ class QrController {
   return 1;
 
 }
-  // void navigateToMenu(BuildContext context, Restaurante restaurante, Menu menu, String idMesa ){
-  //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) { //maybe push 
-  //           return   
-  //           MenuView(info: restaurante.id, restaurante: restaurante,menu: menu, idMesa: int.parse(idMesa));
-  //           },
-  //           settings: const RouteSettings(name: 'menu'),
-  //           ));
-  // } //se comento para ver si funcionaba la solucion de abajo 
 
-  void navigateToMenu(Restaurante restaurante, Menu menu, String idMesa) {
-  if (context != null) {
-    Navigator.pushReplacement(
-      context!,
-      MaterialPageRoute(
-        builder: (context) {
-          return MenuView(
-            info: restaurante.id,
-            restaurante: restaurante,
-            menu: menu,
-            idMesa: int.parse(idMesa),
-          );
-        },
-        settings: const RouteSettings(name: 'menu'),
-      ),
-    );
-  }
 }
-}
+
