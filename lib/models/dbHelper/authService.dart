@@ -28,6 +28,20 @@ class Authservice {
     }
   }
 
+  Future<void> updateUser(Usuario usuario) async {
+    try {
+      final userDoc = _fs.collection('users').doc('${usuario.correo},${usuario.cuenta}');
+
+      // Convertir el objeto Usuario a JSON
+      Map<String, dynamic> updatedData = usuario.toJson();
+
+      // Actualizar el documento con los nuevos datos
+      await userDoc.update(updatedData);
+    } catch (e) {
+      print("Error updating user: $e");
+    }
+  }
+
 Future<String?> signinwithGoogle() async {
   try {
     await _googleSignIn.signOut();

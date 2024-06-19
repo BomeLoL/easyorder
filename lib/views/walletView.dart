@@ -1,11 +1,14 @@
+import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/models/dbHelper/authService.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/navigationBarClient.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
+import 'package:provider/provider.dart';
 
 class walletView extends StatefulWidget {
   const walletView({super.key,
@@ -27,9 +30,16 @@ class _walletViewState extends State<walletView> {
   final myController = TextEditingController();
   double saldo = 0;
   bool vacio=false;
+  final _auth = Authservice();
+  
 
   @override
   Widget build(BuildContext context) {
+    UserController userController = Provider.of<UserController>(context, listen: false);
+    if (userController.usuario?.saldo != null && userController.usuario!.saldo is double) {
+      saldo = userController.usuario!.saldo!;
+    }
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
@@ -196,6 +206,7 @@ class _walletViewState extends State<walletView> {
                               ElevatedButton(
                                   //Aqui empieza la funcion de Paypalx
                                   onPressed: () async {
+
                                     if (myController.text.isEmpty) {
                                       setState(() {
                                         vacio=true;
@@ -243,6 +254,21 @@ class _walletViewState extends State<walletView> {
                                                                   .text);
                                                     });
                                                     myController.clear();
+
+
+                                                  if (userController.usuario != null) {
+                                                    userController.usuario!.saldo = saldo;
+                                                    _auth.updateUser(userController.usuario!);
+                                                  }                                     
+                                                    if (userController.usuario != null && 
+                                                      userController.usuario!.correo != null && 
+                                                      userController.usuario!.cuenta != null) {
+                                                      var updateChangesUser = await _auth.getUserByEmailAndAccount(
+                                                      userController.usuario!.correo!,
+                                                      userController.usuario!.cuenta!,
+                                                    );
+                                                    userController.usuario = updateChangesUser;
+                                                  }
                                                   },
                                                   onError: (error) {
                                                     print("onError: $error");

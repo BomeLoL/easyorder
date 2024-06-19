@@ -1,3 +1,5 @@
+import 'package:easyorder/controllers/user_controller.dart';
+import 'package:easyorder/models/clases/usuario.dart';
 import 'package:easyorder/models/dbHelper/authService.dart';
 import 'package:easyorder/views/Widgets/connectWith.dart';
 import 'package:easyorder/views/Widgets/customTextField.dart';
@@ -5,18 +7,24 @@ import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/Widgets/iconDisplay.dart';
 import 'package:easyorder/views/escaneoQR.dart';
 import 'package:easyorder/views/singUp.dart';
+import 'package:easyorder/views/singUp2.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/controllers/text_controller.dart';
+import 'package:provider/provider.dart';
 
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   
-  final TextController textController = TextController();
-  bool isLoading = false;
+  @override
+  State<Login> createState() => _LoginState();
+}
 
+class _LoginState extends State<Login> {
+  final TextController textController = TextController();
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +104,13 @@ class Login extends StatelessWidget {
                                 textController.getController('password').text
                               );
                               if (result != null) {
+
+                                 UserController userController = Provider.of<UserController>(context, listen: false);
+
+                                Usuario? getUsuario = await _auth.getUserByEmailAndAccount(textController.getController('email').text,'correo');
+                                userController.usuario = getUsuario;
+                                
+
                                 cerrarTeclado(context);
                                 Navigator.pop(context);
                               } else {
@@ -134,11 +149,29 @@ class Login extends StatelessWidget {
                         children: [
                           IconDisplayButton(
                             iconPath: "images/googleIcon.png",
-                            text: "Registrarse con Google",
+                            text: "Iniciar sesión con Google",
                             onPressed: () async {
-                              var x = await _auth.signinwithGoogle();
-                              if (x!= null){
-                                Navigator.pop(context);
+                              var email = await _auth.signinwithGoogle();
+                              if (email != null) {
+                                _auth.getUserByEmailAndAccount(email, 'google');
+                                var y = await _auth.getUserByEmailAndAccount(email, 'google');
+                                if (y == null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => SignuP2(email: email,)),
+                                  );
+                                } else {
+                                    UserController userController = Provider.of<UserController>(context, listen: false);
+                                    Usuario? getUsuario = await _auth.getUserByEmailAndAccount(email,'google');
+                                    userController.usuario = getUsuario;
+
+                                  Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => Escanear()),
+                                );
+                                }                                    
+
+
                               }
                             },
                           ),

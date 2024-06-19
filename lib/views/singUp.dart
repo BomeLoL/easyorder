@@ -1,3 +1,4 @@
+import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/views/login.dart';
 import 'package:easyorder/views/singUp2.dart';
 import 'package:flutter/gestures.dart';
@@ -12,6 +13,7 @@ import 'package:easyorder/views/Widgets/connectWith.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:provider/provider.dart';
 
 class SignuP extends StatefulWidget {
   @override
@@ -214,6 +216,10 @@ String? _validatePassword(String? value) {
                                     if (userType == "Restaurante") {
                                       MongoDatabase.insertarRestaurante(v4, textController.getController('fullName').text);
                                     }
+                                   UserController userController = Provider.of<UserController>(context, listen: false);
+                                    var getUsuario = await _auth.getUserByEmailAndAccount(textController.getController('email').text,'correo');
+                                    userController.usuario = getUsuario;
+                                    cerrarTeclado(context);
                                   Navigator.pop(context);
                                   }
                                   
@@ -265,9 +271,8 @@ String? _validatePassword(String? value) {
                                     MaterialPageRoute(builder: (context) => SignuP2(email: email,)),
                                   );
                                 } else {
-                                  // otra pagina
+                                    Navigator.pop(context);}                              
                                 }
-                              }
                             },
                           ),
                         ],
@@ -315,6 +320,10 @@ String? _validatePassword(String? value) {
     );
   }
 
+}
+
+void cerrarTeclado(BuildContext context) {
+  FocusScope.of(context).requestFocus(new FocusNode());
 }
 
 void errorSignup(BuildContext context) {

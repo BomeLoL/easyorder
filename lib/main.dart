@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/firebase_options.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/dbHelper/Enviroment.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CartController()),
         ChangeNotifierProvider(create: (context) => TextController()),
         ChangeNotifierProvider(create: (context) => CheckController()),
+        ChangeNotifierProvider(create: (context) => UserController()),
         ChangeNotifierProvider(create: (context) {
           return NavController();
         })

@@ -1,3 +1,5 @@
+import 'package:easyorder/controllers/user_controller.dart';
+import 'package:easyorder/views/escaneoQR.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/views/Widgets/customTextField.dart';
@@ -7,6 +9,7 @@ import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:provider/provider.dart';
 
 class SignuP2 extends StatefulWidget {
   final String email;
@@ -168,8 +171,15 @@ String? _validateFullName(String? value) {
                                       } else {
                                         // uwu
                                       }
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
+                                    cerrarTeclado(context);
+
+                                    UserController userController = Provider.of<UserController>(context, listen: false);
+                                    var getUsuario = await _auth.getUserByEmailAndAccount(widget.email,'google');
+                                    userController.usuario = getUsuario;
+                                  Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => Escanear()),
+                                );
                                     } catch (e) {
                                       errorSignup(context);
                                     }
@@ -206,6 +216,9 @@ String? _validateFullName(String? value) {
   }
 }
 
+void cerrarTeclado(BuildContext context) {
+  FocusScope.of(context).requestFocus(new FocusNode());
+}
 
 void errorSignup(BuildContext context) {
   showCustomPopup(
