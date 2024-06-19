@@ -124,7 +124,6 @@ static actualizarMenu(Menu menu) async {
 
       // Si el producto no existe, agregarlo al menú
       menu.itemsMenu.add(itemMenu);
-      print("AAAAAAAAAAAA");
       await actualizarMenu(menu);
     } 
   } catch (e) {

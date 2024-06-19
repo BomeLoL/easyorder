@@ -1,4 +1,5 @@
 import 'package:easyorder/controllers/cart_controller.dart';
+import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
@@ -78,11 +79,25 @@ class QrController {
 
 }
   void navigateToMenu(BuildContext context, Restaurante restaurante, Menu menu, String idMesa ){
+    Future.microtask(() {
+    MenuEditController _menuEditController = Provider.of<MenuEditController>(context, listen: false);
+    
+    // Manejo de errores para asegurarse de que el menú se establece correctamente
+    try {
+      _menuEditController.menu = menu;
+    } catch (e) {
+      print("Error al establecer el menú en MenuEditController: $e");
+      // Manejar el error adecuadamente, por ejemplo, navegando a una pantalla de error o mostrando un mensaje
+      return;
+    }
+
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
             return   
-            MenuView(info: restaurante.id, restaurante: restaurante,menu: menu, idMesa: int.parse(idMesa));
+            MenuView(info: restaurante.id, restaurante: restaurante, idMesa: int.parse(idMesa));
             },
             settings: const RouteSettings(name: 'menu'),
             ));
+    });
+    
   }
 }

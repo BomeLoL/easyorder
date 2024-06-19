@@ -1,4 +1,5 @@
 import 'package:easyorder/controllers/cart_controller.dart';
+import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
@@ -19,14 +20,12 @@ class MenuView extends StatefulWidget {
   const MenuView({
     super.key,
     required this.info,
-    required this.menu,
     required this.restaurante,
     required this.idMesa,
     this.rol = 'admin',
   });
 
   final String info;
-  final Menu menu;
   final Restaurante restaurante;
   final int idMesa;
   final String rol;
@@ -48,9 +47,6 @@ class _MenuState extends State<MenuView> {
     super.initState();
     nombreRes = widget.restaurante.nombre;
     categorias.add("Todo");
-    for (var elemento in widget.menu.itemsMenu) {
-      categorias.add(elemento.categoria);
-    }
     selectedCategoria = "Todo";
   }
 
@@ -183,7 +179,12 @@ class _MenuState extends State<MenuView> {
   }
 
   Widget _buildCategoriesSection() {
-    return ListView(
+    return Consumer<MenuEditController> (builder: (context, menuController, child){
+      print("Building Consumer: ${menuController.menu?.itemsMenu.length} items");
+      for (var elemento in menuController.menu!.itemsMenu) {
+      categorias.add(elemento.categoria);
+      }
+      return ListView(
       scrollDirection: Axis.horizontal,
       children: [
         Row(
@@ -223,27 +224,30 @@ class _MenuState extends State<MenuView> {
                 .toList()),
       ],
       );
+    });    
   }
 
   Widget _buildProductList(){
-    return ListView.builder(
+
+    return Consumer<MenuEditController>(builder: (context, menuController, child){
+      return ListView.builder(
       scrollDirection: Axis.vertical,
       padding: EdgeInsets.zero,
-      itemCount: widget.menu.itemsMenu.length,
+      itemCount: menuController.menu!.itemsMenu.length,
       itemBuilder: (context, index) {
         if (selectedCategoria == "Todo" ||
-            widget.menu.itemsMenu[index].categoria ==
+            menuController.menu!.itemsMenu[index].categoria ==
                 selectedCategoria) {
           return Column(
             children: [
               widget.rol == 'admin'
                   ? EditProductCard(
                       producto:
-                          widget.menu.itemsMenu[index],
+                          menuController.menu!.itemsMenu[index],
                       info: nombreRes)
                   : MenuCard(
                       producto:
-                          widget.menu.itemsMenu[index],
+                          menuController.menu!.itemsMenu[index],
                       info: nombreRes),
               SizedBox(
                 height: 10,
@@ -255,6 +259,8 @@ class _MenuState extends State<MenuView> {
         }
       },
     );
+    });
+    
   }
 
   Widget _buildDivider() {
@@ -356,7 +362,6 @@ class _MenuState extends State<MenuView> {
                       MaterialPageRoute(
                           builder: (context) => detallePedido(
                               info: nombreRes,
-                              menu: widget.menu,
                               restaurante: widget.restaurante,
                               idMesa: widget.idMesa)),
                     );

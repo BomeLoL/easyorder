@@ -1,5 +1,4 @@
 import 'package:easyorder/controllers/cart_controller.dart';
-import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
@@ -17,12 +16,10 @@ class detallePedido extends StatefulWidget {
   const detallePedido(
       {super.key,
       required this.info,
-      required this.menu,
       required this.restaurante, required this.idMesa});
       
   final String info;
   final Restaurante restaurante;
-  final Menu menu;
   final int idMesa;
 
   @override
