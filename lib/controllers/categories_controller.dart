@@ -86,11 +86,14 @@ class CategoriesController extends ChangeNotifier {
     });
 
     //cambiar el nombre de la categoria
-    for (int i = 0; i < categories.length; i++) {
+    // if (categories.contains(newCategory)){
+      for (int i = 0; i < categories.length; i++) {
       if (categories[i] == oldCategory) {
         categories[i] = newCategory;
       }
     }
+    // }
+    
 
     MongoDatabase.actualizarMenu(menu);
 

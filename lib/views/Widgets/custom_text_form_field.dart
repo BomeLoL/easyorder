@@ -7,7 +7,8 @@ class CustomTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final TextInputType keyboardType;
-  final String? validator;
+  // final String? validator;
+  final String? Function(String?)? validator;
  
 
   @override
@@ -33,12 +34,7 @@ class CustomTextFormField extends StatelessWidget {
         hintStyle: GoogleFonts.poppins(
             fontSize: 14.0,
             color: Colors.black38)),
-        validator: (value) {
-          if (validator != null && (value == null || value.trim().isEmpty)) {
-            return validator;
-          }
-          return null;
-        }, 
+        validator: validator,
     );
   }
 

@@ -43,6 +43,13 @@ class _detalleAdminState extends State<detalleAdmin> {
     super.dispose();
   }
 
+  String? TextValidator(String? value, String existingCategoryMessage1) {
+    if (value == null || value.trim().isEmpty) {
+    return existingCategoryMessage1;
+    }
+    return null;
+}
+
   File? _image;
   Future<XFile?> _getImage() async {
     final picker = ImagePicker();
@@ -171,8 +178,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                                   controller:
                                       textController.getController('nombre'),
                                   hintText: 'Ej. Hamburguesa Clásica',
-                                  validator:
-                                      'Por favor, ingresa el nombre del producto',
+                                  validator: (value) => TextValidator(value, 'Por favor, ingresa el nombre del producto'),
                                 ),
 
                                 SizedBox(height: 25),
@@ -190,7 +196,9 @@ class _detalleAdminState extends State<detalleAdmin> {
                                       textController.getController('precio'),
                                   hintText: 'Ej. 12',
                                   keyboardType: TextInputType.number,
-                                  validator: 'Por favor, ingresa el precio',
+                                  validator:  (value) => TextValidator(value, 'Por favor, ingresa el precio'),
+                                  
+                                  
                                 ),
 
                                 SizedBox(height: 25),
@@ -209,8 +217,8 @@ class _detalleAdminState extends State<detalleAdmin> {
                                       textController.getController('descripcion'),
                                   hintText:
                                       'Ej. Pan brioche, 200g de carne, lechuga, tomate, queso amarillo...',
-                                  validator:
-                                      'Por favor, ingresa la descripción',
+                                  validator: (value) => TextValidator(value, 'Por favor, ingresa la descripción'),
+    
                                 ),
 
                                 SizedBox(height: 25),

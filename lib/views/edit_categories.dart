@@ -76,15 +76,25 @@ class _EditCategoriesState extends State<EditCategories> {
     });
   }
 
-  String? categoriaValidator(String? value) {
-  if (value == null || value.trim().isEmpty) {
-    return 'Este campo es obligatorio';
+  String? categoriaValidator(String? value, String existingCategoryMessage1, String existingCategoryMessage2, String newCategory) {
+    if (value == null || value.trim().isEmpty) {
+    return existingCategoryMessage1;
+    }
+
+     if (widget.tipo == 1 || widget.tipo == 2) {
+    // no puede escoger un nombre que ya sea una categoria
+    if (categorias.contains(value.trim()) && value.trim() != categoriaSelect) {
+      return existingCategoryMessage2;
+    }
+  } else if (widget.tipo == 0) {
+    //no crear una categoria que ya existe
+    if (categorias.contains(value.trim())) {
+      return existingCategoryMessage2;
+    }
   }
-  if (categorias.contains(value.trim())) {
-    return 'Esta categoría ya existe';
-  }
-  return null;
+    return null;
 }
+
 
   @override
   void dispose() {
@@ -116,7 +126,7 @@ class _EditCategoriesState extends State<EditCategories> {
               elevation: 0,
               centerTitle: true,
               title: Text(
-                "Categorias",
+                "Editar Categorias",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
             ),
@@ -174,7 +184,7 @@ class _EditCategoriesState extends State<EditCategories> {
               elevation: 0,
               centerTitle: true,
               title: Text(
-                "Categorias",
+                "Crear Categoria",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
             ),
@@ -229,7 +239,7 @@ class _EditCategoriesState extends State<EditCategories> {
               elevation: 0,
               centerTitle: true,
               title: Text(
-                "Categorias",
+                "Eliminar Categoria",
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
             ),
@@ -343,7 +353,7 @@ class _EditCategoriesState extends State<EditCategories> {
             CustomTextFormField(
               controller: textController.getController("New_Categoria"),
               hintText: categoriaSelect,
-              validator: 'Por favor, ingrese un nombre para la categoria',
+              validator: (value) => categoriaValidator(value,'Por favor ingrese un nombre para la categoria' ,'La categoría ingresada ya existe',textController.getController("New_Categoria").text),
             ),
           ],
         ),
@@ -370,7 +380,7 @@ class _EditCategoriesState extends State<EditCategories> {
             CustomTextFormField(
               controller: textController.getController("New_Categoria"),
               hintText: "Nombre de la nueva categoría",
-              validator: 'Por favor, ingrese un nombre para la categoria',
+              validator: (value) => categoriaValidator(value,'Por favor ingrese un nombre para la categoria' ,'La categoría ingresada ya existe.',textController.getController("New_Categoria").text),
             ),
           ],
         ),
@@ -456,6 +466,8 @@ class _EditCategoriesState extends State<EditCategories> {
               Navigator.of(context).popUntil((route) {
                 return route.settings.name == 'menu';
               });
+
+              menuEditController.selectedCategoria = "Todo";
             },
             style: TextButton.styleFrom(
                 shape: RoundedRectangleBorder(
