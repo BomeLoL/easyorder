@@ -48,6 +48,8 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
             color: Color.fromRGBO(142, 142, 142, 1),
           ),
           fixedColor: Color.fromRGBO(142, 142, 142, 1),
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
           items: [
             BottomNavigationBarItem(
               icon: Icon(
@@ -73,16 +75,26 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
               ),
               label: "Mis Pedidos",
             ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_circle_rounded,
+                size: 45.0,
+                color: Color.fromRGBO(255, 95, 4, 1),
+              ),
+              label: "Perfil",
+            ),
           ],
           currentIndex: navController.selectedIndex,
           onTap: (int clickedIndex) async {
-            if (clickedIndex == 2) {
-              // Actualizamos el índice de la barra de navegación
+            if (clickedIndex == 3) {
+              setState(() {
+                navController.selectedIndex = clickedIndex;
+              });
+            } else if (clickedIndex == 2) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
               });
 
-              // Obtenemos el pedido consolidado
               Pedido? pedido = await MongoDatabase.consolidarPedidos(widget.restaurante.id, widget.idMesa);
 
               if (pedido != null) {
@@ -93,9 +105,7 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
                 }
                 checkController.pedido = pedido;
               }
-              print("object");
-              // Navegamos a la página de Factura
-                Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) {
                   return Factura(
@@ -105,20 +115,16 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
                   );
                 }),
               );
-              print("uwu");
             } else if (clickedIndex == 0 && cartController.haPedido == false) {
-              // Actualizamos el índice de la barra de navegación
               setState(() {
                 navController.selectedIndex = clickedIndex;
               });
 
-              // Navegamos al escáner de código de barras
               Navigator.popUntil(context, (route) => route.isFirst);
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return BarcodeScannerWithOverlay();
               }));
             } else if (clickedIndex == 0 && cartController.haPedido == true) {
-              // Mostramos el popup de advertencia
               showCustomPopup(
                 context: context,
                 title: 'Finalice su estadía para escanear',
@@ -146,13 +152,11 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
                 ]
               );
             } else if (clickedIndex == 1 && !navController.isWalletSelected) {
-              // Actualizamos el índice de la barra de navegación y el estado de la billetera
               setState(() {
                 navController.isWalletSelected = true;
                 navController.selectedIndex = clickedIndex;
               });
 
-              // Navegamos a la vista de la billetera
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -165,13 +169,11 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
                   },
                 ),
               ).then((_) {
-                // Actualizamos el estado de la billetera al regresar
                 setState(() {
                   navController.isWalletSelected = false;
                 });
               });
             } else if (clickedIndex == 1 && navController.isWalletSelected) {
-              // Actualizamos el índice de la barra de navegación
               setState(() {
                 navController.selectedIndex = clickedIndex;
               });
@@ -182,3 +184,4 @@ class _NavigationbarClientState extends State<BarNavigationClient> {
     );
   }
 }
+
