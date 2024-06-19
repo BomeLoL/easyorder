@@ -355,7 +355,7 @@ class _detalleFacturaState extends State<Factura> {
         return AlertDialog(
           backgroundColor: Colors.white,
           title: Text(
-            'Fondos Insuficientes!',
+            'Fondos Insuficientes',
             style:
                 GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
           ),
