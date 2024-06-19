@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/restaurante_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
@@ -39,8 +40,8 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer4<CartController, NavController, CheckController, UserController>(
-      builder: (context, cartController, navController, checkController,userController, child) {
+    return Consumer5<CartController, NavController, CheckController, UserController, RestauranteController>(
+      builder: (context, cartController, navController, checkController,userController, restauranteController, child) {
         return BottomNavigationBar(
           elevation: 0,
           backgroundColor: Colors.white,
@@ -83,6 +84,7 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
           ],
           currentIndex: navController.selectedIndex,
           onTap: (int clickedIndex) async {
+            print("AAAAAAAAAAAAAAAAAAAAAAAA ${clickedIndex}");
             if (clickedIndex == 0) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
@@ -90,13 +92,15 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
               Navigator.of(context).popUntil((route) {
                 return route.settings.name == 'menu';
               });
-            if (clickedIndex == 1) {
+            } else if (clickedIndex == 1) {
+              print("AAAAAAAAAAAAAAAAA");
               setState(() {
                 navController.selectedIndex = clickedIndex;
               });
+
+              restauranteController.getMesas(context);
             // aqui va lo de gestionar mesas
 
-            }
             } else if (clickedIndex == 2) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
