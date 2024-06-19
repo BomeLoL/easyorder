@@ -18,4 +18,15 @@ class MenuEditController extends ChangeNotifier {
       throw Exception('Error adding product: $e');
     }
   }
+
+  Future<void> deleteProduct(String restaurantId, int productId) async {
+    try {
+      await MongoDatabase.eliminarProducto(restaurantId, productId);
+      menu = await MongoDatabase.getMenu(restaurantId);
+      notifyListeners(); // Notificar a los listeners (widgets) que hay cambios
+    } catch (e) {
+      throw Exception('Error deleting product: $e');
+    }
+  }
+
 }

@@ -15,6 +15,9 @@ class CustomTextFormField extends StatelessWidget {
     return TextFormField(
       keyboardType: keyboardType,
       controller: controller,
+      onChanged: (value) {
+        
+      },
       style: GoogleFonts.poppins(
               fontSize: 14.0,
               color: Colors.black),
