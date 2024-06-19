@@ -1,4 +1,5 @@
-import 'package:easyorder/controllers/cart_controller.dart';
+import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
@@ -291,7 +292,9 @@ Future<void> _showConfirmationDialog(BuildContext context) {
                             if (verificador == true) {
                               shouldPop = false;
                               CartController cartController = Provider.of<CartController>(context, listen: false);
+                              CheckController checkController = Provider.of<CheckController>(context, listen: false);
                               Pedido pedidoVacio = Pedido(productos: []);
+                              checkController.pedido = cartController.pedido;
                               cartController.pedido = pedidoVacio;
                               Navigator.pop(context, true);
                               Navigator.of(context).push(

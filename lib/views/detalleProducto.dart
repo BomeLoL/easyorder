@@ -3,7 +3,7 @@ import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher_icons/main.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:easyorder/controllers/cart_controller.dart';
+import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/views/Widgets/quantity_button.dart';
@@ -108,7 +108,6 @@ class _detalleProductoState extends State<detalleProducto> {
                                 //Icon(icon);
                                 Text(
                                   widget.producto.nombreProducto,
-                                  textAlign: TextAlign.justify,
                                   style: GoogleFonts.poppins(
                                     fontSize: 25,
                                     fontWeight: FontWeight.bold,
