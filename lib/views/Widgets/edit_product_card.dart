@@ -2,6 +2,8 @@ import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/Widgets/product_card_base.dart';
 import 'package:easyorder/views/detalleAdmin.dart';
@@ -29,8 +31,15 @@ class EditProductCard extends ProductCardBase {
           Expanded(
               flex: 4,
               child: IconButton(
-                onPressed: () {
-                  navigateToDetalleProducto(context);
+                onPressed: () async {
+                                      Provider.of<SpinnerController>(context, listen: false).setLoading(false);
+
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
+                  navigateToDetalleProducto(context);}
                 },
                 icon: Icon(
                   Icons.edit,
@@ -47,8 +56,13 @@ class EditProductCard extends ProductCardBase {
           Expanded(
               flex: 4,
               child: IconButton(
-                onPressed: () {
-                  _showDialog(context, producto);
+                onPressed: () async {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
+                  _showDialog(context, producto);}
                 },
                 icon: Icon(
                   Icons.delete,
@@ -109,6 +123,12 @@ class EditProductCard extends ProductCardBase {
                       ),
                     ),
                     onPressed: () async {
+
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
                       spinnerController.setLoading(true);
                       try {
                         await Provider.of<MenuEditController>(
@@ -123,7 +143,7 @@ class EditProductCard extends ProductCardBase {
                       } finally {
                         spinnerController.setLoading(false);
                       }
-                    },
+                    }},
                     child: Text(
                       'Confirmar',
                       style: GoogleFonts.poppins(

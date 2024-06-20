@@ -5,7 +5,9 @@ import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
+import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/Widgets/edit_product_card.dart';
 import 'package:easyorder/views/Widgets/menu_card.dart';
@@ -155,9 +157,14 @@ class _MenuState extends State<MenuView> {
           ),
           //crear categoria
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
               categoriesController.getCategoriasfromBD(context,menuEditController.menu!, 0);
-            },
+            }},
             icon: Icon(
               Icons.add,
               color: Colors.white,
@@ -169,10 +176,15 @@ class _MenuState extends State<MenuView> {
           ),
           //editar categoria
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
               categoriesController.getCategoriasfromBD(context,menuEditController.menu!, 1);
               
-            },
+            }},
             style: IconButton.styleFrom(
                 backgroundColor: primaryColor,
                 shape: RoundedRectangleBorder(
@@ -184,9 +196,14 @@ class _MenuState extends State<MenuView> {
           ),
           //eliminar categoria
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
               categoriesController.getCategoriasfromBD(context,menuEditController.menu!, 2);
-            },
+            }},
             style: IconButton.styleFrom(
                 backgroundColor: primaryColor,
                 shape: RoundedRectangleBorder(
@@ -341,7 +358,12 @@ class _MenuState extends State<MenuView> {
         Container(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -350,7 +372,7 @@ class _MenuState extends State<MenuView> {
                   },
                 ),
               );
-            },
+            }},
             style: ElevatedButton.styleFrom(
                 backgroundColor: primaryColor,
                 shape: RoundedRectangleBorder(

@@ -1,5 +1,7 @@
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/text_controller.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -484,7 +486,12 @@ class _EditCategoriesState extends State<EditCategories> {
           height: 50,
           width: 150,
           child: ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
               if (widget.tipo == 1 && _formKey.currentState!.validate()) {
                 //editar
                 categoriesController.editarCategoria(
@@ -526,7 +533,7 @@ class _EditCategoriesState extends State<EditCategories> {
                 textController.getController("New_Categoria").clear();
 
               }
-            },
+            }},
             style: ElevatedButton.styleFrom(
                 backgroundColor: Color.fromRGBO(255, 96, 4, 1),
                 shape: RoundedRectangleBorder(

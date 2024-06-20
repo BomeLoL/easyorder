@@ -3,6 +3,7 @@ import 'package:easyorder/controllers/navigate_controller.dart';
 import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/escaneoQR.dart';
 import 'package:easyorder/views/login.dart';
 import 'package:easyorder/views/singUp2.dart';
@@ -218,6 +219,11 @@ String? _validatePassword(String? value) {
                                     // Mostrar errores si hay campos inválidos
                                   } else {
                                     try {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
                                       Provider.of<SpinnerController>(context, listen: false).setLoading(true);
                                       var v4 = Uuid().generateV4();
                                       var x = await _auth.createUserWithEmailAndPassword(
@@ -260,7 +266,7 @@ String? _validatePassword(String? value) {
                                         showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus datos');
             
                                       }
-                                    } catch (e) {
+                                    }} catch (e) {
                                       Provider.of<SpinnerController>(context, listen: false).setLoading(false);
                                       showErrorPopup(context, 'Hubo un error inesperado, por favor revisa tus datos');
                                     }
@@ -296,6 +302,11 @@ String? _validatePassword(String? value) {
                                 iconPath: "images/googleIcon.png",
                                 text: "Registrarse con Google",
                                 onPressed: () async {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
                                   Provider.of<SpinnerController>(context, listen: false).setLoading(true);
                                   email = await _auth.signinwithGoogle();
                                   if (email != null) {
@@ -330,7 +341,7 @@ String? _validatePassword(String? value) {
                                     }     
                                 }
                                 Provider.of<SpinnerController>(context, listen: false).setLoading(false);
-                                },
+                                }},
                               ),
                             ],
                           ),

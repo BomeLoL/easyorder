@@ -1,6 +1,8 @@
 import 'package:easyorder/controllers/restaurante_controller.dart';
 import 'package:easyorder/models/clases/mesa.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/Widgets/navigationBarRestaurant.dart';
 import 'package:easyorder/views/registro_mesa.dart';
@@ -81,7 +83,12 @@ class _VistamesasState extends State<Vistamesas> {
                                 return Column(
                                   children: [
                                     OutlinedButton(
-                                      onPressed: () {
+                                      onPressed: () async {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
@@ -91,7 +98,7 @@ class _VistamesasState extends State<Vistamesas> {
                                                 .restaurante!.id,
                                           );
                                         }));
-                                      },
+                                      }},
                                       child: Align(
                                         alignment: Alignment.centerLeft,
                                         child: Row(
@@ -136,11 +143,16 @@ class _VistamesasState extends State<Vistamesas> {
                 )),
                 ElevatedButton(
                   onPressed: () async {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
                     await _showConfirmationDialog(context);
                     if (error == true) {
                       _errorDialog(context);
                     }
-                  },
+                  }},
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -161,12 +173,17 @@ class _VistamesasState extends State<Vistamesas> {
                 Padding(
                   padding: const EdgeInsets.only(top: 25, bottom: 40),
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
                       widget.mesa
                           .add(Mesa(id: widget.mesa.length + 1, pedidos: []));
                       restauranteController.addMesa(
                           widget.mesa, restauranteController.restaurante!);
-                    }, //ayuda de kevin para conectar con BD
+                    }}, //ayuda de kevin para conectar con BD
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFFFF5F04),
                         shape: RoundedRectangleBorder(
