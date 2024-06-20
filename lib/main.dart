@@ -1,10 +1,9 @@
 import 'package:easyorder/controllers/categories_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/controllers/menu_edit_controller.dart';
-import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/navigation_controller.dart';
-import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/controllers/spinner_controller.dart';
+import 'package:easyorder/controllers/restaurante_controller.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/firebase_options.dart';
@@ -17,7 +16,6 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:easyorder/controllers/text_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +33,8 @@ Future<void> main() async {
   }
 
   // Configuración de orientaciones de pantalla y ejecución de la aplicación
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
     runApp(const MyApp());
   });
 }
@@ -54,15 +53,20 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CheckController()),
         ChangeNotifierProvider(create: (context) => UserController()),
         ChangeNotifierProvider(create: (context) => SpinnerController()),
-        ChangeNotifierProvider(create: (context) {return NavController();}),
-        ChangeNotifierProvider(create:(context) {return MenuEditController();}),
+        ChangeNotifierProvider(create: (context) {
+          return NavController();
+        }),
+        ChangeNotifierProvider(create: (context) {
+          return MenuEditController();
+        }),
         ChangeNotifierProvider(create:(context) {return CategoriesController();}),
-
+ChangeNotifierProvider(create: (context) {
+          return RestauranteController();
+        }),
         ChangeNotifierProvider(
           create: (context) => TextController(),
           child: MyApp(),
         ),
-
       ],
       child: GetMaterialApp(
         defaultTransition: Transition.fade,
