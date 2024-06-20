@@ -5,6 +5,7 @@ import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/firebase_service.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -392,6 +393,11 @@ class _detalleAdminState extends State<detalleAdmin> {
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: () async {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
                       setState(() {
                         _imageSelected = _image != null;
                       });
@@ -452,7 +458,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                         }
                         Navigator.pop(context);
                       }
-                    },
+                    }},
                     style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
                         shape: RoundedRectangleBorder(

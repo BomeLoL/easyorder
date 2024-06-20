@@ -2,6 +2,7 @@ import 'package:easyorder/controllers/navigate_controller.dart';
 import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/escaneoQR.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -161,6 +162,11 @@ String? _validateFullName(String? value) {
                                       } else {
                                         // Lógica para crear cuenta
                                         try {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
                                           Provider.of<SpinnerController>(context, listen: false).setLoading(true);
                                           var v4 = Uuid().generateV4();
                                           await _auth.createUserDoc(
@@ -188,7 +194,7 @@ String? _validateFullName(String? value) {
                                             context,
                                             MaterialPageRoute(builder: (context) => Escanear()),
                                           );                                      }
-                                        } catch (e) {
+                                        } }catch (e) {
                                           errorSignup(context);
                                         }
                                         Provider.of<SpinnerController>(context, listen: false).setLoading(true);

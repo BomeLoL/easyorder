@@ -5,6 +5,7 @@ import 'package:easyorder/models/clases/usuario.dart';
 import 'package:easyorder/models/dbHelper/authService.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/connectWith.dart';
 import 'package:easyorder/views/Widgets/customTextField.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
@@ -104,6 +105,11 @@ class _LoginState extends State<Login> {
                             height: size.height * 0.075,
                             child: ElevatedButton(
                             onPressed: () async {
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
                               var result = await _auth.loginUserWithEmailAndPassword(
                                 textController.getController('email').text,
                                 textController.getController('password').text
@@ -136,7 +142,7 @@ class _LoginState extends State<Login> {
                                 errorLogin(context);
                                 Provider.of<SpinnerController>(context, listen: false).setLoading(false);
                               }
-                            },
+                            }},
 
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xFFFF5F04),
@@ -171,6 +177,11 @@ class _LoginState extends State<Login> {
                             iconPath: "images/googleIcon.png",
                             text: "Iniciar sesión con Google",
                             onPressed: () async {  
+                                      final tester = await MongoDatabase.Test();
+                                      if (tester == false) {
+                                        // ignore: use_build_context_synchronously
+                                        dbErrorDialog(context);
+                                      }else{
                               Provider.of<SpinnerController>(context, listen: false).setLoading(true);                            
                               var email = await _auth.signinwithGoogle();                              
                               if (email != null) {
@@ -205,7 +216,7 @@ class _LoginState extends State<Login> {
 
                               }
                               Provider.of<SpinnerController>(context, listen: false).setLoading(false);
-                            },
+                            }},
                           ),
                         ],
                       ),
