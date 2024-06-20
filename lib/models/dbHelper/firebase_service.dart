@@ -17,4 +17,21 @@ class FirebaseService {
       return null;
     }
   }
+
+  static Future<void> deleteImageFromStorage(String imageUrl) async {
+  try {
+    // Obtener la referencia al archivo en Firebase Storage usando la URL
+    final ref = FirebaseStorage.instance.refFromURL(imageUrl);
+
+    // Eliminar el archivo
+    await ref.delete();
+
+    print('Imagen eliminada correctamente del Firebase Storage.');
+  } catch (e) {
+    print('Error al eliminar la imagen del Firebase Storage: $e');
+    throw Exception('Error al eliminar la imagen del Firebase Storage.');
+  }
+}
+
+  
 }

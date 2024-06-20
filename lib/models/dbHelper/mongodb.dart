@@ -1,14 +1,13 @@
-  import 'dart:async';
-
-  import 'package:easyorder/models/clases/itemPedido.dart';
+import 'dart:async';
+import 'package:easyorder/models/clases/itemPedido.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/models/clases/menu.dart';
-  import 'package:easyorder/models/clases/mesa.dart';
-  import 'package:easyorder/models/clases/pedido.dart';
-  import 'package:easyorder/models/clases/restaurante.dart';
-  import 'package:easyorder/models/dbHelper/constant.dart';
-  import 'package:flutter_dotenv/flutter_dotenv.dart';
-  import 'package:mongo_dart/mongo_dart.dart';
+import 'package:easyorder/models/clases/mesa.dart';
+import 'package:easyorder/models/clases/pedido.dart';
+import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
   class MongoDatabase {
     static var db, coleccion_restaurante, coleccion_menu, coleccion_test,coleccion_categories;
@@ -150,6 +149,60 @@ import 'package:easyorder/models/clases/menu.dart';
     throw Exception('Error al agregar el producto: $e');
   }
 }
+///Elimina un producto del menu del restaurante
+static Future<void> eliminarProducto(String idRestaurante, int idProducto) async {
+  try {
+    // Obtener el menú del restaurante
+    Menu? menu = await getMenu(idRestaurante);
+    if (menu == null) {
+      throw Exception('Menú no encontrado para el restaurante con ID: $idRestaurante');
+    }
+
+    // Buscar el producto por su ID
+    bool productoEncontrado = false;
+    menu.itemsMenu.removeWhere((item) {
+      if (item.id == idProducto) {
+        productoEncontrado = true;
+        return true;
+      }
+      return false;
+    });
+
+    // Si no se encontró el producto, lanzar una excepción
+    if (!productoEncontrado) {
+      throw Exception('El producto con ID: $idProducto no existe en el menú del restaurante');
+    }
+
+    // Actualizar el menú en la base de datos
+    await actualizarMenu(menu);
+    print('Producto eliminado exitosamente del menú');
+  } catch (e) {
+    print('Error al eliminar el producto: $e');
+    throw Exception('Error al eliminar el producto: $e');
+  }
+}
+
+///Este método es para editar un producto del menú del restaurante
+static Future<void> editarProducto(String idRestaurante, ItemMenu itemMenu) async {
+    try {
+      final menu = await getMenu(idRestaurante);
+      if (menu != null) {
+        // Encontrar el índice del producto a editar
+        int index = menu.itemsMenu.indexWhere((item) => item.id == itemMenu.id);
+        if (index != -1) {
+          // Reemplazar el producto existente con el nuevo
+          menu.itemsMenu[index] = itemMenu;
+          await actualizarMenu(menu);
+        } else {
+          throw Exception('Producto no encontrado en el menú');
+        }
+      } else {
+        throw Exception('Menú no encontrado');
+      }
+    } catch (e) {
+      throw Exception('Error al editar el producto: $e');
+    }
+  }
 
 static Future<Pedido?> consolidarPedidos(String restauranteId, int numeroMesa) async {
   if (db == null || !db.isConnected) {

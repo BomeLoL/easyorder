@@ -1,6 +1,7 @@
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
+import 'package:easyorder/models/dbHelper/firebase_service.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _detalleAdminState extends State<detalleAdmin> {
   late TextController textController;
   final _formKey = GlobalKey<FormState>();
   late MenuEditController menuEditController;
+  final _firebaseService = FirebaseService();
 
   String? _selectedCategory;
   bool _categoryValid = true;
@@ -33,6 +35,12 @@ class _detalleAdminState extends State<detalleAdmin> {
     super.initState();
     textController = Provider.of<TextController>(context, listen: false);
     menuEditController = Provider.of<MenuEditController>(context, listen: false);
+    if(widget.producto != null){
+      textController.getController('nombre').text = widget.producto!.nombreProducto;
+      textController.getController('precio').text = widget.producto!.precio.toString();
+      textController.getController('descripcion').text = widget.producto!.descripcion;
+      _selectedCategory = widget.producto!.categoria;
+    }
   }
 
   @override
@@ -144,7 +152,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                   ),
                   child: Column(
                     children: [
-                      if (!_imageSelected)
+                      if (!_imageSelected && widget.producto == null)
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
@@ -317,24 +325,40 @@ class _detalleAdminState extends State<detalleAdmin> {
                   _categoryValid = _selectedCategory != null;
                   _imageSelected = _image != null;
                 });
-                if (_formKey.currentState!.validate() &&
+                if ((_formKey.currentState!.validate() &&
                     _categoryValid &&
-                    _imageSelected) {
+                    _imageSelected) || (_formKey.currentState!.validate() &&
+                    _categoryValid && widget.producto != null)) {
+                      String? imageURL;
                       // Obtener el texto del campo
                       String precioTexto = textController.getText('precio');
+                      String nombre = textController.getText('nombre').trim();
+                      if(widget.producto != null && _image == null){
+                        imageURL = widget.producto!.imgUrl;
+                      } else {
+                        imageURL = await _firebaseService.uploadImage(_image!);
+                      }
 
                       // Reemplazar comas por puntos
                       precioTexto = precioTexto.replaceAll(',', '.');
+                      int id_p = DateTime.now().millisecondsSinceEpoch;
+                      if(widget.producto != null){
+                        id_p = widget.producto!.id;
+                      }
                       final itemMenu = ItemMenu(
-                      id: DateTime.now().millisecondsSinceEpoch, 
-                      nombreProducto: textController.getText('nombre'),
+                      id: id_p, 
+                      nombreProducto: nombre,
                       descripcion: textController.getText('descripcion'),
                       precio: double.parse(precioTexto),
                       categoria: _selectedCategory!,
-                      imgUrl: 'https://upload.wikimedia.org/wikipedia/en/f/fd/Logo_of_Stardew_Valley.png',
+                      imgUrl: imageURL!,
                     );
                     try {
-                      await menuEditController.addProduct(widget.idRestaurante, itemMenu);
+                      if(widget.producto != null){
+                        await menuEditController.editProduct(widget.idRestaurante, itemMenu);
+                      } else{
+                        await menuEditController.addProduct(widget.idRestaurante, itemMenu);
+                      }
                       
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
