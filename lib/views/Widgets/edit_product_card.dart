@@ -1,4 +1,5 @@
 import 'package:easyorder/controllers/menu_edit_controller.dart';
+import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
@@ -67,54 +68,76 @@ class EditProductCard extends ProductCardBase {
         'Si seleccionas confirmar se eliminará el producto "${producto.nombreProducto}" del menú.',
       ),
       actions: [
-        Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                ),
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  'Cancelar',
-                  style: GoogleFonts.poppins(
-                    color: primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textScaler: TextScaler.linear(0.9),
-                ),
+        Consumer<SpinnerController>(
+            builder: (context, spinnerController, child) {
+          if (spinnerController.isLoading == true) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: primaryColor,
               ),
-            ),
-            Expanded(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
+            );
+          } else {
+            return Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(
+                      'Cancelar',
+                      style: GoogleFonts.poppins(
+                        color: primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textScaler: TextScaler.linear(0.9),
+                    ),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Provider.of<MenuEditController>(context, listen: false)
-                      .deleteProduct(idRestaurante, producto);
-                },
-                child: Text(
-                  'Confirmar',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                    ),
+                    onPressed: () async {
+                      spinnerController.setLoading(true);
+                      try {
+                        await Provider.of<MenuEditController>(
+                          context,
+                          listen: false,
+                        ).deleteProduct(idRestaurante, producto);
+                        // Si la eliminación fue exitosa, cerrar el diálogo
+                        Navigator.of(context).pop();
+                      } catch (e) {
+                        // Manejo de errores si es necesario
+                        print('Error al eliminar el producto: $e');
+                      } finally {
+                        spinnerController.setLoading(false);
+                      }
+                    },
+                    child: Text(
+                      'Confirmar',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textScaler: TextScaler.linear(0.9),
+                    ),
                   ),
-                  textScaler: TextScaler.linear(0.9),
                 ),
-              ),
-            ),
-          ],
-        ),
+              ],
+            );
+          }
+        })
       ],
     );
   }

@@ -1,4 +1,6 @@
+import 'package:easyorder/controllers/categories_controller.dart';
 import 'package:easyorder/controllers/menu_edit_controller.dart';
+import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/firebase_service.dart';
@@ -12,7 +14,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class detalleAdmin extends StatefulWidget {
-  const detalleAdmin({super.key, this.producto = null, required this.idRestaurante});
+  const detalleAdmin(
+      {super.key, this.producto = null, required this.idRestaurante});
   final ItemMenu? producto;
   final String idRestaurante;
 
@@ -27,19 +30,26 @@ class _detalleAdminState extends State<detalleAdmin> {
   final _firebaseService = FirebaseService();
 
   String? _selectedCategory;
-  bool _categoryValid = true;
   bool _imageSelected = true;
 
   @override
   void initState() {
     super.initState();
     textController = Provider.of<TextController>(context, listen: false);
-    menuEditController = Provider.of<MenuEditController>(context, listen: false);
-    if(widget.producto != null){
-      textController.getController('nombre').text = widget.producto!.nombreProducto;
-      textController.getController('precio').text = widget.producto!.precio.toString();
-      textController.getController('descripcion').text = widget.producto!.descripcion;
-      _selectedCategory = widget.producto!.categoria;
+    menuEditController =
+        Provider.of<MenuEditController>(context, listen: false);
+    if (widget.producto != null) {
+      textController.getController('nombre').text =
+          widget.producto!.nombreProducto;
+      textController.getController('precio').text =
+          widget.producto!.precio.toString();
+      textController.getController('descripcion').text =
+          widget.producto!.descripcion;
+      if (widget.producto!.categoria == '') {
+        _selectedCategory = null;
+      } else {
+        _selectedCategory = widget.producto!.categoria;
+      }
     }
   }
 
@@ -53,10 +63,10 @@ class _detalleAdminState extends State<detalleAdmin> {
 
   String? TextValidator(String? value, String existingCategoryMessage1) {
     if (value == null || value.trim().isEmpty) {
-    return existingCategoryMessage1;
+      return existingCategoryMessage1;
     }
     return null;
-}
+  }
 
   File? _image;
   Future<XFile?> _getImage() async {
@@ -98,12 +108,61 @@ class _detalleAdminState extends State<detalleAdmin> {
                     },
                     child: Container(
                       child: Builder(builder: (context) {
-                        if (_image != null) {
+                        if (_image != null ||
+                            widget.producto != null && _image == null) {
                           _imageSelected = true;
-                          return Image.file(
-                            _image!,
-                            fit: BoxFit.cover,
-                            filterQuality: FilterQuality.high,
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Container(
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(25),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.upload,
+                                          color: Colors.black,
+                                          // Icono de cámara
+
+                                          size: 50,
+                                          // Tamaño del icono
+                                        ),
+                                        SizedBox(height: 10),
+                                        // Espacio entre el icono y el texto
+
+                                        Text(
+                                          'Selecciona la imagen del producto',
+                                          // Texto
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Opacity(
+                                opacity: 0.5,
+                                child: _image != null
+                                    ? Image.file(
+                                        _image!,
+                                        fit: BoxFit.cover,
+                                        filterQuality: FilterQuality.high,
+                                      )
+                                    : Image.network(
+                                        widget.producto!.imgUrl,
+                                        fit: BoxFit.cover,
+                                        filterQuality: FilterQuality.high,
+                                      ),
+                              ),
+                            ],
                           );
                         } else {
                           return Container(
@@ -186,7 +245,8 @@ class _detalleAdminState extends State<detalleAdmin> {
                                   controller:
                                       textController.getController('nombre'),
                                   hintText: 'Ej. Hamburguesa Clásica',
-                                  validator: (value) => TextValidator(value, 'Por favor, ingresa el nombre del producto'),
+                                  validator: (value) => TextValidator(value,
+                                      'Por favor, ingresa el nombre del producto'),
                                 ),
 
                                 SizedBox(height: 25),
@@ -204,9 +264,8 @@ class _detalleAdminState extends State<detalleAdmin> {
                                       textController.getController('precio'),
                                   hintText: 'Ej. 12',
                                   keyboardType: TextInputType.number,
-                                  validator:  (value) => TextValidator(value, 'Por favor, ingresa el precio'),
-                                  
-                                  
+                                  validator: (value) => TextValidator(
+                                      value, 'Por favor, ingresa el precio'),
                                 ),
 
                                 SizedBox(height: 25),
@@ -221,12 +280,12 @@ class _detalleAdminState extends State<detalleAdmin> {
                                 ),
 
                                 CustomTextFormField(
-                                  controller:
-                                      textController.getController('descripcion'),
+                                  controller: textController
+                                      .getController('descripcion'),
                                   hintText:
                                       'Ej. Pan brioche, 200g de carne, lechuga, tomate, queso amarillo...',
-                                  validator: (value) => TextValidator(value, 'Por favor, ingresa la descripción'),
-    
+                                  validator: (value) => TextValidator(value,
+                                      'Por favor, ingresa la descripción'),
                                 ),
 
                                 SizedBox(height: 25),
@@ -239,66 +298,47 @@ class _detalleAdminState extends State<detalleAdmin> {
                                   ),
                                 ),
 
-                                DropdownButtonHideUnderline(
-                                  child: Container(
-                                    width: double
-                                        .infinity, // This makes the dropdown width fit the screen
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: _categoryValid
-                                              ? primaryColor
-                                              : Colors
-                                                  .red), // Set the border color
-                                      borderRadius: BorderRadius.circular(
-                                          4.0), // Optional: Add border radius
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12.5),
-                                      child: DropdownButton<String>(
-                                        isExpanded:
-                                            true, // This makes the dropdown width fit the screen
-                                        value: _selectedCategory,
-                                        items: [
-                                          DropdownMenuItem(
-                                            value: 'item1',
-                                            child: Text('Elemento 1'),
-                                          ),
-                                          DropdownMenuItem(
-                                            value: 'item2',
-                                            child: Text('Elemento 2'),
-                                          ),
-                                          DropdownMenuItem(
-                                            value: 'item3',
-                                            child: Text('Elemento 3'),
-                                          ),
-                                        ],
-                                        hint: Text('Seleccionar categoría',
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 14)),
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            _selectedCategory = value;
-                                            _categoryValid =
-                                                true; // Clear the error when a category is selected
-                                          });
-                                        },
+                                Consumer<CategoriesController>(builder:
+                                    (context, categoriesController, child) {
+                                  return DropdownButtonHideUnderline(
+                                    child: Container(
+                                      width: double
+                                          .infinity, // This makes the dropdown width fit the screen
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color:
+                                                primaryColor), // Set the border color
+                                        borderRadius: BorderRadius.circular(
+                                            4.0), // Optional: Add border radius
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12.5),
+                                        child: DropdownButton<String>(
+                                          isExpanded:
+                                              true, // This makes the dropdown width fit the screen
+                                          value: _selectedCategory,
+                                          items: categoriesController.categories
+                                              ?.map<DropdownMenuItem<String>>(
+                                                  (String category) {
+                                            return DropdownMenuItem<String>(
+                                              value: category,
+                                              child: Text(category),
+                                            );
+                                          }).toList(),
+                                          hint: Text('Seleccionar categoría',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 14)),
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              _selectedCategory = value;
+                                            });
+                                          },
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                if (!_categoryValid)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12.5, vertical: 8.0),
-                                    child: Text(
-                                      'Por favor, selecciona una categoría',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12.0,
-                                        color: Colors.red.shade900,
-                                      ),
-                                    ),
-                                  ),
+                                  );
+                                }),
                               ],
                             ),
                           ),
@@ -317,70 +357,100 @@ class _detalleAdminState extends State<detalleAdmin> {
         color: Colors.grey[50],
         child: Padding(
           padding: EdgeInsets.all(25),
-          child: Container(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () async {
-                setState(() {
-                  _categoryValid = _selectedCategory != null;
-                  _imageSelected = _image != null;
-                });
-                if ((_formKey.currentState!.validate() &&
-                    _categoryValid &&
-                    _imageSelected) || (_formKey.currentState!.validate() &&
-                    _categoryValid && widget.producto != null)) {
-                      String? imageURL;
-                      // Obtener el texto del campo
-                      String precioTexto = textController.getText('precio');
-                      String nombre = textController.getText('nombre').trim();
-                      if(widget.producto != null && _image == null){
-                        imageURL = widget.producto!.imgUrl;
-                      } else {
-                        imageURL = await _firebaseService.uploadImage(_image!);
+          child: Consumer<SpinnerController>(
+              builder: (context, spinnerController, child) {
+            if (spinnerController.isLoading == true) {
+              return Container(
+                alignment: Alignment.center,
+                width: 50,
+                height: 50,
+                child: CircularProgressIndicator(
+                  color: Colors.orange,
+                  
+                ),
+              );
+            } else {
+              return Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () async {
+                      setState(() {
+                        _imageSelected = _image != null;
+                      });
+                      if ((_formKey.currentState!.validate() &&
+                              _imageSelected) ||
+                          (_formKey.currentState!.validate() &&
+                              widget.producto != null)) {
+                        Provider.of<SpinnerController>(context, listen: false)
+                            .setLoading(true);
+                        String? imageURL;
+                        String category;
+                        if (_selectedCategory != null) {
+                          category = _selectedCategory!;
+                        } else {
+                          category = '';
+                        }
+                        // Obtener el texto del campo
+                        String precioTexto = textController.getText('precio');
+                        String nombre =
+                            textController.getText('nombre').trim();
+                        if (widget.producto != null && _image == null) {
+                          imageURL = widget.producto!.imgUrl;
+                        } else {
+                          imageURL =
+                              await _firebaseService.uploadImage(_image!);
+                        }
+                          
+                        // Reemplazar comas por puntos
+                        precioTexto = precioTexto.replaceAll(',', '.');
+                        int id_p = DateTime.now().millisecondsSinceEpoch;
+                        if (widget.producto != null) {
+                          id_p = widget.producto!.id;
+                        }
+                        final itemMenu = ItemMenu(
+                          id: id_p,
+                          nombreProducto: nombre,
+                          descripcion: textController.getText('descripcion'),
+                          precio: double.parse(precioTexto),
+                          categoria: category,
+                          imgUrl: imageURL!,
+                        );
+                        try {
+                          if (widget.producto != null) {
+                            await menuEditController.editProduct(
+                                widget.idRestaurante, itemMenu);
+                          } else {
+                            await menuEditController.addProduct(
+                                widget.idRestaurante, itemMenu);
+                          }
+                          Provider.of<SpinnerController>(context,
+                                  listen: false)
+                              .setLoading(false);
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Error: $e')));
+                          Provider.of<SpinnerController>(context,
+                                  listen: false)
+                              .setLoading(false);
+                        }
+                        Navigator.pop(context);
                       }
-
-                      // Reemplazar comas por puntos
-                      precioTexto = precioTexto.replaceAll(',', '.');
-                      int id_p = DateTime.now().millisecondsSinceEpoch;
-                      if(widget.producto != null){
-                        id_p = widget.producto!.id;
-                      }
-                      final itemMenu = ItemMenu(
-                      id: id_p, 
-                      nombreProducto: nombre,
-                      descripcion: textController.getText('descripcion'),
-                      precio: double.parse(precioTexto),
-                      categoria: _selectedCategory!,
-                      imgUrl: imageURL!,
-                    );
-                    try {
-                      if(widget.producto != null){
-                        await menuEditController.editProduct(widget.idRestaurante, itemMenu);
-                      } else{
-                        await menuEditController.addProduct(widget.idRestaurante, itemMenu);
-                      }
-                      
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
-                    }
-                    Navigator.pop(context);
-
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  )),
-              child: Text(
-                'Guardar',
-                style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
-          ),
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7),
+                        )),
+                    child: Text(
+                      'Guardar',
+                      style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    )),
+              );
+            }
+          }),
         ),
       ),
     );

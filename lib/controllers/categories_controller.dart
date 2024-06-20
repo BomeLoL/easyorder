@@ -8,9 +8,9 @@ import 'package:easyorder/views/menu.dart';
 import 'package:provider/provider.dart';
 
 class CategoriesController extends ChangeNotifier {
-  List? _categories;
+  List<String>? _categories;
 
-  List? get categories => _categories;
+  List<String>? get categories => _categories;
 
   Future<void> getCategoriasfromBD(context, menu, tipo) async {
     var categorias;
@@ -67,7 +67,7 @@ class CategoriesController extends ChangeNotifier {
   }
 
   void editarCategoria(String newCategory, Map<String, bool> productos,
-      List cambiar, String oldCategory, Menu menu, List categories) async {
+      List cambiar, String oldCategory, Menu menu, List<String> categories) async {
     //poner en string de otros las que se quedaron sin categoria
     cambiar.forEach((producto) {
       producto.categoria = "";
@@ -103,7 +103,7 @@ class CategoriesController extends ChangeNotifier {
   }
 
   void crearCategoria(String newCategory, Map<String, bool> productos,
-      Menu menu, List categories) async {
+      Menu menu, List<String> categories) async {
     bool hayProductoSeleccionado = false;
     //cambiar la categoria de los productos seleccionados
     productos.forEach((nombreProducto, estaSeleccionado) {
@@ -128,7 +128,7 @@ class CategoriesController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void eliminarCategoria(String deleteCategory, Map<String, bool> productos,Menu menu, List categories) async {
+  void eliminarCategoria(String deleteCategory, Map<String, bool> productos,Menu menu, List<String> categories) async {
 
     //cambiar a vacio la categoria de los productos seleccionados
     productos.forEach((nombreProducto, estaSeleccionado) {
