@@ -1,6 +1,7 @@
 import 'package:easyorder/controllers/categories_controller.dart';
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/restaurante_controller.dart';
+import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/menu.dart';
@@ -15,7 +16,7 @@ class NavigateController {
 
       RestauranteController _restauranteController = Provider.of<RestauranteController>(context, listen: false);
 
-      // Manejo de errores para asegurarse de que el menú se establece correctamente
+      Provider.of<SpinnerController>(context, listen: false).setLoading(false);
       try {
         _restauranteController.restaurante=restaurante;
         _menuEditController.menu = menu;
