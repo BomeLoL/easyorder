@@ -263,7 +263,8 @@ class _detalleAdminState extends State<detalleAdmin> {
                                   controller:
                                       textController.getController('precio'),
                                   hintText: 'Ej. 12',
-                                  keyboardType: TextInputType.number,
+                                  keyboardType: TextInputType.numberWithOptions(
+                                      decimal: true),
                                   validator: (value) => TextValidator(
                                       value, 'Por favor, ingresa el precio'),
                                 ),
