@@ -1,8 +1,6 @@
 import 'package:easyorder/controllers/navigation_controller.dart';
-import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
-import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/login.dart';
@@ -136,6 +134,7 @@ class _EscanearState extends State<Escanear> {
                                   height: 55,
                                   child: ElevatedButton(
                                     onPressed: () {
+                                      Provider.of<SpinnerController>(context, listen: false).setLoading(false);
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
                                     },
                                     style: ElevatedButton.styleFrom(
@@ -169,6 +168,7 @@ class _EscanearState extends State<Escanear> {
                                   height: 55,
                                   child: ElevatedButton(
                                     onPressed: () {
+                                      Provider.of<SpinnerController>(context, listen: false).setLoading(false);
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => SignuP()));
                                     },
                                     style: ElevatedButton.styleFrom(
