@@ -1,17 +1,9 @@
 import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/controllers/restaurante_controller.dart';
+import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
-import 'package:easyorder/models/clases/menu.dart';
-import 'package:easyorder/models/clases/pedido.dart';
-import 'package:easyorder/models/clases/restaurante.dart';
-import 'package:easyorder/models/dbHelper/mongodb.dart';
-import 'package:easyorder/views/Widgets/custom_popup.dart';
-import 'package:easyorder/views/factura.dart';
 import 'package:easyorder/views/profile_view.dart';
-import 'package:easyorder/views/vistaMesas.dart';
-import 'package:easyorder/views/vistaQr.dart';
-import 'package:easyorder/views/walletView.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -80,6 +72,7 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
           ],
           currentIndex: navController.selectedIndex,
           onTap: (int clickedIndex) async {
+              Provider.of<SpinnerController>(context, listen: false).setLoading(false);
             if (clickedIndex == 0) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
