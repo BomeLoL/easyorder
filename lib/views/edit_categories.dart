@@ -81,12 +81,12 @@ class _EditCategoriesState extends State<EditCategories> {
 
      if (widget.tipo == 1 || widget.tipo == 2) {
     // no puede escoger un nombre que ya sea una categoria
-    if (categorias.contains(value.trim()) && value.trim() != categoriaSelect) {
+    if (categorias.contains(value.trim().replaceRange(0, 1, value[0].toUpperCase())) && value.trim().replaceRange(0, 1, value[0].toUpperCase()) != categoriaSelect) {
       return existingCategoryMessage2;
     }
   } else if (widget.tipo == 0) {
     //no crear una categoria que ya existe
-    if (categorias.contains(value.trim())) {
+    if (categorias.contains(value.trim().replaceRange(0, 1, value[0].toUpperCase()))) {
       return existingCategoryMessage2;
     }
   }
@@ -351,7 +351,7 @@ class _EditCategoriesState extends State<EditCategories> {
             CustomTextFormField(
               controller: textController.getController("New_Categoria"),
               hintText: categoriaSelect,
-              validator: (value) => categoriaValidator(value,'Por favor ingrese un nombre para la categoria' ,'La categoría ingresada ya existe',textController.getController("New_Categoria").text),
+              validator: (value) => categoriaValidator(value,'Por favor ingrese un nombre para la categoria' ,'La categoría ingresada ya existe',textController.getText("New_Categoria")),
             ),
           ],
         ),
@@ -378,7 +378,7 @@ class _EditCategoriesState extends State<EditCategories> {
             CustomTextFormField(
               controller: textController.getController("New_Categoria"),
               hintText: "Nombre de la nueva categoría",
-              validator: (value) => categoriaValidator(value,'Por favor ingrese un nombre para la categoria' ,'La categoría ingresada ya existe.',textController.getController("New_Categoria").text),
+              validator: (value) => categoriaValidator(value,'Por favor ingrese un nombre para la categoria' ,'La categoría ingresada ya existe.',textController.getText("New_Categoria")),
             ),
           ],
         ),
@@ -488,7 +488,7 @@ class _EditCategoriesState extends State<EditCategories> {
               if (widget.tipo == 1 && _formKey.currentState!.validate()) {
                 //editar
                 categoriesController.editarCategoria(
-                    textController.getController("New_Categoria").text,
+                    textController.getText("New_Categoria"),
                     productos,
                     cambiar,
                     categoriaSelect,
@@ -502,7 +502,7 @@ class _EditCategoriesState extends State<EditCategories> {
               } else if (widget.tipo == 0 && _formKey.currentState!.validate()) {
                 //crear
                   categoriesController.crearCategoria(
-                      textController.getController("New_Categoria").text,
+                      textController.getText("New_Categoria"),
                       productos,
                       menuEditController.menu!,
                       categorias);
@@ -512,7 +512,7 @@ class _EditCategoriesState extends State<EditCategories> {
                   });
               } else if (widget.tipo == 2) {
                 categoriesController.eliminarCategoria(
-                    textController.getController("New_Categoria").text,
+                    textController.getText("New_Categoria"),
                     productos,
                     menuEditController.menu!,
                     categorias);
