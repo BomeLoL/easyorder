@@ -1,4 +1,5 @@
 import 'package:easyorder/controllers/navigation_controller.dart';
+import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/views/Widgets/navigationBarClientLogged.dart';
 import 'package:easyorder/views/Widgets/navigationBarRestaurant.dart';
@@ -188,6 +189,7 @@ class _ProfileViewState extends State<ProfileView> {
                           onPressed: () {
                             usercontroller.usuario = null;
                             navcontroller.selectedIndex =0;
+                            Provider.of<SpinnerController>(context, listen: false).setLoading(false);
                             Navigator.of(context).popUntil((route) =>
                             route.settings.name == 'menu');
                             Navigator.pop(context);
