@@ -72,7 +72,7 @@ class _VistamesasState extends State<Vistamesas> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Container(
-                            height: MediaQuery.of(context).size.height * 0.35,
+                            height: MediaQuery.of(context).size.height * 0.49,
                             child: ListView(
                               shrinkWrap: true,
                               padding: EdgeInsets.zero,
