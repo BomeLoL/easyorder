@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
@@ -75,6 +76,7 @@ class _NavigationbarClientState extends State<BarNavigationClientUnlogged> {
           ],
           currentIndex: navController.selectedIndex,
           onTap: (int clickedIndex) async {
+              Provider.of<SpinnerController>(context, listen: false).setLoading(false);
               if (clickedIndex == 1) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
