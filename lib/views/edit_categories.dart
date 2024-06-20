@@ -83,12 +83,12 @@ class _EditCategoriesState extends State<EditCategories> {
 
      if (widget.tipo == 1 || widget.tipo == 2) {
     // no puede escoger un nombre que ya sea una categoria
-    if (categorias.contains(value.trim().replaceRange(0, 1, value[0].toUpperCase())) && value.trim().replaceRange(0, 1, value[0].toUpperCase()) != categoriaSelect) {
+    if (categorias.contains(value.trim().toLowerCase().replaceRange(0, 1, value[0].toUpperCase())) && value.trim().replaceRange(0, 1, value[0].toUpperCase()) != categoriaSelect) {
       return existingCategoryMessage2;
     }
   } else if (widget.tipo == 0) {
     //no crear una categoria que ya existe
-    if (categorias.contains(value.trim().replaceRange(0, 1, value[0].toUpperCase()))) {
+    if (categorias.contains(value.trim().toLowerCase().replaceRange(0, 1, value[0].toUpperCase()))) {
       return existingCategoryMessage2;
     }
   }
