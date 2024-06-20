@@ -2,12 +2,14 @@ import 'dart:ui';
 
 import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
+import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/authService.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
+import 'package:easyorder/models/dbHelper/authService.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
@@ -77,20 +79,25 @@ class _detalleFacturaState extends State<Factura> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: size.height * 0.18), // Ajusta este tamaño para controlar la altura
+                    SizedBox(
+                        height: size.height *
+                            0.18), // Ajusta este tamaño para controlar la altura
                     Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
                             width: double.infinity,
-                            padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.05),
                             child: Image.asset(
                               'images/flyingHamburger.png', // Reemplaza con la ruta de tu imagen
-                              height: size.height * 0.23, // Ajusta el tamaño de la imagen según lo necesites
+                              height: size.height *
+                                  0.23, // Ajusta el tamaño de la imagen según lo necesites
                             ),
                           ),
-                          SizedBox(height: 10), // Espacio entre la imagen y el texto
+                          SizedBox(
+                              height: 10), // Espacio entre la imagen y el texto
                           Text(
                             'Aún no has realizado pedidos',
                             textAlign: TextAlign.center,
@@ -102,7 +109,8 @@ class _detalleFacturaState extends State<Factura> {
                           SizedBox(height: 6), // Espacio entre los textos
                           Container(
                             width: double.infinity,
-                            padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.05),
                             child: Text(
                               'Busca entre todas nuestras opciones y disfruta de tu primer pedido',
                               textAlign: TextAlign.center,
@@ -116,7 +124,9 @@ class _detalleFacturaState extends State<Factura> {
                     ),
                     Spacer(),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: size.width * 0.05, vertical: size.height * 0.03),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: size.width * 0.05,
+                          vertical: size.height * 0.03),
                       child: Row(
                         children: [
                           Expanded(
@@ -124,11 +134,10 @@ class _detalleFacturaState extends State<Factura> {
                               height: 55,
                               child: ElevatedButton(
                                 onPressed: () async {
-
                                   // Acción del botón
-                                Navigator.of(context).popUntil((route) {
-                                  return route.settings.name == 'menu';
-                                });
+                                  Navigator.of(context).popUntil((route) {
+                                    return route.settings.name == 'menu';
+                                  });
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFFFF5F04),
@@ -140,7 +149,9 @@ class _detalleFacturaState extends State<Factura> {
                                 child: Text(
                                   "Realizar un Pedido",
                                   style: GoogleFonts.poppins(
-                                    fontSize: MediaQuery.of(context).size.height * 0.018,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            0.018,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -341,7 +352,6 @@ class _detalleFacturaState extends State<Factura> {
             ),
           );
           }
-          
         },
       ),
     );

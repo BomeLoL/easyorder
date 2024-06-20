@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/restaurante_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
@@ -8,6 +9,7 @@ import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/factura.dart';
 import 'package:easyorder/views/profile_view.dart';
+import 'package:easyorder/views/vistaMesas.dart';
 import 'package:easyorder/views/vistaQr.dart';
 import 'package:easyorder/views/walletView.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +35,10 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer4<CartController, NavController, CheckController, UserController>(
-      builder: (context, cartController, navController, checkController,userController, child) {
+    return Consumer5<CartController, NavController, CheckController,
+        UserController, RestauranteController>(
+      builder: (context, cartController, navController, checkController,
+          userController, restauranteController, child) {
         return BottomNavigationBar(
           elevation: 0,
           backgroundColor: Colors.white,
@@ -45,10 +49,9 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
             color: Colors.black,
           ),
           fixedColor: Color.fromRGBO(142, 142, 142, 1),
-          unselectedItemColor:Color.fromRGBO(142, 142, 142, 1) ,
+          unselectedItemColor: Color.fromRGBO(142, 142, 142, 1),
           showSelectedLabels: true,
           showUnselectedLabels: true,
-          
           items: [
             BottomNavigationBarItem(
               icon: Icon(
@@ -84,19 +87,19 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
               Navigator.of(context).popUntil((route) {
                 return route.settings.name == 'menu';
               });
-            if (clickedIndex == 1) {
+            } else if (clickedIndex == 1) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
               });
-            // aqui va lo de gestionar mesas
 
-            }
+              restauranteController.getMesas(context);
+              // aqui va lo de gestionar mesas
             } else if (clickedIndex == 2) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
-              Navigator.of(context).popUntil((route) {
-                return route.settings.name == 'menu';
-              });
+                Navigator.of(context).popUntil((route) {
+                  return route.settings.name == 'menu';
+                });
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return ProfileView();
               }));});
@@ -108,4 +111,3 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
     );
   }
 }
-

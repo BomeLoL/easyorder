@@ -111,18 +111,26 @@ class _LoginState extends State<Login> {
                               if (result != null) {
                                 Provider.of<SpinnerController>(context, listen: false).setLoading(true);
                                  UserController userController = Provider.of<UserController>(context, listen: false);
-                                
+                                cerrarTeclado(context);                                
                                 Usuario? getUsuario = await _auth.getUserByEmailAndAccount(textController.getController('email').text,'correo');
                                 userController.usuario = getUsuario;
-                                cerrarTeclado(context);
                                 if (userController.usuario?.usertype == "Restaurante"){
                                       var restaurante = await MongoDatabase.getRestaurante(userController.usuario!.id);
                                       var menu = await MongoDatabase.getMenu(userController.usuario!.id);
                                       if (restaurante!= null && menu!=null){  
                                       NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");}
                                 }else{
-
-                                Navigator.pop(context);}
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return Escanear();
+                          
+                                          }
+                                        ),
+                                      );
+                                }
                                 Provider.of<SpinnerController>(context, listen: false).setLoading(false);
                               } else {
                                 errorLogin(context);

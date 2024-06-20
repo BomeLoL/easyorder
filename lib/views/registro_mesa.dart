@@ -8,13 +8,13 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-
 //esta clean (creo)
 class RegistroMesa extends StatefulWidget {
-  const RegistroMesa({super.key, required this.idMesa, required this.idRestaurante});
+  const RegistroMesa(
+      {super.key, required this.idMesa, required this.idRestaurante});
 
   final int idMesa;
-  final int idRestaurante;
+  final String idRestaurante;
 
   @override
   State<RegistroMesa> createState() => _RegistroMesaState();
@@ -31,99 +31,104 @@ class _RegistroMesaState extends State<RegistroMesa> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          backgroundColor: Color.fromARGB(0, 255, 255, 255),
-          scrolledUnderElevation: 0,
-          centerTitle: true,
-          title: Text(
-            "Mesa ${widget.idMesa}",
-            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-          ),
+        backgroundColor: Color.fromARGB(0, 255, 255, 255),
+        scrolledUnderElevation: 0,
+        centerTitle: true,
+        title: Text(
+          "Mesa ${widget.idMesa}",
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
         ),
+      ),
       body: Column(
         children: [
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                        top: 0,
-                        right: 16,
-                        left: 16,
-                      ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Qr asociado a la mesa",
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    ),
-                  SizedBox(height: 40,),
-                  Container(
-                    child: buildQrCode(),
-                  ),
-                  SizedBox(height: 20,),
-                   ElevatedButton(
-                     onPressed: _captureAndSaveQR,
-                     style: ElevatedButton.styleFrom(
-                       backgroundColor: Color(0xFFFF5F04),
-                       shape: RoundedRectangleBorder(
-                         borderRadius: BorderRadius.circular(5),),
-                       minimumSize: Size(320, 50)
-                     ), 
-                     child: Container(
-                      width: 270,
-                      height: 50,
-                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                         children: [
-                          Text("Descargar",
-                             style:GoogleFonts.poppins(
-                             fontSize: 15.0,
-                             fontWeight: FontWeight.bold,
-                             color: Colors.white), 
-                           ),
-                          SizedBox(width: 10),
-                          Icon(
-                            Icons.file_download_outlined,
-                            color: Colors.white,
-                            size: 27,
-                           ),
-                         ],
-                       ),
-                     ),
-                     ),
-                ],
-              ),
-              )
+              child: Padding(
+            padding: const EdgeInsets.only(
+              top: 0,
+              right: 16,
+              left: 16,
             ),
-            //botones de abajo
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Qr asociado a la mesa",
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Container(
+                  child: buildQrCode(),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  onPressed: _captureAndSaveQR,
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFFF5F04),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      minimumSize: Size(320, 50)),
+                  child: Container(
+                    width: 270,
+                    height: 50,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Descargar",
+                          style: GoogleFonts.poppins(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        SizedBox(width: 10),
+                        Icon(
+                          Icons.file_download_outlined,
+                          color: Colors.white,
+                          size: 27,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )),
+          //botones de abajo
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 35.0),
-              child: Align(
-                alignment: Alignment.center,
-                child: ElevatedButton(
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
+            child: Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
                     side: BorderSide(
                       color: Color(0xFFFF5F04),
                     ),
-                    minimumSize: Size(320, 50)
-                  ), 
-                  child: Text("Volver",
-                    style:GoogleFonts.poppins(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFFF5F04)), 
-                  ),
-                  ),
+                    minimumSize: Size(320, 50)),
+                child: Text(
+                  "Volver",
+                  style: GoogleFonts.poppins(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFFF5F04)),
+                ),
               ),
-            )
+            ),
+          )
         ],
       ),
     );
@@ -149,7 +154,7 @@ class _RegistroMesaState extends State<RegistroMesa> {
     );
   }
 
-  //se descarga la imagen 
+  //se descarga la imagen
   Future<void> _captureAndSaveQR() async {
     try {
       RenderRepaintBoundary boundary =

@@ -1,4 +1,6 @@
+import 'package:easyorder/controllers/navigation_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
+import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
@@ -23,8 +25,8 @@ class _EscanearState extends State<Escanear> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<UserController>(
-        builder: (context, usercontroller, child) {
+      body: Consumer2<UserController,NavController>(
+        builder: (context, usercontroller, navcontroller,child) {
           return Stack(
             children: [
               // Imagen de fondo que cubre solo el área encima del contenedor blanco
@@ -201,12 +203,14 @@ class _EscanearState extends State<Escanear> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       usercontroller.usuario = null;
+                                      navcontroller.selectedIndex=0;
+                                      Provider.of<SpinnerController>(context, listen: false).setLoading(false);
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) {
                                         return Escanear();
-                                    
+                                  
                                       },
                                     ),
                                   );                                    },

@@ -98,7 +98,7 @@ class _NavigationbarClientState extends State<BarNavigationClientLogged> {
                 return route.settings.name == 'menu';
               });
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ProfileView();
+                return ProfileView(info: widget.info, idMesa: widget.idMesa, restaurante: widget.restaurante,);
               }));});
             } else if (clickedIndex == 2) {
               setState(() {
