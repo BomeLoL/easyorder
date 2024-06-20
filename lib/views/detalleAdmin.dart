@@ -194,7 +194,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                   ),
                   child: Column(
                     children: [
-                      if (!_imageSelected)
+                      if (!_imageSelected && widget.producto == null)
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
