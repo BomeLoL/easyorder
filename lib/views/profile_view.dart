@@ -226,7 +226,7 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
               ),
             ),
-          bottomNavigationBar: navBar(context, usercontroller.usuario!.usertype),
+          bottomNavigationBar:usercontroller.usuario != null ? navBar(context, usercontroller.usuario!.usertype) : null,
         );
       }
     );
