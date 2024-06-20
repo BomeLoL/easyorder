@@ -187,7 +187,6 @@ class _ProfileViewState extends State<ProfileView> {
                                     MaterialPageRoute(
                                       builder: (context) {
                                         return Escanear();
-                      
                                       }
                                     ),
                                   );

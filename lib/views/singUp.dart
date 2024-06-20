@@ -244,6 +244,16 @@ String? _validatePassword(String? value) {
                                           NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");} 
                                         }else{
                                           Navigator.pop(context);
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return Escanear();
+                          
+                                          }
+                                        ),
+                                      );
                                         }
                                       }
                                       
@@ -307,7 +317,17 @@ String? _validatePassword(String? value) {
                                           NavigateController().navigateToMenu(context,restaurante, menu, "1","Restaurante");}
                                     }else{
             
-                                    Navigator.pop(context);}
+                                    Navigator.pop(context);
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return Escanear();
+                          
+                                          }
+                                        ),
+                                      );
+                                    }
                                     }     
                                 }
                                 Provider.of<SpinnerController>(context, listen: false).setLoading(false);
