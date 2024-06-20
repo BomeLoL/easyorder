@@ -1,5 +1,6 @@
 import 'package:easyorder/controllers/categories_controller.dart';
 import 'package:easyorder/controllers/menu_edit_controller.dart';
+import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/views/menu.dart';
@@ -11,7 +12,7 @@ class NavigateController {
     Future.microtask(() {
       MenuEditController _menuEditController = Provider.of<MenuEditController>(context, listen: false);
       CategoriesController _categoriesController=Provider.of<CategoriesController>(context, listen: false);
-      // Manejo de errores para asegurarse de que el menú se establece correctamente
+      Provider.of<SpinnerController>(context, listen: false).setLoading(false);
       try {
         _menuEditController.menu = menu;
         _categoriesController.getCategoriasfromBD(context, menu, 3);
