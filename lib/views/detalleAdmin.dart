@@ -7,6 +7,7 @@ import 'package:easyorder/models/dbHelper/firebase_service.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
@@ -259,12 +260,29 @@ class _detalleAdminState extends State<detalleAdmin> {
                                     color: Colors.black,
                                   ),
                                 ),
-                                CustomTextFormField(
-                                  controller:
-                                      textController.getController('precio'),
-                                  hintText: 'Ej. 12',
+                                TextFormField(
                                   keyboardType: TextInputType.numberWithOptions(
                                       decimal: true),
+                                  controller: textController.getController('precio'),
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'^\d+\.?\d{0,2}'))
+                                  ],
+                                  onChanged: (value) {},
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 14.0, color: Colors.black),
+                                  cursorColor: primaryColor,
+                                  decoration: InputDecoration(
+                                      errorStyle: GoogleFonts.poppins(),
+                                      border: OutlineInputBorder(),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: primaryColor, width: 2),
+                                      ),
+                                      hintText: 'Ej. 12',
+                                      hintStyle: GoogleFonts.poppins(
+                                          fontSize: 14.0,
+                                          color: Colors.black38)),
                                   validator: (value) => TextValidator(
                                       value, 'Por favor, ingresa el precio'),
                                 ),
@@ -367,7 +385,6 @@ class _detalleAdminState extends State<detalleAdmin> {
                 height: 50,
                 child: CircularProgressIndicator(
                   color: Colors.orange,
-                  
                 ),
               );
             } else {
@@ -382,8 +399,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                               _imageSelected) ||
                           (_formKey.currentState!.validate() &&
                               widget.producto != null)) {
-                        Provider.of<SpinnerController>(context, listen: false)
-                            .setLoading(true);
+                        
                         String? imageURL;
                         String category;
                         if (_selectedCategory != null) {
@@ -391,17 +407,18 @@ class _detalleAdminState extends State<detalleAdmin> {
                         } else {
                           category = '';
                         }
+                        Provider.of<SpinnerController>(context, listen: false)
+                            .setLoading(true);
                         // Obtener el texto del campo
                         String precioTexto = textController.getText('precio');
-                        String nombre =
-                            textController.getText('nombre').trim();
+                        String nombre = textController.getText('nombre').trim();
                         if (widget.producto != null && _image == null) {
                           imageURL = widget.producto!.imgUrl;
                         } else {
                           imageURL =
                               await _firebaseService.uploadImage(_image!);
                         }
-                          
+
                         // Reemplazar comas por puntos
                         precioTexto = precioTexto.replaceAll(',', '.');
                         int id_p = DateTime.now().millisecondsSinceEpoch;
@@ -424,15 +441,14 @@ class _detalleAdminState extends State<detalleAdmin> {
                             await menuEditController.addProduct(
                                 widget.idRestaurante, itemMenu);
                           }
-                          Provider.of<SpinnerController>(context,
-                                  listen: false)
+                          Provider.of<SpinnerController>(context, listen: false)
                               .setLoading(false);
                         } catch (e) {
+                          Provider.of<SpinnerController>(context, listen: false)
+                              .setLoading(false);
                           ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Error: $e')));
-                          Provider.of<SpinnerController>(context,
-                                  listen: false)
-                              .setLoading(false);
+                          
                         }
                         Navigator.pop(context);
                       }
