@@ -94,13 +94,19 @@ class _VistamesasState extends State<Vistamesas> {
                                       },
                                       child: Align(
                                         alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Mesa ${mesa.id}",
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 17,
-                                          ),
-                                          textAlign: TextAlign.start,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Mesa ${mesa.id}",
+                                              style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17,
+                                              ),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                            Icon(Icons.qr_code, color: Colors.black),
+                                          ],
                                         ),
                                       ),
                                       style: OutlinedButton.styleFrom(
