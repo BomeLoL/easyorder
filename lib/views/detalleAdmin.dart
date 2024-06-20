@@ -381,7 +381,7 @@ class _detalleAdminState extends State<detalleAdmin> {
                       if(widget.producto != null && _image == null){
                         imageURL = widget.producto!.imgUrl;
                       } else {
-                        await _firebaseService.uploadImage(_image!);
+                        imageURL = await _firebaseService.uploadImage(_image!);
                       }
 
                       // Reemplazar comas por puntos

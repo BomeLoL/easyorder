@@ -101,7 +101,7 @@ class EditProductCard extends ProductCardBase {
                 onPressed: () {
                   Navigator.of(context).pop();
                   Provider.of<MenuEditController>(context, listen: false)
-                      .deleteProduct(idRestaurante, producto.id);
+                      .deleteProduct(idRestaurante, producto);
                 },
                 child: Text(
                   'Confirmar',

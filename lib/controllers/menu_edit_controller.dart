@@ -1,4 +1,5 @@
-
+import 'package:easyorder/models/dbHelper/firebase_service.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
@@ -19,9 +20,10 @@ class MenuEditController extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteProduct(String restaurantId, int productId) async {
+  Future<void> deleteProduct(String restaurantId, ItemMenu producto) async {
     try {
-      await MongoDatabase.eliminarProducto(restaurantId, productId);
+      await MongoDatabase.eliminarProducto(restaurantId, producto.id);
+      await FirebaseService.deleteImageFromStorage(producto.imgUrl);
       menu = await MongoDatabase.getMenu(restaurantId);
       notifyListeners(); // Notificar a los listeners (widgets) que hay cambios
     } catch (e) {
