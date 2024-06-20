@@ -35,34 +35,6 @@ class CategoriesController extends ChangeNotifier {
         );
       }
 
-      // if (tipo==0) {
-      //   Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) {
-      //       return EditCategories(
-      //         menu: menu,
-      //         tipo: 0,
-      //         categoria: categorias,
-      //       );
-      //     },
-      //   ),
-      // );
-      // } else if (tipo==1) {
-      //   Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) {
-      //       return EditCategories(
-      //         menu: menu,
-      //         tipo: 1,
-      //         categoria: categorias,
-      //       );
-      //     },
-      //   ),
-      // );
-
-      // }
     
   }
 

@@ -522,7 +522,7 @@ class _EditCategoriesState extends State<EditCategories> {
                 });
               }
 
-              if (!_formKey.currentState!.validate()) {
+              if (_formKey.currentState!=null && !_formKey.currentState!.validate()) {
                 textController.getController("New_Categoria").clear();
 
               }
