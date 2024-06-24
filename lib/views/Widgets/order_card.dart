@@ -4,7 +4,7 @@ import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/Widgets/product_card_base.dart';
-import 'package:easyorder/views/detalleProducto.dart';
+import 'package:easyorder/views/detalleProducto/detalleProducto.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
