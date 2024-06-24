@@ -8,7 +8,7 @@ import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/factura.dart';
-import 'package:easyorder/views/vistaQr.dart';
+import 'package:easyorder/views/QR/vistaQr.dart';
 import 'package:easyorder/views/Wallet/walletView.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

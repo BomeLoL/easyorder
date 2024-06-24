@@ -65,7 +65,7 @@ class _BottomButtonsMesasState extends State<BottomButtonsMesas> {
                 widget.restauranteController.addMesa(
                     widget.mesa, widget.restauranteController.restaurante!);
               }
-            }, //ayuda de kevin para conectar con BD
+            },
             style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFFFF5F04),
                 shape: RoundedRectangleBorder(

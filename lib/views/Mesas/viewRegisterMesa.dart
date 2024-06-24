@@ -8,7 +8,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-//esta clean (creo)
 class RegistroMesa extends StatefulWidget {
   const RegistroMesa(
       {super.key, required this.idMesa, required this.idRestaurante});

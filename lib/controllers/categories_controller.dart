@@ -3,7 +3,7 @@ import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/material.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
-import 'package:easyorder/views/edit_categories.dart';
+import 'package:easyorder/views/Categorias/edit_categories.dart';
 import 'package:easyorder/views/menu.dart';
 import 'package:provider/provider.dart';
 
@@ -34,8 +34,6 @@ class CategoriesController extends ChangeNotifier {
           ),
         );
       }
-
-    
   }
 
   void editarCategoria(String newCategory, Map<String, bool> productos,
@@ -57,19 +55,14 @@ class CategoriesController extends ChangeNotifier {
     });
 
     //cambiar el nombre de la categoria
-    // if (categories.contains(newCategory)){
       for (int i = 0; i < categories.length; i++) {
       if (categories[i] == oldCategory) {
         categories[i] = newCategory;
       }
-    }
-    // }
-    
+    }    
 
     MongoDatabase.actualizarMenu(menu);
-
     MongoDatabase.actualizaCategorias(categories, menu.idRestaurante);
-
     _categories = categories;
     notifyListeners();
   }
@@ -124,6 +117,4 @@ class CategoriesController extends ChangeNotifier {
     notifyListeners();
 
   }
-    
-    
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import '../views/Widgets/scanned_barcode_label.dart';
-import '../views/Widgets/scanner_error_widget.dart';
+import 'components/scanned_barcode_label.dart';
+import 'components/scanner_error_widget.dart';
 import 'package:easyorder/controllers/qr_controller.dart';
 
 
