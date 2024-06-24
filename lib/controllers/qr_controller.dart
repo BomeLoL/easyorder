@@ -45,19 +45,7 @@ class QrController {
         }
       }
 
-      if (existeMesa) { // el restaurante si posee la mesa escaneada
-       // if (restaurante.mesa[idMesa].pedidos.length==0) {//la mesa no esta ocupada, se va al menu normal      
-       // Obtener la instancia de CartController
-      
-//        bool exist = true;
-// Llamar al setter pedido para establecer el nuevo pedido
-//        try{
-//        Pedido nuevoPedido = restaurante.mesas[j].pedidos[0];
-//        }catch(e){exist = false;}
-//        if (exist == true){
-//        Pedido nuevoPedido = restaurante.mesas[j].pedidos[0];
-//        cartController.pedido = nuevoPedido;}
-//        else{
+      if (existeMesa) { 
         CartController cartController = Provider.of<CartController>(context, listen: false);
         Pedido pedidoVacio = Pedido(productos: []);
         cartController.pedido = pedidoVacio;
