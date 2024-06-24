@@ -51,7 +51,6 @@ Widget build(BuildContext context) {
             controller: controller,
             scanWindow: scanWindow,
             errorBuilder: (context, error, child) {
-              // pedirPermiso();
               return 
               ScannerErrorWidget(error: error);
             },
@@ -66,17 +65,8 @@ Widget build(BuildContext context) {
             },
             onDetect: (barcode)async{
               if(barcode.barcodes.isNotEmpty && isWidgetMounted){
-                // bool continuar;
                 int continuarOerror = await qrController.revisarBd(barcode.barcodes, context);
-                // if (continuarOerror == 1) { //esto comentado por ahora, si aparece un error a futuro se descomenta 
-                //   setState(() {
-                //     tipo=1;
-                //   });
-                // }else if (continuarOerror == 2) {
-                //   setState(() {
-                //     tipo=2;
-                //   }); }
-                 if (isWidgetMounted) { //al hacer debug salian excepciones aqui, puse esto para ver si se evitaba, si causa problemas o no funciona se puede borrar y se descomenta lo de arriba
+                 if (isWidgetMounted) {
                   setState(() {
                     if (continuarOerror == 1) {
                       tipo = 1;
