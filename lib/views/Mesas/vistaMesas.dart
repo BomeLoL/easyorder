@@ -2,7 +2,7 @@ import 'package:easyorder/controllers/restaurante_controller.dart';
 import 'package:easyorder/models/clases/mesa.dart';
 import 'package:easyorder/views/Mesas/Layouts/bottom_buttons_mesas.dart';
 import 'package:easyorder/views/Mesas/Layouts/show_mesas.dart';
-import 'package:easyorder/views/Widgets/navigationBarRestaurant.dart';
+import 'package:easyorder/views/Widgets/navigationBar/navigationBarRestaurant.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

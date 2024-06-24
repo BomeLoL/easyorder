@@ -10,10 +10,11 @@ import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/Widgets/edit_product_card.dart';
-import 'package:easyorder/views/Widgets/menu_card.dart';
-import 'package:easyorder/views/Widgets/navigationBarClientLogged.dart';
-import 'package:easyorder/views/Widgets/navigationBarClientUnLogged.dart';
-import 'package:easyorder/views/Widgets/navigationBarRestaurant.dart';
+import 'package:easyorder/views/Widgets/navigationBar/navigationBarClientLogged.dart';
+import 'package:easyorder/views/Widgets/navigationBar/navigationBarClientUnLogged.dart';
+import 'package:easyorder/views/Widgets/navigationBar/navigationBarRestaurant.dart';
+import 'package:easyorder/views/Widgets/productCard/menu_card.dart';
+
 import 'package:easyorder/views/detalleAdmin.dart';
 import 'package:easyorder/views/detallePedido.dart';
 import 'package:easyorder/views/Categorias/edit_categories.dart';

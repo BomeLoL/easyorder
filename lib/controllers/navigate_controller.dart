@@ -4,7 +4,7 @@ import 'package:easyorder/controllers/restaurante_controller.dart';
 import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
-import 'package:easyorder/views/menu.dart';
+import 'package:easyorder/views/menu/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
