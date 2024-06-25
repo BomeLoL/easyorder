@@ -9,7 +9,7 @@ import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/navigationBarClientLogged.dart';
 import 'package:easyorder/views/Widgets/navigationBarClientUnLogged.dart';
 import 'package:easyorder/views/Widgets/navigationBarRestaurant.dart';
-import 'package:easyorder/views/detalleAdmin.dart';
+import 'package:easyorder/views/detalleAdmin/detalleAdmin.dart';
 import 'package:easyorder/views/menu/layouts/cart_summary.dart';
 import 'package:easyorder/views/menu/layouts/categories_view.dart';
 import 'package:easyorder/views/menu/layouts/menu_header.dart';

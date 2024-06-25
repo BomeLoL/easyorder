@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
-import 'package:easyorder/views/Widgets/quantity_button.dart';
+import 'package:easyorder/views/detalleProducto/components/quantity_button.dart';
 
 class detalleProducto extends StatefulWidget {
   const detalleProducto(

@@ -2,7 +2,7 @@ import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/controllers/text_controller.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
-import 'package:easyorder/views/Widgets/quantity_button.dart';
+import 'package:easyorder/views/detalleProducto/components/quantity_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';

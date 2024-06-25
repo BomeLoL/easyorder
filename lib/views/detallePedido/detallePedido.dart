@@ -7,6 +7,8 @@ import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/order_card.dart';
+import 'package:easyorder/views/detallePedido/layouts/order_bottom_card.dart';
+import 'package:easyorder/views/detallePedido/components/order_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -89,92 +91,7 @@ class _detallePedidoState extends State<detallePedido> {
                     ),
                   ),
                   Spacer(),
-                  Container(
-                    height: 150, // Cambiar a 180 con Sub-total y Descuentos
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        gradient: const LinearGradient(
-                          colors: [
-                            primaryColor,
-                            Colors.red,
-                          ],
-                        )),
-                    child: Column(
-                      children: [  
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Total:',
-                                style: GoogleFonts.roboto(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '\$${cartController.getTotalAmount()}',
-                                style: GoogleFonts.roboto(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                       
-                        Expanded(
-                          flex: 1, //Cambiar a 3 cuando se agrege nuevamente el Sub-total y Descuento
-                          child: Container(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                              final tester = await MongoDatabase.Test();
-                              if (tester == false){
-                              // ignore: use_build_context_synchronously
-                              dbErrorDialog(context);
-                              }
-                              else{
-                                await _showConfirmationDialog(context);
-                                if (confirmation) {
-                                  if (funciona) {
-                                    //Se hace una pequeña espera a la base de datos y después se continúa
-                                    await Future.delayed(
-                                        const Duration(seconds: 5));
-                                    cartController.haPedido = true;
-                                    Navigator.of(context).popUntil((route) {
-                                      return route.settings.name == 'menu';
-                                    });
-                                  } else {
-                                    Navigator.pop(context);
-                                    _showAlertDialog(context);
-                                  }
-                                }
-                              }},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(7),
-                                ),
-                              ),
-                              child: Text(
-                                'Ordenar',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: primaryColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
+                  OrderBottomCard(controller: cartController, showConfirmationDialog: _showConfirmationDialog(context), showAlertDialog: _showAlertDialog(context), confirmation: confirmation, funciona: funciona)
                 ],
               ),
             ),
@@ -187,7 +104,7 @@ class _detallePedidoState extends State<detallePedido> {
   }
 
   //Esta función muestra el mensaje de error de cuando la orden falla
-  void _showAlertDialog(BuildContext context) {
+  Future<void> _showAlertDialog(BuildContext context) async {
     showDialog(
       context: context,
       barrierDismissible: false,
