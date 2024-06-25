@@ -5,7 +5,7 @@ import 'package:easyorder/models/dbHelper/authService.dart';
 import 'package:easyorder/views/Wallet/Layouts/recargarView.dart';
 import 'package:easyorder/views/Wallet/Layouts/saldoView.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
-import 'package:easyorder/views/Widgets/navigationBarClientLogged.dart';
+import 'package:easyorder/views/Widgets/navigationBar/navigationBarClientLogged.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -36,9 +36,7 @@ class _EditCategoriesState extends State<EditCategories> {
   List<String> categorias = [];
   Map<String, bool> productos = {};
   String categoriaSelect = "";
-
   List cambiar = [];
-
   bool guardarPresionado = false;
 
   @override

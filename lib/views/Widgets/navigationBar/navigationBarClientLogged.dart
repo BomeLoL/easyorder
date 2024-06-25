@@ -8,14 +8,15 @@ import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/factura.dart';
-import 'package:easyorder/views/vistaQr.dart';
+import 'package:easyorder/views/profile_view.dart';
+import 'package:easyorder/views/QR/vistaQr.dart';
 import 'package:easyorder/views/Wallet/walletView.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class BarNavigationClientUnlogged extends StatefulWidget {
-  const BarNavigationClientUnlogged({
+class BarNavigationClientLogged extends StatefulWidget {
+  const BarNavigationClientLogged({
     super.key,
     this.index,
     required this.info,
@@ -29,10 +30,10 @@ class BarNavigationClientUnlogged extends StatefulWidget {
   final int idMesa;
 
   @override
-  State<BarNavigationClientUnlogged> createState() => _NavigationbarClientState();
+  State<BarNavigationClientLogged> createState() => _NavigationbarClientState();
 }
 
-class _NavigationbarClientState extends State<BarNavigationClientUnlogged> {
+class _NavigationbarClientState extends State<BarNavigationClientLogged> {
   bool confirmation = false;
   int selectedIndex = 0;
   bool isWalletSelected = false;
@@ -66,18 +67,42 @@ class _NavigationbarClientState extends State<BarNavigationClientUnlogged> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
+                Icons.wallet,
+                size: 45.0,
+                color: Color.fromRGBO(255, 95, 4, 1),
+              ),
+              label: "Billetera",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
                 Icons.assignment_outlined,
                 size: 45.0,
                 color: Color.fromRGBO(255, 95, 4, 1),
               ),
               label: "Mis Pedidos",
             ),
-
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_circle_rounded,
+                size: 45.0,
+                color: Color.fromRGBO(255, 95, 4, 1),
+              ),
+              label: "Perfil",
+            ),
           ],
           currentIndex: navController.selectedIndex,
           onTap: (int clickedIndex) async {
               Provider.of<SpinnerController>(context, listen: false).setLoading(false);
-              if (clickedIndex == 1) {
+            if (clickedIndex == 3) {
+              setState(() {
+                navController.selectedIndex = clickedIndex;
+              Navigator.of(context).popUntil((route) {
+                return route.settings.name == 'menu';
+              });
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ProfileView(info: widget.info, idMesa: widget.idMesa, restaurante: widget.restaurante,);
+              }));});
+            } else if (clickedIndex == 2) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
               });
@@ -137,6 +162,25 @@ class _NavigationbarClientState extends State<BarNavigationClientUnlogged> {
                     ),
                   ),
                 ]
+              );
+            } else if (clickedIndex == 1 ) {
+              setState(() {
+                navController.selectedIndex = clickedIndex;
+              });
+              Navigator.of(context).popUntil((route) {
+                return route.settings.name == 'menu';
+              });
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return walletView(
+                      idMesa: widget.idMesa,
+                      info: widget.info,
+                      restaurante: widget.restaurante,
+                    );
+                  },
+                ),
               );
             } 
           },

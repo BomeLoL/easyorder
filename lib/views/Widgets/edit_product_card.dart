@@ -5,7 +5,7 @@ import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
-import 'package:easyorder/views/Widgets/product_card_base.dart';
+import 'package:easyorder/views/Widgets/productCard/product_card_base.dart';
 import 'package:easyorder/views/detalleAdmin/detalleAdmin.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
