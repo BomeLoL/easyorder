@@ -1,7 +1,7 @@
 import 'package:easyorder/controllers/pedido_controller.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
-import 'package:easyorder/views/detallePedido.dart';
+import 'package:easyorder/views/detallePedido/detallePedido.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
