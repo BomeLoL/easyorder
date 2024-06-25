@@ -1,4 +1,4 @@
-import 'package:easyorder/views/login.dart';
+import 'package:easyorder/views/screens/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

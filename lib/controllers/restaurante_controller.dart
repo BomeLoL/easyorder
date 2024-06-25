@@ -1,6 +1,6 @@
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
-import 'package:easyorder/views/Mesas/vistaMesas.dart';
+import 'package:easyorder/views/screens/Mesas/vistaMesas.dart';
 import 'package:flutter/material.dart';
 
 class RestauranteController extends ChangeNotifier {

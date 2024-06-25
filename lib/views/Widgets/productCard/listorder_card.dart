@@ -3,7 +3,7 @@ import 'package:easyorder/models/clases/itemPedido.dart';
 import 'package:easyorder/models/clases/item_menu.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/views/Widgets/productCard/product_card_base.dart';
-import 'package:easyorder/views/detalleProducto/detalleProducto.dart';
+import 'package:easyorder/views/screens/detalleProducto/detalleProducto.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
