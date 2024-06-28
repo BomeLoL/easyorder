@@ -3,6 +3,7 @@ import 'package:easyorder/controllers/spinner_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
+import 'package:easyorder/views/screens/Wallet/walletView.dart';
 import 'package:easyorder/views/screens/inicio/components/orange_background_button.dart.dart';
 import 'package:easyorder/views/screens/inicio/components/orange_text_button.dart.dart';
 import 'package:easyorder/views/screens/inicio/layouts/background_image.dart';
@@ -137,6 +138,28 @@ class _InicioViewState extends State<InicioView> {
                           ),
                         ),
                       ] else if (usercontroller.usuario != null) ... [
+                        if (usercontroller.usuario?.usertype == "Comensal") ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 35),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: SizedBox(
+                                  height: 55,
+                                  child: OrangeTextButton(
+                                    text: "Billetera Virtual",
+                                    onPressed: () {
+                                      Provider.of<SpinnerController>(context, listen: false).setLoading(false);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => walletView()));
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                        SizedBox(height: 20), // Agrega un espacio entre los botones
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 35),
                           child: Row(
@@ -166,7 +189,7 @@ class _InicioViewState extends State<InicioView> {
                             ],
                           ),
                         ),
-                      ] 
+                      ],
                     ],
                   ),
                 ),

@@ -14,13 +14,13 @@ import 'package:provider/provider.dart';
 
 class walletView extends StatefulWidget {
   const walletView({super.key,
-      required this.info,
-      required this.restaurante,
-      required this.idMesa});
+       this.info,
+       this.restaurante,
+       this.idMesa});
       
-  final String info;
-  final Restaurante restaurante;
-  final int idMesa;
+  final String? info;
+  final Restaurante? restaurante;
+  final int? idMesa;
   
   @override
   State<walletView> createState() => _walletViewState();
@@ -69,7 +69,9 @@ class _walletViewState extends State<walletView> {
           ),
         ),
       ),
-      bottomNavigationBar: BarNavigationClientLogged(idMesa: widget.idMesa,info: widget.info,restaurante: widget.restaurante),
+      bottomNavigationBar: widget.idMesa != null && widget.restaurante != null && widget.info != null
+          ? BarNavigationClientLogged(idMesa: widget.idMesa!, info: widget.info!, restaurante: widget.restaurante!)
+          : null,
     );
 }
 }
