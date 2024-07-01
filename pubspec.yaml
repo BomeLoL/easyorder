@@ -58,6 +58,8 @@ dependencies:
   qr_flutter: ^4.1.0
   screenshot: ^3.0.0
   path_provider: ^2.1.3
+  pretty_qr_code: ^3.3.0
+
 
   collection: any
   firebase_storage: ^12.0.1
