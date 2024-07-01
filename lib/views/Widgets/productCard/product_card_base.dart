@@ -60,7 +60,7 @@ abstract class ProductCardBase extends StatelessWidget {
           Spacer(flex: 1),
           _buildProductDetails(),
           Spacer(flex: 1),
-          buildQuantityController(context),
+          buildCardOptions(context),
         ],
       ),
     );
@@ -170,7 +170,7 @@ abstract class ProductCardBase extends StatelessWidget {
     );
   }
 
-  Widget buildQuantityController(BuildContext context);
+  Widget buildCardOptions(BuildContext context);
   Widget buildDeleteButton(BuildContext context);
 
 }

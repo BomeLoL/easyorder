@@ -1,7 +1,7 @@
 import 'package:easyorder/controllers/menu_edit_controller.dart';
 import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
-import 'package:easyorder/views/Widgets/edit_product_card.dart';
+import 'package:easyorder/views/Widgets/productCard/edit_product_card.dart';
 import 'package:easyorder/views/Widgets/productCard/menu_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

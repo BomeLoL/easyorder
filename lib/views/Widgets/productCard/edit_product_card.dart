@@ -23,7 +23,7 @@ class EditProductCard extends ProductCardBase {
         );
 
   @override
-  Widget buildQuantityController(BuildContext context) {
+  Widget buildCardOptions(BuildContext context) {
     return Expanded(
       flex: 5,
       child: Row(
@@ -32,14 +32,16 @@ class EditProductCard extends ProductCardBase {
               flex: 4,
               child: IconButton(
                 onPressed: () async {
-                                      Provider.of<SpinnerController>(context, listen: false).setLoading(false);
+                  Provider.of<SpinnerController>(context, listen: false)
+                      .setLoading(false);
 
-                                      final tester = await MongoDatabase.Test();
-                                      if (tester == false) {
-                                        // ignore: use_build_context_synchronously
-                                        dbErrorDialog(context);
-                                      }else{
-                  navigateToDetalleProducto(context);}
+                  final tester = await MongoDatabase.Test();
+                  if (tester == false) {
+                    // ignore: use_build_context_synchronously
+                    dbErrorDialog(context);
+                  } else {
+                    navigateToDetalleProducto(context);
+                  }
                 },
                 icon: Icon(
                   Icons.edit,
@@ -54,21 +56,23 @@ class EditProductCard extends ProductCardBase {
             flex: 1,
           ),
           Expanded(
-              flex: 4,
-              child: IconButton(
-                onPressed: () async {
-                                      final tester = await MongoDatabase.Test();
-                                      if (tester == false) {
-                                        // ignore: use_build_context_synchronously
-                                        dbErrorDialog(context);
-                                      }else{
-                  _showDialog(context, producto);}
-                },
-                icon: Icon(
-                  Icons.delete,
-                  color: primaryColor,
-                ),
-              ))
+            flex: 4,
+            child: IconButton(
+              onPressed: () async {
+                final tester = await MongoDatabase.Test();
+                if (tester == false) {
+                  // ignore: use_build_context_synchronously
+                  dbErrorDialog(context);
+                } else {
+                  _showDialog(context, producto);
+                }
+              },
+              icon: Icon(
+                Icons.delete,
+                color: primaryColor,
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -123,27 +127,27 @@ class EditProductCard extends ProductCardBase {
                       ),
                     ),
                     onPressed: () async {
-
-                                      final tester = await MongoDatabase.Test();
-                                      if (tester == false) {
-                                        // ignore: use_build_context_synchronously
-                                        dbErrorDialog(context);
-                                      }else{
-                      spinnerController.setLoading(true);
-                      try {
-                        await Provider.of<MenuEditController>(
-                          context,
-                          listen: false,
-                        ).deleteProduct(idRestaurante, producto);
-                        // Si la eliminación fue exitosa, cerrar el diálogo
-                        Navigator.of(context).pop();
-                      } catch (e) {
-                        // Manejo de errores si es necesario
-                        print('Error al eliminar el producto: $e');
-                      } finally {
-                        spinnerController.setLoading(false);
+                      final tester = await MongoDatabase.Test();
+                      if (tester == false) {
+                        // ignore: use_build_context_synchronously
+                        dbErrorDialog(context);
+                      } else {
+                        spinnerController.setLoading(true);
+                        try {
+                          await Provider.of<MenuEditController>(
+                            context,
+                            listen: false,
+                          ).deleteProduct(idRestaurante, producto);
+                          // Si la eliminación fue exitosa, cerrar el diálogo
+                          Navigator.of(context).pop();
+                        } catch (e) {
+                          // Manejo de errores si es necesario
+                          print('Error al eliminar el producto: $e');
+                        } finally {
+                          spinnerController.setLoading(false);
+                        }
                       }
-                    }},
+                    },
                     child: Text(
                       'Confirmar',
                       style: GoogleFonts.poppins(

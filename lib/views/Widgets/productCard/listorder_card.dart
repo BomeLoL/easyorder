@@ -26,7 +26,7 @@ class ListorderCard extends ProductCardBase {
   }
 
   @override
-  Widget buildQuantityController (BuildContext context){
+  Widget buildCardOptions (BuildContext context){
     return Consumer<CheckController>(
       builder: (context, checkController, child) {
         final productoPedido = checkController.pedido
