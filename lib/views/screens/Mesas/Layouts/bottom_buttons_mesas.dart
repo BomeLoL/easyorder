@@ -3,12 +3,14 @@ import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
+import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class BottomButtonsMesas extends StatefulWidget {
-  const BottomButtonsMesas({super.key, required this.restauranteController, required this.mesa});
+  const BottomButtonsMesas(
+      {super.key, required this.restauranteController, required this.mesa});
   final restauranteController;
   final mesa;
 
@@ -22,6 +24,7 @@ class _BottomButtonsMesasState extends State<BottomButtonsMesas> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Gap(20),
         ElevatedButton(
           onPressed: () async {
             final tester = await MongoDatabase.Test();
@@ -52,35 +55,51 @@ class _BottomButtonsMesasState extends State<BottomButtonsMesas> {
                 color: Color(0xFFFF5F04)),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 25, bottom: 40),
-          child: ElevatedButton(
-            onPressed: () async {
-              final tester = await MongoDatabase.Test();
-              if (tester == false) {
-                // ignore: use_build_context_synchronously
-                dbErrorDialog(context);
-              } else {
-                widget.mesa.add(Mesa(id: widget.mesa.length + 1, pedidos: []));
-                widget.restauranteController.addMesa(
-                    widget.mesa, widget.restauranteController.restaurante!);
-              }
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFFF5F04),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                minimumSize: Size(320, 50)),
-            child: Text(
-              "Registrar mesa",
-              style: GoogleFonts.poppins(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
+        Gap(20),
+        ElevatedButton(
+          onPressed: () async {
+            final tester = await MongoDatabase.Test();
+            if (tester == false) {
+              // ignore: use_build_context_synchronously
+              dbErrorDialog(context);
+            } else {
+              widget.mesa.add(Mesa(id: widget.mesa.length + 1, pedidos: []));
+              widget.restauranteController.addMesa(
+                  widget.mesa, widget.restauranteController.restaurante!);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              minimumSize: Size(320, 50)),
+          child: Text(
+            "Registrar mesa",
+            style: GoogleFonts.poppins(
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
+        Gap(20),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              minimumSize: Size(320, 50)),
+          child: Text(
+            "Descargar todos los códigos QR",
+            style: GoogleFonts.poppins(
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+        ),
+        Gap(20)
       ],
     );
   }
