@@ -5,9 +5,11 @@ import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/screens/QR/vistaQr.dart';
+import 'package:easyorder/views/screens/Questions/questions_screen.dart';
 import 'package:easyorder/views/screens/Wallet/walletView.dart';
 import 'package:easyorder/views/screens/factura/facturaView.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +31,8 @@ class BarNavigationClientUnlogged extends StatefulWidget {
   final int idMesa;
 
   @override
-  State<BarNavigationClientUnlogged> createState() => _NavigationbarClientState();
+  State<BarNavigationClientUnlogged> createState() =>
+      _NavigationbarClientState();
 }
 
 class _NavigationbarClientState extends State<BarNavigationClientUnlogged> {
@@ -39,8 +42,10 @@ class _NavigationbarClientState extends State<BarNavigationClientUnlogged> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer4<CartController, NavController, CheckController, UserController>(
-      builder: (context, cartController, navController, checkController,userController, child) {
+    return Consumer4<CartController, NavController, CheckController,
+        UserController>(
+      builder: (context, cartController, navController, checkController,
+          userController, child) {
         return BottomNavigationBar(
           elevation: 0,
           backgroundColor: Colors.white,
@@ -51,10 +56,9 @@ class _NavigationbarClientState extends State<BarNavigationClientUnlogged> {
             color: Colors.black,
           ),
           fixedColor: Color.fromRGBO(142, 142, 142, 1),
-          unselectedItemColor:Color.fromRGBO(142, 142, 142, 1) ,
+          unselectedItemColor: Color.fromRGBO(142, 142, 142, 1),
           showSelectedLabels: true,
           showUnselectedLabels: true,
-          
           items: [
             BottomNavigationBarItem(
               icon: Icon(
@@ -72,17 +76,25 @@ class _NavigationbarClientState extends State<BarNavigationClientUnlogged> {
               ),
               label: "Mis Pedidos",
             ),
-
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.question_answer_outlined,
+                  size: 45.0,
+                  color: primaryColor,
+                ),
+                label: 'Preguntas')
           ],
           currentIndex: navController.selectedIndex,
           onTap: (int clickedIndex) async {
-              Provider.of<SpinnerController>(context, listen: false).setLoading(false);
-              if (clickedIndex == 1) {
+            Provider.of<SpinnerController>(context, listen: false)
+                .setLoading(false);
+            if (clickedIndex == 1) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
               });
 
-              Pedido? pedido = await MongoDatabase.consolidarPedidos(widget.restaurante.id, widget.idMesa);
+              Pedido? pedido = await MongoDatabase.consolidarPedidos(
+                  widget.restaurante.id, widget.idMesa);
 
               if (pedido != null) {
                 if (pedido.productos.isEmpty) {
@@ -113,36 +125,37 @@ class _NavigationbarClientState extends State<BarNavigationClientUnlogged> {
               }));
             } else if (clickedIndex == 0 && cartController.haPedido == true) {
               showCustomPopup(
-                context: context,
-                title: 'Finalice su estadía para escanear',
-                content: Text(
-                  'Para escanear otro código, primero debes terminar tu sesión actual. Por favor, finaliza tu estadía para continuar.'
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7)
-                      )
-                    ),
-                    child: Text(
-                      'Ok',
-                      style: GoogleFonts.poppins(
-                        color: const Color.fromRGBO(255, 96, 4, 1),
-                        fontWeight: FontWeight.bold
+                  context: context,
+                  title: 'Finalice su estadía para escanear',
+                  content: Text(
+                      'Para escanear otro código, primero debes terminar tu sesión actual. Por favor, finaliza tu estadía para continuar.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7))),
+                      child: Text(
+                        'Ok',
+                        style: GoogleFonts.poppins(
+                            color: const Color.fromRGBO(255, 96, 4, 1),
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ),
-                ]
+                  ]);
+            } else if (clickedIndex == 2) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuestionsScreen(),
+                ),
               );
-            } 
+            }
           },
-      );
+        );
       },
     );
   }
 }
-
