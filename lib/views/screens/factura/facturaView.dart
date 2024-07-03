@@ -187,16 +187,24 @@ class _detalleFacturaState extends State<Factura> {
                                             );
                                             await MongoDatabase.vaciarPedidosDeMesa(widget.restaurante.id, widget.idMesa);
                                             cartController.haPedido = false;
+                                            await DialogsFactura.showPayDialog(context, "Confirmación de pago", "Tu pago ha sido procesado de manera exitosa.", 'images/check_icon.png', 
+                                            () async {
                                             Navigator.of(context).popUntil((route) {
                                               return route.settings.name == 'menu';
+                                            });
+                                            Navigator.pop(context);
                                             });
                                           } else if (paypal == true && saldo < checkcontroller.getTotalAmount()) {
                                             DialogsFactura.showAlertDialog(context, 'Fondos Insuficientes', 'No hay fondos en su cuenta para realizar este pago');
                                           } else {
                                             await MongoDatabase.vaciarPedidosDeMesa(widget.restaurante.id, widget.idMesa);
                                             cartController.haPedido = false;
+                                            await DialogsFactura.showPayDialog(context, "¡Gracias por tu Visita!", "Esperamos que hayas disfrutado de tu experiencia. ", 'images/check_icon.png', 
+                                            () async {
                                             Navigator.of(context).popUntil((route) {
                                               return route.settings.name == 'menu';
+                                            });
+                                            Navigator.pop(context);
                                             });
                                           }
                                         },
@@ -212,9 +220,13 @@ class _detalleFacturaState extends State<Factura> {
                                           });
                                           await MongoDatabase.vaciarPedidosDeMesa(widget.restaurante.id, widget.idMesa);
                                           cartController.haPedido = false;
-                                          Navigator.of(context).popUntil((route) {
-                                            return route.settings.name == 'menu';
-                                          });
+                                          await DialogsFactura.showPayDialog(context, "¡Gracias por tu Visita!", "Esperamos que hayas disfrutado de tu experiencia. ", 'images/check_icon.png', 
+                                            () async {
+                                            Navigator.of(context).popUntil((route) {
+                                              return route.settings.name == 'menu';
+                                            });
+                                            Navigator.pop(context);
+                                            });
                                         },
                                       );
                                     }
