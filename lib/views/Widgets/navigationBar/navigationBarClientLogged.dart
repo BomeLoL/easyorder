@@ -5,8 +5,10 @@ import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
+import 'package:easyorder/views/screens/Questions/questions_screen.dart';
 import 'package:easyorder/views/screens/factura/facturaView.dart';
 import 'package:easyorder/views/screens/profile/profile_view.dart';
 import 'package:easyorder/views/screens/QR/vistaQr.dart';
@@ -40,8 +42,10 @@ class _NavigationbarClientState extends State<BarNavigationClientLogged> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer4<CartController, NavController, CheckController, UserController>(
-      builder: (context, cartController, navController, checkController,userController, child) {
+    return Consumer4<CartController, NavController, CheckController,
+        UserController>(
+      builder: (context, cartController, navController, checkController,
+          userController, child) {
         return BottomNavigationBar(
           elevation: 0,
           backgroundColor: Colors.white,
@@ -52,15 +56,14 @@ class _NavigationbarClientState extends State<BarNavigationClientLogged> {
             color: Colors.black,
           ),
           fixedColor: Color.fromRGBO(142, 142, 142, 1),
-          unselectedItemColor:Color.fromRGBO(142, 142, 142, 1) ,
+          unselectedItemColor: Color.fromRGBO(142, 142, 142, 1),
           showSelectedLabels: true,
           showUnselectedLabels: true,
-          
           items: [
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.qr_code,
-                size: 45.0,
+                size: 35,
                 color: Color.fromRGBO(255, 95, 4, 1),
               ),
               label: "Escanear",
@@ -68,7 +71,7 @@ class _NavigationbarClientState extends State<BarNavigationClientLogged> {
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.wallet,
-                size: 45.0,
+                size: 35,
                 color: Color.fromRGBO(255, 95, 4, 1),
               ),
               label: "Billetera",
@@ -76,38 +79,52 @@ class _NavigationbarClientState extends State<BarNavigationClientLogged> {
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.assignment_outlined,
-                size: 45.0,
+                size: 35,
                 color: Color.fromRGBO(255, 95, 4, 1),
               ),
-              label: "Mis Pedidos",
+              label: "Pedidos",
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.account_circle_rounded,
-                size: 45.0,
+                size: 35,
                 color: Color.fromRGBO(255, 95, 4, 1),
               ),
               label: "Perfil",
             ),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.question_answer_outlined,
+                  size: 35,
+                  color: primaryColor,
+                ),
+                label: 'Preguntas')
           ],
           currentIndex: navController.selectedIndex,
           onTap: (int clickedIndex) async {
-              Provider.of<SpinnerController>(context, listen: false).setLoading(false);
+            Provider.of<SpinnerController>(context, listen: false)
+                .setLoading(false);
             if (clickedIndex == 3) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
-              Navigator.of(context).popUntil((route) {
-                return route.settings.name == 'menu';
+                Navigator.of(context).popUntil((route) {
+                  return route.settings.name == 'menu';
+                });
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ProfileView(
+                    info: widget.info,
+                    idMesa: widget.idMesa,
+                    restaurante: widget.restaurante,
+                  );
+                }));
               });
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ProfileView(info: widget.info, idMesa: widget.idMesa, restaurante: widget.restaurante,);
-              }));});
             } else if (clickedIndex == 2) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
               });
 
-              Pedido? pedido = await MongoDatabase.consolidarPedidos(widget.restaurante.id, widget.idMesa);
+              Pedido? pedido = await MongoDatabase.consolidarPedidos(
+                  widget.restaurante.id, widget.idMesa);
 
               if (pedido != null) {
                 if (pedido.productos.isEmpty) {
@@ -138,32 +155,27 @@ class _NavigationbarClientState extends State<BarNavigationClientLogged> {
               }));
             } else if (clickedIndex == 0 && cartController.haPedido == true) {
               showCustomPopup(
-                context: context,
-                title: 'Finalice su estadía para escanear',
-                content: Text(
-                  'Para escanear otro código, primero debes terminar tu sesión actual. Por favor, finaliza tu estadía para continuar.'
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7)
-                      )
-                    ),
-                    child: Text(
-                      'Ok',
-                      style: GoogleFonts.poppins(
-                        color: const Color.fromRGBO(255, 96, 4, 1),
-                        fontWeight: FontWeight.bold
+                  context: context,
+                  title: 'Finalice su estadía para escanear',
+                  content: Text(
+                      'Para escanear otro código, primero debes terminar tu sesión actual. Por favor, finaliza tu estadía para continuar.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7))),
+                      child: Text(
+                        'Ok',
+                        style: GoogleFonts.poppins(
+                            color: const Color.fromRGBO(255, 96, 4, 1),
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ),
-                ]
-              );
-            } else if (clickedIndex == 1 ) {
+                  ]);
+            } else if (clickedIndex == 1) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
               });
@@ -182,11 +194,17 @@ class _NavigationbarClientState extends State<BarNavigationClientLogged> {
                   },
                 ),
               );
-            } 
+            } else if (clickedIndex == 4) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuestionsScreen(),
+                ),
+              );
+            }
           },
-      );
+        );
       },
     );
   }
 }
-

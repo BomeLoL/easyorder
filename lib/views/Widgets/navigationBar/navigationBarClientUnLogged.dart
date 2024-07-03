@@ -74,7 +74,7 @@ class _NavigationbarClientState extends State<BarNavigationClientUnlogged> {
                 size: 45.0,
                 color: Color.fromRGBO(255, 95, 4, 1),
               ),
-              label: "Mis Pedidos",
+              label: "Pedidos",
             ),
             BottomNavigationBarItem(
                 icon: Icon(
