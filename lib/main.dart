@@ -58,9 +58,9 @@ class MyApp extends StatelessWidget {
         }),
         ChangeNotifierProvider(create: (context) {
           return MenuEditController();
-        }),
+        }), 
         ChangeNotifierProvider(create:(context) {return CategoriesController();}),
-ChangeNotifierProvider(create: (context) {
+        ChangeNotifierProvider(create: (context) {
           return RestauranteController();
         }),
         ChangeNotifierProvider(

@@ -5,6 +5,7 @@ import 'package:easyorder/controllers/user_controller.dart';
 import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
+import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
 import 'package:easyorder/views/screens/factura/facturaView.dart';
@@ -61,7 +62,7 @@ class _NavigationbarClientState extends State<BarNavigationClientLogged> {
               icon: Icon(
                 Icons.qr_code,
                 size: 45.0,
-                color: Color.fromRGBO(255, 95, 4, 1),
+                color: checkController.pedido.productos.length >0 ? Colors.grey :primaryColor,
               ),
               label: "Escanear",
             ),
@@ -137,32 +138,6 @@ class _NavigationbarClientState extends State<BarNavigationClientLogged> {
                 return BarcodeScannerWithOverlay();
               }));
             } else if (clickedIndex == 0 && cartController.haPedido == true) {
-              showCustomPopup(
-                context: context,
-                title: 'Finalice su estadía para escanear',
-                content: Text(
-                  'Para escanear otro código, primero debes terminar tu sesión actual. Por favor, finaliza tu estadía para continuar.'
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7)
-                      )
-                    ),
-                    child: Text(
-                      'Ok',
-                      style: GoogleFonts.poppins(
-                        color: const Color.fromRGBO(255, 96, 4, 1),
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                  ),
-                ]
-              );
             } else if (clickedIndex == 1 ) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
