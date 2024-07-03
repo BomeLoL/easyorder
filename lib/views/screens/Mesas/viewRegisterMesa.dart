@@ -1,29 +1,55 @@
+import 'package:easyorder/controllers/download_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:flutter/rendering.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
+
 
 class RegistroMesa extends StatefulWidget {
   const RegistroMesa(
-      {super.key, required this.idMesa, required this.idRestaurante});
+      {super.key, required this.idMesa, required this.idRestaurante, required this.nomRestaurante});
 
   final int idMesa;
   final String idRestaurante;
+  final String nomRestaurante;
 
   @override
   State<RegistroMesa> createState() => _RegistroMesaState();
 }
 
 class _RegistroMesaState extends State<RegistroMesa> {
-  final GlobalKey _qrKey = GlobalKey();
   ScreenshotController screenshotController = ScreenshotController();
   dynamic externalDir = '/storage/emulated/0/Download/Codigos_QR';
   bool dirExists = false;
+
+  @protected
+  late QrCode qrCode;
+
+  @protected
+  late QrImage qrImage;
+
+  @protected
+  late PrettyQrDecoration decoration;
+
+    void initState() {
+    super.initState();
+
+    qrCode = QrCode.fromData(
+      data: '${widget.idRestaurante},${widget.idMesa}',
+      errorCorrectLevel: QrErrorCorrectLevel.H,
+    );
+
+    qrImage = QrImage(qrCode);
+
+    decoration = const PrettyQrDecoration(
+      shape: PrettyQrSmoothSymbol(
+        color: Colors.black,
+        roundFactor: 0, 
+        ),
+      background: Colors.white,
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,14 +86,31 @@ class _RegistroMesaState extends State<RegistroMesa> {
                 SizedBox(
                   height: 40,
                 ),
-                Container(
-                  child: buildQrCode(),
-                ),
+                Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: PrettyQrView(qrImage: qrImage, decoration: decoration,),
+                  ),
                 SizedBox(
                   height: 20,
                 ),
                 ElevatedButton(
-                  onPressed: _captureAndSaveQR,
+                  onPressed: ()async{
+                    var status = await Permission.manageExternalStorage.status;
+                    var path;
+                    if (status.isDenied) {
+                      status = await Pedir_permiso(context);
+                    }
+
+                    if (status.isGranted) {
+                      path = await qrImage.exportAsImage(
+                        context, 
+                        size: 512, 
+                        decoration: decoration, 
+                        idmesa: widget.idMesa, 
+                        nomrestaurante: widget.nomRestaurante); 
+                        showExportPath(path);
+                    }
+                  }, 
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFFF5F04),
                       shape: RoundedRectangleBorder(
@@ -133,76 +176,11 @@ class _RegistroMesaState extends State<RegistroMesa> {
     );
   }
 
-  //se crea el qr de la mesa
-  Widget buildQrCode() {
-    return RepaintBoundary(
-      key: _qrKey,
-      child: QrImageView(
-        data: '${widget.idRestaurante},${widget.idMesa}',
-        version: QrVersions.auto,
-        size: 270,
-        errorStateBuilder: (ctx, err) {
-          return const Center(
-            child: Text(
-              "Algo salió mal",
-              textAlign: TextAlign.center,
-            ),
-          );
-        },
-      ),
+    @protected
+  void showExportPath(String? path) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(path == null ? 'Saved' : 'Saved to $path')),
     );
-  }
-
-  //se descarga la imagen
-  Future<void> _captureAndSaveQR() async {
-    try {
-      RenderRepaintBoundary boundary =
-          _qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-
-      var image = await boundary.toImage(pixelRatio: 3.0);
-
-      //Se dibuja un fondo blanco debido a que el QR es de color negro y esto se va a descargar como un png transparente
-      final whitePaint = Paint()..color = Colors.white;
-      final recorder = PictureRecorder();
-      final canvas = Canvas(recorder,
-          Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()));
-      canvas.drawRect(
-          Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
-          whitePaint);
-      canvas.drawImage(image, Offset.zero, Paint());
-      final picture = recorder.endRecording();
-      final img = await picture.toImage(image.width, image.height);
-
-      ByteData? byteData = await img.toByteData(format: ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
-
-      String filename = 'qr_code_mesa_${widget.idMesa}';
-      int i = 1;
-      while (await File('${externalDir}/${filename}.png').exists()) {
-        filename = 'qr_code_mesa_${widget.idMesa}(${i})';
-        i++;
-      }
-
-      //Revisa si el directorio existe o no
-      dirExists = await File(externalDir).exists();
-      if (!dirExists) {
-        await Directory(externalDir).create(recursive: true);
-        dirExists = true;
-      }
-
-      final file = await File('${externalDir}/${filename}.png').create();
-      await file.writeAsBytes(pngBytes);
-
-      if (!mounted) return;
-      const Snackbar = SnackBar(
-          content: Text(
-              'El código QR se ha guardado correctamente a su dispositivo'));
-      ScaffoldMessenger.of(context).showSnackBar(Snackbar);
-    } catch (e) {
-      print(e);
-      const Snackbar =
-          SnackBar(content: Text('Ha ocurrido un problema guardando el QR'));
-      ScaffoldMessenger.of(context).showSnackBar(Snackbar);
-    }
   }
 }

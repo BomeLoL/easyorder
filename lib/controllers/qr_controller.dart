@@ -1,13 +1,8 @@
 import 'package:easyorder/controllers/navigate_controller.dart';
 import 'package:easyorder/controllers/pedido_controller.dart';
-import 'package:easyorder/controllers/categories_controller.dart';
-import 'package:easyorder/controllers/menu_edit_controller.dart';
-import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/pedido.dart';
-import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/material.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
-import 'package:easyorder/views/screens/menu/menu.dart';
 import 'package:provider/provider.dart';
 
 

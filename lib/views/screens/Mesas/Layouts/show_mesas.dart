@@ -51,6 +51,7 @@ class _ShowMesasState extends State<ShowMesas> {
                                     return RegistroMesa(
                                       idMesa: mesa.id,
                                       idRestaurante: widget.restauranteController.restaurante!.id,
+                                      nomRestaurante: widget.restauranteController.restaurante!.nombre,
                                     );
                                   }));
                                 }
