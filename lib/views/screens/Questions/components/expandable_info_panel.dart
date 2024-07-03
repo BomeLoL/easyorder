@@ -6,11 +6,15 @@ class ExpandableInfoPanel extends StatefulWidget {
   final String title;
   final Icon icon;
   final String info;
+   final bool isExpanded;
+  final VoidCallback onExpansionChanged;
   const ExpandableInfoPanel({
     Key? key,
     required this.icon,
     required this.title,
     required this.info,
+    required this.isExpanded,
+    required this.onExpansionChanged,
   }) : super(key: key);
 
   @override
@@ -18,7 +22,7 @@ class ExpandableInfoPanel extends StatefulWidget {
 }
 
 class _ExpandableInfoPanelState extends State<ExpandableInfoPanel> {
-  bool _isExpanded = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +31,7 @@ class _ExpandableInfoPanelState extends State<ExpandableInfoPanel> {
       child: ExpansionPanelList(
         elevation: 0,
         expansionCallback: (panelIndex, isExpanded) {
-          setState(() {
-            _isExpanded = !_isExpanded;
-          });
+          widget.onExpansionChanged();
         },
         children: [
           ExpansionPanel(
@@ -55,7 +57,7 @@ class _ExpandableInfoPanelState extends State<ExpandableInfoPanel> {
                 textAlign: TextAlign.justify,
               ),
             ),
-            isExpanded: _isExpanded,
+            isExpanded: widget.isExpanded,
           ),
         ],
       ),

@@ -164,84 +164,45 @@ class _ProfileViewState extends State<ProfileView> {
                   ],
                 ),
                 Spacer(),
-                Column(
-                  children: [
-                    Container(
-                      height: size.height * 0.05,
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        icon: Icon(
-                          Icons.question_answer_outlined,
-                          color: primaryColor,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => QuestionsScreen(),
-                            ),
-                          );
-                        },
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: primaryColor),
-                          foregroundColor: primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        label: Text(
-                          'Preguntas frecuentes',
-                          style: GoogleFonts.poppins(
-                            fontSize:
-                                MediaQuery.of(context).size.height * 0.018,
-                            fontWeight: FontWeight.bold,
-                            color: primaryColor,
-                          ),
-                        ),
+                Container(
+                  height: size.height * 0.05,
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    icon: Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      usercontroller.usuario = null;
+                      navcontroller.selectedIndex = 0;
+                      Provider.of<SpinnerController>(context, listen: false)
+                          .setLoading(false);
+                      Navigator.of(context).popUntil(
+                          (route) => route.settings.name == 'menu');
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return InicioView();
+                        }),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFFF5F04),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    Gap(size.height * 0.02),
-                    Container(
-                      height: size.height * 0.05,
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        icon: Icon(
-                          Icons.logout,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          usercontroller.usuario = null;
-                          navcontroller.selectedIndex = 0;
-                          Provider.of<SpinnerController>(context, listen: false)
-                              .setLoading(false);
-                          Navigator.of(context).popUntil(
-                              (route) => route.settings.name == 'menu');
-                          Navigator.pop(context);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) {
-                              return InicioView();
-                            }),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFFF5F04),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        label: Text(
-                          "Cerrar Sesión",
-                          style: GoogleFonts.poppins(
-                            fontSize:
-                                MediaQuery.of(context).size.height * 0.018,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                    label: Text(
+                      "Cerrar Sesión",
+                      style: GoogleFonts.poppins(
+                        fontSize:
+                            MediaQuery.of(context).size.height * 0.018,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
