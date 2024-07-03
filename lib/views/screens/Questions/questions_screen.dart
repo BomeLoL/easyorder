@@ -12,7 +12,14 @@ class QuestionsScreen extends StatefulWidget {
 }
 
 class _QuestionsScreenState extends State<QuestionsScreen> {
-  bool isExpanded = false;
+  int _expandedPanelIndex = -1; // -1 means no panel is expanded
+
+  void _setExpandedPanel(int index) {
+    setState(() {
+      _expandedPanelIndex = _expandedPanelIndex == index ? -1 : index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,56 +35,36 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       body: ListView(
         children: [
           ExpandableInfoPanel(
-              title: '¿Cómo hacer un pedido?',
-              icon: Icon(
-                Icons.shopping_cart_outlined,
-                color: primaryColor,
-              ),
-              info: pedidoInstructions),
-          ExpandableInfoPanel(
-              title: '¿Cómo recargar la billetera?',
-              icon: Icon(
-                Icons.wallet,
-                color: primaryColor,
-              ),
-              info: rechargeInstructions),
-          ExpandableInfoPanel(
-              title: '¿Cómo pagar?',
-              icon: Icon(
-                Icons.payments,
-                color: primaryColor,
-              ),
-              info: paymentIstructions)
-        ],
-      ),
-    );
-  }
-
-  Widget _buildButton(String title, Icon icon, String description) {
-    return Container(
-      height: 90,
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        icon: icon,
-        onPressed: () {
-          setState(() {
-            isExpanded = !isExpanded;
-          });
-        },
-        style: ElevatedButton.styleFrom(
-            alignment: Alignment.centerLeft,
-            backgroundColor: Colors.white,
-            shadowColor: Colors.transparent,
-            shape: BeveledRectangleBorder(),
-            overlayColor: Colors.deepOrange.shade100),
-        label: Text(
-          title,
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
+            title: '¿Cómo hacer un pedido?',
+            icon: Icon(
+              Icons.shopping_cart_outlined,
+              color: primaryColor,
+            ),
+            info: pedidoInstructions,
+            isExpanded: _expandedPanelIndex == 0,
+            onExpansionChanged: () => _setExpandedPanel(0),
           ),
-        ),
+          ExpandableInfoPanel(
+            title: '¿Cómo recargar la billetera?',
+            icon: Icon(
+              Icons.wallet,
+              color: primaryColor,
+            ),
+            info: rechargeInstructions,
+            isExpanded: _expandedPanelIndex == 1,
+            onExpansionChanged: () => _setExpandedPanel(1),
+          ),
+          ExpandableInfoPanel(
+            title: '¿Cómo pagar?',
+            icon: Icon(
+              Icons.payments,
+              color: primaryColor,
+            ),
+            info: paymentIstructions,
+            isExpanded: _expandedPanelIndex == 2,
+            onExpansionChanged: () => _setExpandedPanel(2),
+          )
+        ],
       ),
     );
   }
