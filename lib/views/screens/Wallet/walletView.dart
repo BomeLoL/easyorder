@@ -1,15 +1,11 @@
 import 'package:easyorder/controllers/user_controller.dart';
-import 'package:easyorder/models/clases/menu.dart';
 import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:easyorder/models/dbHelper/authService.dart';
 import 'package:easyorder/views/screens/Wallet/Layouts/recargarView.dart';
 import 'package:easyorder/views/screens/Wallet/Layouts/saldoView.dart';
 import 'package:easyorder/views/Widgets/background_image.dart';
 import 'package:easyorder/views/Widgets/navigationBar/navigationBarClientLogged.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:provider/provider.dart';
 
 class walletView extends StatefulWidget {
