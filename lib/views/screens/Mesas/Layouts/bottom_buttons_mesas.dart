@@ -1,14 +1,21 @@
+import 'package:easyorder/controllers/download_controller.dart';
 import 'package:easyorder/models/clases/mesa.dart';
 import 'package:easyorder/models/dbHelper/constant.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/Widgets/bd_Error.dart';
 import 'package:easyorder/views/Widgets/custom_popup.dart';
+import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 class BottomButtonsMesas extends StatefulWidget {
-  const BottomButtonsMesas({super.key, required this.restauranteController, required this.mesa});
+  const BottomButtonsMesas({
+    super.key,
+    required this.restauranteController,
+    required this.mesa,
+  });
   final restauranteController;
   final mesa;
 
@@ -18,10 +25,40 @@ class BottomButtonsMesas extends StatefulWidget {
 
 class _BottomButtonsMesasState extends State<BottomButtonsMesas> {
   bool error = false;
+
+  @protected
+  late QrCode qrCode;
+
+  @protected
+  late QrImage qrImage;
+
+  @protected
+  late PrettyQrDecoration decoration;
+
+  void initState() {
+    super.initState();
+
+    qrCode = QrCode.fromData(
+      data: '${widget.restauranteController.restaurante!.id},1',
+      errorCorrectLevel: QrErrorCorrectLevel.H,
+    );
+
+    qrImage = QrImage(qrCode);
+
+    decoration = const PrettyQrDecoration(
+      shape: PrettyQrSmoothSymbol(
+        color: Colors.black,
+        roundFactor: 0, 
+      ),
+      background: Colors.white,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Gap(20),
         ElevatedButton(
           onPressed: () async {
             final tester = await MongoDatabase.Test();
@@ -52,35 +89,80 @@ class _BottomButtonsMesasState extends State<BottomButtonsMesas> {
                 color: Color(0xFFFF5F04)),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 25, bottom: 40),
-          child: ElevatedButton(
-            onPressed: () async {
-              final tester = await MongoDatabase.Test();
-              if (tester == false) {
-                // ignore: use_build_context_synchronously
-                dbErrorDialog(context);
-              } else {
-                widget.mesa.add(Mesa(id: widget.mesa.length + 1, pedidos: []));
-                widget.restauranteController.addMesa(
-                    widget.mesa, widget.restauranteController.restaurante!);
-              }
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFFF5F04),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                minimumSize: Size(320, 50)),
-            child: Text(
-              "Registrar mesa",
-              style: GoogleFonts.poppins(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
+        Gap(20),
+        ElevatedButton(
+          onPressed: () async {
+            final tester = await MongoDatabase.Test();
+            if (tester == false) {
+              // ignore: use_build_context_synchronously
+              dbErrorDialog(context);
+            } else {
+              widget.mesa.add(Mesa(id: widget.mesa.length + 1, pedidos: []));
+              widget.restauranteController.addMesa(
+                  widget.mesa, widget.restauranteController.restaurante!);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              minimumSize: Size(320, 50)),
+          child: Text(
+            "Registrar mesa",
+            style: GoogleFonts.poppins(
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
+        Gap(20),
+        ElevatedButton(
+          onPressed: () async {
+            var status = await Permission.manageExternalStorage.status;
+            if (status.isDenied) {
+              status = await Pedir_permiso(context);
+            }
+            if (status.isGranted) {
+              var path;
+              for (var i = 0; i < widget.mesa.length; i++) {
+                setState(() {
+                  qrCode = QrCode.fromData(
+                      data:
+                          '${widget.restauranteController.restaurante!.id},${i + 1}',
+                      errorCorrectLevel: QrErrorCorrectLevel.H);
+                  qrImage = QrImage(qrCode);
+                });
+                path = await qrImage.exportAsImage(context,
+                    size: 512,
+                    decoration: decoration,
+                    idmesa: i + 1,
+                    nomrestaurante: widget.restauranteController.restaurante!.nombre);
+                showExportPath(path);
+                //espera dos segundos para descargar el siguiente
+                await Future.delayed(Duration(seconds: 2));
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text("Descarga exitosa")),
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              minimumSize: Size(320, 50)),
+          child: Text(
+            "Descargar todos los códigos QR",
+            style: GoogleFonts.poppins(
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+        ),
+        Gap(20)
       ],
     );
   }
@@ -183,6 +265,14 @@ class _BottomButtonsMesasState extends State<BottomButtonsMesas> {
           },
         );
       },
+    );
+  }
+
+  @protected
+  void showExportPath(String? path) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(path == null ? 'Saved' : 'Saved to $path')),
     );
   }
 }

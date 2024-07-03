@@ -1,11 +1,8 @@
 import 'package:easyorder/models/clases/menu.dart';
-import 'package:easyorder/models/clases/pedido.dart';
-import 'package:easyorder/models/clases/restaurante.dart';
 import 'package:flutter/material.dart';
 import 'package:easyorder/models/dbHelper/mongodb.dart';
 import 'package:easyorder/views/screens/categorias/edit_categories.dart';
-import 'package:easyorder/views/screens/menu/menu.dart';
-import 'package:provider/provider.dart';
+
 
 class CategoriesController extends ChangeNotifier {
   List<String>? _categories;
