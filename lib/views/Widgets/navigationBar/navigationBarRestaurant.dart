@@ -7,6 +7,7 @@ import 'package:easyorder/views/screens/profile/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:easyorder/views/screens/Questions/questions_screen.dart';
 
 class BarNavigationRestaurant extends StatefulWidget {
   const BarNavigationRestaurant({
@@ -69,10 +70,18 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
               ),
               label: "Perfil",
             ),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.question_answer_outlined,
+                  size: 45.0,
+                  color: Color.fromRGBO(255, 95, 4, 1),
+                ),
+                label: 'Preguntas')
           ],
           currentIndex: navController.selectedIndex,
           onTap: (int clickedIndex) async {
-              Provider.of<SpinnerController>(context, listen: false).setLoading(false);
+            Provider.of<SpinnerController>(context, listen: false)
+                .setLoading(false);
             if (clickedIndex == 0) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
@@ -87,19 +96,30 @@ class _NavigationbarClientState extends State<BarNavigationRestaurant> {
 
               restauranteController.getMesas(context);
               // aqui va lo de gestionar mesas
-            } else if (clickedIndex == 2) {
+            }
+            if (clickedIndex == 2) {
               setState(() {
                 navController.selectedIndex = clickedIndex;
                 Navigator.of(context).popUntil((route) {
                   return route.settings.name == 'menu';
                 });
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ProfileView();
-              }));});
-
-
-          }},
-      );
+                  return ProfileView();
+                }));
+              });
+            } else if (clickedIndex == 3) {
+              setState(() {
+                navController.selectedIndex = clickedIndex;
+              });
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuestionsScreen(),
+                ),
+              );
+            }
+          },
+        );
       },
     );
   }
