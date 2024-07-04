@@ -34,4 +34,4 @@ String addTableInstructions = '''1. Selecciona el botón de agregar categoría e
 3. Agrega la cantidad de mesas que desees. Se añaden con un # de mesa automático y consecutivo. Así mismo, recuerda que c/u tiene un  QR asociado a ella  que debes imprimir y pegar de manera física, puedes descargar uno por uno el que desees o todos al mismo tiempo con la opción de "Descargar todos"\n
 ¡Y listo, has agregado una mesa a tu restaurante!''';
 
-String editDataInstructions = '''Aún no contamos con la opción de modificar el perfil. Si deseas cambiar los datos de tu restaurante comunícate con los desarrolladores y ellos se encargarán de esto.''';
+String editDataInstructions = '''Aún no contamos con la opción de modificar el perfil. Si deseas cambiar los datos de tu restaurante comunícate con los desarrolladores y ellos se encargarán de eso. Contacto: devs@easyorder.com''';
