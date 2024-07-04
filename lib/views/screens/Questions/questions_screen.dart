@@ -39,7 +39,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           body:  
           ListView(
             children: [
-              if (userController.usuario?.usertype == 'Comensal') 
+              if (userController.usuario?.usertype == 'Comensal'  || userController.usuario?.usertype == null) 
               ExpandableInfoPanel(
                 title: '¿Cómo hacer un pedido?',
                 icon: Icon(
@@ -50,7 +50,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                 isExpanded: _expandedPanelIndex == 0,
                 onExpansionChanged: () => _setExpandedPanel(0),
               ),
-               if (userController.usuario?.usertype == 'Comensal') 
+               if (userController.usuario?.usertype == 'Comensal' || userController.usuario?.usertype == null) 
               ExpandableInfoPanel(
                 title: '¿Cómo recargar la billetera?',
                 icon: Icon(
@@ -61,7 +61,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                 isExpanded: _expandedPanelIndex == 1,
                 onExpansionChanged: () => _setExpandedPanel(1),
               ),
-               if (userController.usuario?.usertype == 'Comensal')
+               if (userController.usuario?.usertype == 'Comensal'  || userController.usuario?.usertype == null)
               ExpandableInfoPanel(
                 title: '¿Cómo pagar?',
                 icon: Icon(
